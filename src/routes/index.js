@@ -4,7 +4,16 @@ import { Router, Route, IndexRoute, browserHistory } from 'react-router'
 import AppIndex from '../components/AppIndex'
 import Home from '../components/Home'
 import About from '../components/About'
-import PromoterPerformance from '../components/Mine/promoter/PromoterPerformance'
+import Auth from '../components/Auth'
+import BindSuccess from '../components/Auth/BindSuccess'
+import Mine from '../components/Mine'
+import Open from '../components/Mine/Open'
+import ModifyProfile from '../components/Mine/ModifyProfile'
+
+const requireAuth = (nextState, replace) => {
+  console.log("nextState: ", nextState)
+  console.log("replace: ", replace)
+}
 
 const routes = (
   <Route path="/" component={AppIndex}>
@@ -16,7 +25,12 @@ const routes = (
 const rootRouter = (
   <Router history={browserHistory}>
     {routes}
-    <Route path="promoter/performance/:promoterId" component={PromoterPerformance}/>
+    <Route path='auth' component={Auth}/>
+    <Route path='auth/success' component={BindSuccess}/>
+    <Route path='mine' component={Mine}/>
+    <Route path='open' component={Open}/>
+    <Route path='open' component={Open}/>
+    <Route path='modifyProfile' component={ModifyProfile}/>
   </Router>
 )
 

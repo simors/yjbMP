@@ -18,6 +18,10 @@ class About extends Component {
     super(props)
   }
 
+  componentDidMount() {
+    document.title = "绑定手机"
+  }
+
   getDomain = () => {
     this.props.requestDomain({times: 1})
   }

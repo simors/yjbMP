@@ -1,0 +1,31 @@
+
+.header {
+  display: flex;
+  height: 9.69rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.button {
+  margin-top: 1.63rem;
+  padding-left: 1.31rem;
+  padding-right: 1.19rem;
+  margin-bottom: 10.63rem;
+}
+
+.avatar {
+  height: 5rem;
+  width: 5rem;
+  border-radius: 0.63rem;
+}
+
+.logo {
+  width: 6.25rem;
+  height: 5.63rem;
+}
+
+.footer {
+  display: flex;
+  justify-content: center;
+
+}

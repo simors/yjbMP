@@ -1,0 +1,12 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 11.69rem;
+  background: url("/doodles.png");
+}
+
+.button {
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
