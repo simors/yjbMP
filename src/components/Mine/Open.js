@@ -5,6 +5,7 @@ import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import WeUI from 'react-weui'
+import {requestWechatUserinfo} from '../../actions/authActions'
 import './mine.css'
 
 const {
@@ -21,6 +22,12 @@ const {
 class Open extends Component {
   constructor(props) {
     super(props)
+  }
+
+  componentWillMount() {
+    var openid = this.props.location.query.openid
+    var code = this.props.location.query.code
+    this.props.requestWechatUserinfo({code: code})
   }
 
   render() {
@@ -61,10 +68,12 @@ class Open extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
+
   }
 };
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
+  requestWechatUserinfo,
 }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(Open)

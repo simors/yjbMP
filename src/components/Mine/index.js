@@ -36,7 +36,7 @@ class Mine extends Component {
     return (
       <Page ptr={false}>
         <div className="container">
-          <img src="/airbnb.svg" alt="" style={{display: `block`, width: `7.5rem`, height: `6.75rem`}}/>
+          <img src="/logo.png" alt="" style={{display: `block`, width: `7.5rem`, height: `6.75rem`}}/>
         </div>
 
         <Cell access>

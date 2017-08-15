@@ -6,8 +6,8 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import * as WECHAT_CONFIG from '../../constants/appConfig'
 import WeUI from 'react-weui'
-var OAuth = require('wechat-oauth');
-var client = new OAuth(WECHAT_CONFIG.WECHAT_MP_APPID, WECHAT_CONFIG.WECHAT_MP_APPSECRET);
+// var OAuth = require('wechat-oauth');
+// var client = new OAuth(WECHAT_CONFIG.WECHAT_MP_APPID, WECHAT_CONFIG.WECHAT_MP_APPSECRET);
 
 import './bindsuccess.css'
 

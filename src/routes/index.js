@@ -9,11 +9,7 @@ import BindSuccess from '../components/Auth/BindSuccess'
 import Mine from '../components/Mine'
 import Open from '../components/Mine/Open'
 import ModifyProfile from '../components/Mine/ModifyProfile'
-
-const requireAuth = (nextState, replace) => {
-  console.log("nextState: ", nextState)
-  console.log("replace: ", replace)
-}
+import {wechatOauth} from  '../util'
 
 const routes = (
   <Route path="/" component={AppIndex}>
@@ -25,10 +21,9 @@ const routes = (
 const rootRouter = (
   <Router history={browserHistory}>
     {routes}
-    <Route path='auth' component={Auth}/>
+    <Route path='auth' component={Auth} onEnter={wechatOauth}/>
     <Route path='auth/success' component={BindSuccess}/>
     <Route path='mine' component={Mine}/>
-    <Route path='open' component={Open}/>
     <Route path='open' component={Open}/>
     <Route path='modifyProfile' component={ModifyProfile}/>
   </Router>
