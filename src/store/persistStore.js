@@ -6,11 +6,11 @@ import createFilter from 'redux-persist-transform-filter'
 import immutableTransform from 'redux-persist-transform-immutable'
 import createStore from './createStore'
 
-const configFilter = createFilter('CONFIG', [])
+const configFilter = createFilter('CONFIG', 'AUTH', [])
 
 export default function persist(store) {
   return persistStore(store, {
-    whitelist: ['CONFIG'],
+    whitelist: ['CONFIG', 'AUTH'],
     // transforms: [configFilter]
   }, () => {
     // TODO: add function after rehydration is finished

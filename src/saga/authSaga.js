@@ -3,7 +3,7 @@
  */
 import { call, put, takeEvery } from 'redux-saga/effects'
 import {fetchWechatInfo, requestLeanSmsCode, verifySmsCode, register} from  '../api/auth'
-import {requestWechatUserinfoSuccess} from '../actions/authActions'
+import {requestWechatUserinfoSuccess, registerSuccess} from '../actions/authActions'
 import * as authActionTypes from '../constants/authActionTypes'
 
 //获取微信用户信息
@@ -39,17 +39,11 @@ export function* submitRegister(action) {
     smsCode: payload.smsCode
   }
   try {
-    let result = yield call(verifySmsCode, verifyPayload)
-    if(!result) {
-      if(payload.error) {
-        payload.error("无效的短信验证码")
-      }
-
-    } else {
-      yield call(register, payload)
-      if(payload.success) {
-        payload.success()
-      }
+    // let result = yield call(verifySmsCode, verifyPayload)
+    let userInfo = yield call(register, payload)
+    yield  put(registerSuccess({userInfo}))
+    if(payload.success) {
+      payload.success()
     }
   } catch(error) {
     if(payload.error) {

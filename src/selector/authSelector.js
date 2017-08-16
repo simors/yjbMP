@@ -6,3 +6,8 @@ export function selectWechatUserInfo(state) {
   let AUTH = state.AUTH
   return AUTH.wechatUserInfo
 }
+
+export function selectUserInfo(state) {
+  let AUTH = state.AUTH
+  return AUTH.profile.toJSON()
+}

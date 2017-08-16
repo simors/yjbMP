@@ -3,6 +3,7 @@
  */
 import AV from 'leancloud-storage'
 import {APP_NAME} from '../constants/appConfig'
+import {UserInfo} from '../models/authModel'
 
 
 export function fetchWechatInfo(payload) {
@@ -46,5 +47,32 @@ export function verifySmsCode(payload) {
 }
 
 export function register(payload) {
+  console.log("register", payload)
+  let authData = {
+    "openid": payload.wechatUserInfo.openid,
+    "access_token": payload.wechatUserInfo.accessToken,
+    "expires_at": Date.parse(payload.wechatUserInfo.expires_in),
+  }
+  let platform = 'weixin'
 
+  return AV.User.signUpOrlogInWithMobilePhone(payload.phone, payload.smsCode).then((user) => {
+    return AV.User.associateWithAuthData(user, platform, authData)
+  }).then((authUser) => {
+    authUser.set('nickname', payload.wechatUserInfo.nickname)
+    authUser.set('avatar', payload.wechatUserInfo.headimgurl)
+    authUser.set('sex', payload.wechatUserInfo.sex)
+    authUser.set('language', payload.wechatUserInfo.language)
+    authUser.set('country', payload.wechatUserInfo.country)
+    authUser.set('province', payload.wechatUserInfo.province)
+    authUser.set('city', payload.wechatUserInfo.city)
+
+    return authUser.save()
+  }).then((leanUser) => {
+    let userInfo = UserInfo.fromLeancloudObject(leanUser)
+    return userInfo
+  }).catch((error) => {
+    console.log("register error", error)
+
+    throw error
+  })
 }

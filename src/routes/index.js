@@ -9,6 +9,7 @@ import BindSuccess from '../components/Auth/BindSuccess'
 import Mine from '../components/Mine'
 import Open from '../components/Mine/Open'
 import ModifyProfile from '../components/Mine/ModifyProfile'
+import Wallet from '../components/Mine/Wallet'
 import {wechatOauth} from  '../util'
 
 const routes = (
@@ -24,6 +25,7 @@ const rootRouter = (
     <Route path='auth' component={Auth} onEnter={wechatOauth}/>
     <Route path='auth/success' component={BindSuccess}/>
     <Route path='mine' component={Mine}/>
+    <Route path='mine/wallet' component={Wallet} />
     <Route path='open' component={Open}/>
     <Route path='modifyProfile' component={ModifyProfile}/>
   </Router>

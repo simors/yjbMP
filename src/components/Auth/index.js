@@ -4,6 +4,7 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import {browserHistory} from 'react-router'
 import {requestWechatUserinfo, requestSmsCode, submitRegister} from '../../actions/authActions'
 import {selectWechatUserInfo} from '../../selector/authSelector'
 import WeUI from 'react-weui'
@@ -171,7 +172,9 @@ class Auth extends Component {
       phone: this.state.phone,
       smsCode: this.state.smsCode,
       wechatUserInfo: this.props.wechatUserInfo,
-      success: () => {},
+      success: () => {
+        browserHistory.replace('/auth/success')
+      },
       error: (error) => {
         this.setState({
           showWarn: true,

@@ -4,6 +4,8 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import {browserHistory} from 'react-router'
+
 import WeUI from 'react-weui'
 
 const {

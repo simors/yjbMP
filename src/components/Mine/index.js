@@ -4,12 +4,13 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import {browserHistory} from 'react-router'
+import {selectUserInfo} from '../../selector/authSelector'
 import WeUI from 'react-weui'
 import './mine.css'
 
 const {
   Button,
-
   Page,
   Cells,
   Cell,
@@ -33,28 +34,41 @@ class Mine extends Component {
   }
 
   render() {
+    console.log("state profile:", this.props.profile)
     return (
-      <Page ptr={false}>
+      <Page ptr={false} style={{backgroundColor: `#EFEFF4`}}>
         <div className="container">
           <img src="/logo.png" alt="" style={{display: `block`, width: `7.5rem`, height: `6.75rem`}}/>
         </div>
 
-        <Cell access>
-          <CellHeader>
-            <img src="http://wx.qlogo.cn/mmopen/Ric56ibJEmQMY9d3xqXy0tlwRS4iaZkdttpMJghTGoKwq0mt04lcH3bV1gyJaQsuXia4X6aicdNTmaBy5YGauKLwyoMiaUSs3l3Com/0" alt="" style={{display: `block`, width: `3.13rem`, marginRight: `0.63rem`}}/>
-          </CellHeader>
-          <CellBody primary={true}>
-            <h6>绿蚁网络</h6>
-            <p>普通用户</p>
-          </CellBody>
-          <CellFooter>
-            修改资料
-          </CellFooter>
-        </Cell>
-        <Cells>
-          <Cell href="javascript:;" access>
+        <Cells style={{marginTop: 0}}>
+          <Cell access onClick={() => {browserHistory.push('/modifyProfile')}}>
             <CellHeader>
-              <img src="/wallet.svg" alt="" style={{display: `block`, width: `1rem`, marginRight: `1.06rem`}}/>
+              <img src={this.props.profile.avatar || '/defaultAvatar.svg'} alt="" style={{display: `block`, width: `3.13rem`, marginRight: `0.63rem`}}/>
+            </CellHeader>
+            <CellBody primary={true}>
+              <h6>{this.props.profile.nickname || '衣家宝'}</h6>
+              <p style={{fontSize: `0.9rem`, marginTop: `0.1rem`}}>普通用户</p>
+            </CellBody>
+            <CellFooter style={{fontSize: `1.1rem`}}>
+              修改资料
+            </CellFooter>
+          </Cell>
+
+        </Cells>
+        <Cells>
+          <Cell access>
+            <CellHeader>
+              <img src="/integration.png" alt="" style={{display: `block`, width: `1.3rem`, marginRight: `1.1rem`}}/>
+            </CellHeader>
+            <CellBody>
+              积分
+            </CellBody>
+            <CellFooter/>
+          </Cell>
+          <Cell href="/mine/wallet" access>
+            <CellHeader>
+              <img src="/wallet.png" alt="" style={{display: `block`, width: `1.3rem`, marginRight: `1.1rem`}}/>
             </CellHeader>
             <CellBody>
               钱包
@@ -63,16 +77,7 @@ class Mine extends Component {
           </Cell>
           <Cell access>
             <CellHeader>
-              <img src="/score.svg" alt="" style={{display: `block`, width: `1rem`, marginRight: `1.06rem`}}/>
-            </CellHeader>
-            <CellBody>
-              积分
-            </CellBody>
-            <CellFooter/>
-          </Cell>
-          <Cell access>
-            <CellHeader>
-              <img src="/orders.svg" alt="" style={{display: `block`, width: `1rem`, marginRight: `1.06rem`}}/>
+              <img src="/order.png" alt="" style={{display: `block`, width: `1.3rem`, marginRight: `1.1rem`}}/>
             </CellHeader>
             <CellBody>
               历史订单
@@ -84,23 +89,13 @@ class Mine extends Component {
         <Cells>
           <Cell access>
             <CellHeader>
-              <img src="/about-us.svg" alt="" style={{display: `block`, width: `1rem`, marginRight: `1.06rem`}}/>
+              <img src="/about_us.png" alt="" style={{display: `block`, width: `1.3rem`, marginRight: `1.1rem`}}/>
             </CellHeader>
             <CellBody>
-              关于
+              关于衣家宝
             </CellBody>
             <CellFooter/>
           </Cell>
-          <Cell access>
-            <CellHeader>
-              <img src="/link.svg" alt="" style={{display: `block`, width: `1rem`, marginRight: `1.06rem`}}/>
-            </CellHeader>
-            <CellBody>
-              重新绑定微信账户
-            </CellBody>
-            <CellFooter/>
-          </Cell>
-
         </Cells>
       </Page>
     )
@@ -111,6 +106,7 @@ class Mine extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
+    profile: selectUserInfo(state)
   }
 };
 

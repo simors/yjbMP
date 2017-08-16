@@ -4,10 +4,9 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import {browserHistory} from 'react-router'
 import * as WECHAT_CONFIG from '../../constants/appConfig'
 import WeUI from 'react-weui'
-// var OAuth = require('wechat-oauth');
-// var client = new OAuth(WECHAT_CONFIG.WECHAT_MP_APPID, WECHAT_CONFIG.WECHAT_MP_APPSECRET);
 
 import './bindsuccess.css'
 
@@ -38,45 +37,24 @@ class BindSuccess extends Component {
 
   render() {
     return (
-      <Page>
-        <Flex className="flex" style={{flexDirection: 'column', justifyContent: 'space-around'}}>
-          <FlexItem>
-            <div className="placeholder">weui</div>
-          </FlexItem>
-          <FlexItem>
-            <div className="placeholder">weui</div>
-          </FlexItem>
-          <FlexItem>
-            <div className="placeholder">weui</div>
-          </FlexItem>
-          <FlexItem>
-            <div className="placeholder">weui</div>
-          </FlexItem>
-        </Flex>
+      <Page transition={true} infiniteLoader={true} ptr={false}>
+        <div className="msg">
+          <Msg
+            type="success"
+            title="绑定成功"
+            buttons={[{
+              type: 'primary',
+              label: '返回',
+              onClick: () => {browserHistory.replace('/mine')}
+            }]}
+          />
+        </div>
+        <div className="footer">
+          <img className="logo" src="/airbnb.svg" alt=""/>
+        </div>
       </Page>
     )
   }
-
-  // render() {
-  //   return (
-  //     <Page transition={true} infiniteLoader={true} ptr={false}>
-  //       <div className="msg">
-  //         <Msg
-  //           type="success"
-  //           title="绑定成功"
-  //           buttons={[{
-  //             type: 'primary',
-  //             label: '返回',
-  //             onClick: false
-  //           }]}
-  //         />
-  //       </div>
-  //       <div className="footer">
-  //         <img className="logo" src="/airbnb.svg" alt=""/>
-  //       </div>
-  //     </Page>
-  //   )
-  // }
 }
 
 const mapStateToProps = (state, ownProps) => {
