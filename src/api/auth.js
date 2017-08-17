@@ -5,6 +5,19 @@ import AV from 'leancloud-storage'
 import {APP_NAME} from '../constants/appConfig'
 import {UserInfo} from '../models/authModel'
 
+export function become(payload) {
+  return AV.User.become(payload.token).then((leanUser) => {
+    let userInfo = UserInfo.fromLeancloudObject(leanUser)
+    let token = leanUser.getSessionToken()
+
+    return ({
+      token: token,
+      userInfo: userInfo,
+    })
+  }, (err) => {
+    throw err
+  })
+}
 
 export function fetchWechatInfo(payload) {
   var params = {
@@ -18,7 +31,6 @@ export function fetchWechatInfo(payload) {
   })
 }
 
-
 export function requestLeanSmsCode(payload) {
   let phone = payload.phone
   return AV.Cloud.requestSmsCode({
@@ -31,18 +43,6 @@ export function requestLeanSmsCode(payload) {
     // err.message = ERROR[err.code] ? ERROR[err.code] : ERROR[9999]
     console.log("requestSmsCode error:", err)
     throw err
-  })
-}
-
-export function verifySmsCode(payload) {
-  let smsCode = payload.smsCode
-  let phone = payload.phone
-  return AV.Cloud.verifySmsCode(smsCode, phone).then(function (success) {
-    return true
-  }, function (err) {
-    // err.message = ERROR[err.code] ? ERROR[err.code] : ERROR[9999]
-    console.log("verifySmsCode error:", err)
-    return false
   })
 }
 
@@ -69,7 +69,11 @@ export function register(payload) {
     return authUser.save()
   }).then((leanUser) => {
     let userInfo = UserInfo.fromLeancloudObject(leanUser)
-    return userInfo
+    let token = leanUser.getSessionToken()
+    return({
+      userInfo: userInfo,
+      token: token,
+    })
   }).catch((error) => {
     console.log("register error", error)
 

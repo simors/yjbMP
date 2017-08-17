@@ -5,7 +5,6 @@ import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import WeUI from 'react-weui'
-import {requestWechatUserinfo} from '../../actions/authActions'
 import './mine.css'
 
 const {
@@ -19,26 +18,30 @@ const {
   MediaBoxDescription,
 } = WeUI
 
-class Open extends Component {
+class OpenDevice extends Component {
   constructor(props) {
     super(props)
+    this.state = {
+      deviceid: undefined
+    }
   }
 
   componentWillMount() {
-    var openid = this.props.location.query.openid
-    var code = this.props.location.query.code
-    this.props.requestWechatUserinfo({code: code})
+    var deviceid = this.props.location.query.deviceid
+    this.setState({
+      deviceid: deviceid,
+    })
   }
 
   render() {
     return(
       <Page>
         <div className="container">
-          <img src="/airbnb.svg" alt="" style={{display: `block`, width: `7.5rem`, height: `6.75rem`}}/>
+          <img src="/logo.png" alt="" style={{display: `block`, width: `7.5rem`, height: `6.75rem`}}/>
         </div>
-        <Panel>
+        <Panel style={{borderStyle: `solid`, borderWidth: 1, borderColor: `red`, marginTop: 0}}>
           <PanelHeader>
-            设备编号：2323425422
+            {'设备编号：' + this.state.deviceid}
           </PanelHeader>
           <PanelBody>
             <MediaBox type="text">
@@ -55,7 +58,6 @@ class Open extends Component {
             </MediaBox>
 
           </PanelBody>
-
         </Panel>
         <div className="button">
           <Button>开门</Button>
@@ -73,7 +75,6 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
-  requestWechatUserinfo,
 }, dispatch)
 
-export default connect(mapStateToProps, mapDispatchToProps)(Open)
+export default connect(mapStateToProps, mapDispatchToProps)(OpenDevice)

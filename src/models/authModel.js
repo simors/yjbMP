@@ -48,6 +48,8 @@ export class UserInfo extends UserInfoRecord {
 }
 
 export const AuthRecord = Record({
+  activeUser: undefined,
+  token: undefined,
   wechatUserInfo: undefined,
   profile: UserInfoRecord(),
 }, "AuthRecord")

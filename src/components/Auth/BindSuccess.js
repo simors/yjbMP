@@ -50,7 +50,7 @@ class BindSuccess extends Component {
           />
         </div>
         <div className="footer">
-          <img className="logo" src="/airbnb.svg" alt=""/>
+          <img className="logo" src="/logo_gray.png" alt=""/>
         </div>
       </Page>
     )

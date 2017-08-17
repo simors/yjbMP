@@ -5,6 +5,7 @@ import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import {browserHistory} from 'react-router'
+import {requestWechatUserinfo} from '../../actions/authActions'
 import {selectUserInfo} from '../../selector/authSelector'
 import WeUI from 'react-weui'
 import './mine.css'
@@ -33,8 +34,12 @@ class Mine extends Component {
     document.title = "个人中心"
   }
 
+  componentWillMount() {
+    var code = this.props.location.query.code
+    this.props.requestWechatUserinfo({code: code})
+  }
+
   render() {
-    console.log("state profile:", this.props.profile)
     return (
       <Page ptr={false} style={{backgroundColor: `#EFEFF4`}}>
         <div className="container">
@@ -54,8 +59,8 @@ class Mine extends Component {
               修改资料
             </CellFooter>
           </Cell>
-
         </Cells>
+
         <Cells>
           <Cell access>
             <CellHeader>
@@ -100,8 +105,6 @@ class Mine extends Component {
       </Page>
     )
   }
-
-
 }
 
 const mapStateToProps = (state, ownProps) => {
@@ -111,6 +114,7 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
+  requestWechatUserinfo,
 }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(Mine)
