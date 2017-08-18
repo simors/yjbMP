@@ -4,14 +4,21 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import {requestDomain} from '../../actions/configActions'
-import {selectDomain} from '../../selector/configSelector'
 import WeUI from 'react-weui'
 
 import 'weui'
-// import 'react-weui/lib/react-weui.min.css'
 
-const {Button} = WeUI
+const {
+  Button,
+  Panel,
+  Page,
+  PanelHeader,
+  PanelBody,
+  MediaBox,
+  MediaBoxTitle,
+  MediaBoxDescription,
+} = WeUI
+
 
 class About extends Component {
   constructor(props) {
@@ -19,33 +26,24 @@ class About extends Component {
   }
 
   componentDidMount() {
-    document.title = "绑定手机"
-  }
-
-  getDomain = () => {
-    this.props.requestDomain({times: 1})
+    document.title = "衣家宝"
   }
 
   render() {
     return (
-      <div>
-        <Button onClick={this.getDomain}>获取域名</Button>
-        <div>
-          {this.props.domain ? this.props.domain : ""}
-        </div>
-      </div>
+      <Page>
+
+      </Page>
     )
   }
 }
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    domain: selectDomain(state)
   }
 };
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
-  requestDomain,
 }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(About)

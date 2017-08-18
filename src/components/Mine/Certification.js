@@ -24,6 +24,7 @@ const {
   Form,
   FormCell,
   CellHeader,
+  CellsTitle,
   Label,
   Input
 } = WeUI
@@ -40,7 +41,28 @@ class Certification extends Component {
   render() {
     return(
       <Page>
-
+        <CellsTitle>请输入您本人的真实信息。</CellsTitle>
+        <Form>
+          <FormCell>
+            <CellHeader>
+              <Label>真实姓名</Label>
+            </CellHeader>
+            <CellBody>
+              <Input type="text" placeholder="请输入"/>
+            </CellBody>
+          </FormCell>
+          <FormCell>
+            <CellHeader>
+              <Label>身份证号</Label>
+            </CellHeader>
+            <CellBody>
+              <Input type="text" placeholder="请输入"/>
+            </CellBody>
+          </FormCell>
+        </Form>
+        <div className="button">
+          <Button onClick={() => {}}>提交</Button>
+        </div>
       </Page>
     )
   }

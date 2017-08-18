@@ -1,5 +1,5 @@
 /**
- * Created by wanpeng on 2017/8/16.
+ * Created by wanpeng on 2017/8/18.
  */
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
@@ -18,22 +18,15 @@ const {
   MediaBoxDescription,
 } = WeUI
 
-class Wallet extends Component {
+class Recharge extends Component {
   constructor(props) {
     super(props)
   }
 
   componentDidMount() {
-    document.title = "消费明细"
+    document.title = "充值"
   }
 
-  render() {
-    return(
-      <Page>
-
-      </Page>
-    )
-  }
 }
 
 const mapStateToProps = (state, ownProps) => {
@@ -45,4 +38,4 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => bindActionCreators({
 }, dispatch)
 
-export default connect(mapStateToProps, mapDispatchToProps)(Wallet)
+export default connect(mapStateToProps, mapDispatchToProps)(Recharge)

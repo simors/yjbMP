@@ -15,6 +15,7 @@ export function selectUserInfo(state) {
 export function isUserLogined(state) {
   let AUTH = state.AUTH
   let activeUser = AUTH.activeUser
+  console.log("activeUser", activeUser)
   return activeUser ? true : false
 }
 

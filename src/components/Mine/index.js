@@ -35,8 +35,7 @@ class Mine extends Component {
   }
 
   componentWillMount() {
-    var code = this.props.location.query.code
-    this.props.requestWechatUserinfo({code: code})
+
   }
 
   render() {
@@ -47,7 +46,7 @@ class Mine extends Component {
         </div>
 
         <Cells style={{marginTop: 0}}>
-          <Cell access onClick={() => {browserHistory.push('/modifyProfile')}}>
+          <Cell href="/modifyProfile" access>
             <CellHeader>
               <img src={this.props.profile.avatar || '/defaultAvatar.svg'} alt="" style={{display: `block`, width: `3.13rem`, marginRight: `0.63rem`}}/>
             </CellHeader>
@@ -62,9 +61,9 @@ class Mine extends Component {
         </Cells>
 
         <Cells>
-          <Cell access>
+          <Cell href="mine/score" access>
             <CellHeader>
-              <img src="/integration.png" alt="" style={{display: `block`, width: `1.3rem`, marginRight: `1.1rem`}}/>
+              <img src="/score.png" alt="" style={{display: `block`, width: `1.3rem`, marginRight: `1.1rem`}}/>
             </CellHeader>
             <CellBody>
               积分
@@ -80,7 +79,7 @@ class Mine extends Component {
             </CellBody>
             <CellFooter/>
           </Cell>
-          <Cell access>
+          <Cell href="mine/orders" access>
             <CellHeader>
               <img src="/order.png" alt="" style={{display: `block`, width: `1.3rem`, marginRight: `1.1rem`}}/>
             </CellHeader>
@@ -92,7 +91,7 @@ class Mine extends Component {
         </Cells>
 
         <Cells>
-          <Cell access>
+          <Cell href="/about" access>
             <CellHeader>
               <img src="/about_us.png" alt="" style={{display: `block`, width: `1.3rem`, marginRight: `1.1rem`}}/>
             </CellHeader>
@@ -114,7 +113,6 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
-  requestWechatUserinfo,
 }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(Mine)

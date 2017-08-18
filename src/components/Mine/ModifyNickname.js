@@ -42,12 +42,12 @@ class ModifyNickname extends Component {
               <Label>昵称</Label>
             </CellHeader>
             <CellBody>
-              <Input type="text" placeholder=""/>
+              <Input type="text" placeholder="请输入"/>
             </CellBody>
           </FormCell>
         </Form>
         <div className="button">
-          <Button onClick={() => {}}>保存</Button>
+          <Button onClick={() => {}}>提交</Button>
         </div>
       </Page>
     )

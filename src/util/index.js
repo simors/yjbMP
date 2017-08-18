@@ -3,7 +3,10 @@
  */
 import querystring from 'querystring'
 import URL from  'url'
+import {store} from '../store/persistStore'
+import {selectToken, isUserLogined} from '../selector/authSelector'
 
+const state = store.getState()
 
 function getAuthorizeURL(redirect, state, scope) {
   var url = 'https://open.weixin.qq.com/connect/oauth2/authorize';
@@ -26,5 +29,21 @@ export function wechatOauth(nextState, replace, next) {
     next()
   } else {
     document.location = redirectUrl
+  }
+}
+
+export function oauth(nextState, replace, next) {
+  console.log("是否已登录", isUserLogined(state))
+  if(isUserLogined(state)) {
+    next()
+  } else {
+    var redirectUrl = getAuthorizeURL(document.location.href, '', 'snsapi_userinfo')
+    var urlObj = URL.parse(document.location.href)
+    const {code} = querystring.parse(urlObj.query)
+    if(code) {
+      next()
+    } else {
+      document.location = redirectUrl
+    }
   }
 }

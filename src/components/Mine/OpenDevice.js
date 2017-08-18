@@ -39,7 +39,7 @@ class OpenDevice extends Component {
         <div className="container">
           <img src="/logo.png" alt="" style={{display: `block`, width: `7.5rem`, height: `6.75rem`}}/>
         </div>
-        <Panel style={{borderStyle: `solid`, borderWidth: 1, borderColor: `red`, marginTop: 0}}>
+        <Panel style={{marginTop: `0`}}>
           <PanelHeader>
             {'设备编号：' + this.state.deviceid}
           </PanelHeader>
@@ -54,6 +54,13 @@ class OpenDevice extends Component {
               <MediaBoxTitle>2元/小时</MediaBoxTitle>
               <MediaBoxDescription>
                 计费标准
+              </MediaBoxDescription>
+            </MediaBox>
+            <Button type="warn">获得运气红包 1 元，轻触领取</Button>
+            <MediaBox type="text">
+              <MediaBoxTitle>请您将衣物预先脱水甩干后再放入干衣柜</MediaBoxTitle>
+              <MediaBoxDescription>
+                衣柜中有湿度探测器，在您的衣物烘干后会通过微信提醒您，届时请您及时收取衣物。
               </MediaBoxDescription>
             </MediaBox>
 

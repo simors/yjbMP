@@ -46,7 +46,9 @@ class Auth extends Component {
 
   componentWillMount() {
     var code = this.props.location.query.code
-    this.props.requestWechatUserinfo({code: code})
+    if(code) {
+      this.props.requestWechatUserinfo({code: code})
+    }
   }
 
   getSmsCode = () => {
@@ -173,7 +175,12 @@ class Auth extends Component {
       smsCode: this.state.smsCode,
       wechatUserInfo: this.props.wechatUserInfo,
       success: () => {
-        browserHistory.replace('/auth/success')
+        let deviceid = this.props.location.query.deviceid
+        if(deviceid) {
+          browserHistory.replace('/openDevice?deviceid=' + deviceid)
+        } else {
+          browserHistory.replace('/auth/success')
+        }
       },
       error: (error) => {
         this.setState({
