@@ -1,0 +1,38 @@
+.banner {
+  height: 8.1rem;
+  background: url("/banner_recharge.png");
+  background-size: 100% 100%;
+}
+
+.amountButton {
+  font-size: 0.9rem;
+  color: #737373;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #737373;}
+
+.button-area {
+  padding-top: 2.0rem;
+}
+
+.trip {
+  padding-top: 6.8rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.tripTitle {
+  font-size: 1.3rem;
+}
+
+.tripDesc {
+  font-size: 0.9rem;
+}
+
+.rechargeButton {
+  margin-top: 1.3rem;
+  padding-left: 1.3rem;
+  padding-right: 1.3rem;
+}

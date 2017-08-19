@@ -1,0 +1,65 @@
+.walletcontainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  height: 26.9rem;
+  background: url("/bg_wallet.png");
+  background-size: auto;
+}
+
+.amount {
+  font-size: 3rem;
+  color: #ffffff;
+  margin-top: 2.3rem;
+}
+
+.amountTrip {
+  font-size: 1.3rem;
+  color: #ffffff;
+  margin-top: 0.6rem;
+}
+
+.buttons-area {
+  padding-top: 4.6rem;
+  width: 11.3rem;
+}
+
+.detailsButton {
+  color: #ffffff;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #ffffff;
+}
+
+.rechargeButton {
+  margin-top: 1.3rem;
+  color: #ffffff;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #ffffff;
+}
+
+.deposit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 4.5rem;
+}
+
+.depositTrip {
+  font-size: 1.1rem;
+  color: #000000;
+}
+
+.depositButton-area {
+  padding-top: 0.9rem;
+  width: 11.3rem;
+}
+
+.depositButton {
+  color: #000000;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #000000;
+}

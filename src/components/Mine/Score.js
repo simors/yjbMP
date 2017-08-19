@@ -5,7 +5,7 @@ import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import WeUI from 'react-weui'
-import './mine.css'
+import './score.css'
 
 const {
   Button,
@@ -30,7 +30,10 @@ class Score extends Component {
   render() {
     return(
       <Page>
-
+        <div className="background">
+          <text className="score">3934</text>
+          <text className="scoreTrip">当前积分</text>
+        </div>
       </Page>
     )
   }

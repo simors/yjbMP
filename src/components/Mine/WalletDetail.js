@@ -24,7 +24,7 @@ class WalletDetail extends Component {
   }
 
   componentDidMount() {
-    document.title = "钱包"
+    document.title = "消费明细"
   }
 
   render() {
