@@ -10,8 +10,8 @@ const initialState = AuthRecord()
 
 export default function authReducer(state = initialState, action) {
   switch (action.type) {
-    case authActionTypes.FETCH_WECHAT_USERINFO_SCCESS:
-      return handleSaveWechatUserInfo(state, action)
+    case authActionTypes.FETCH_USERINFO_SCCESS:
+      // return handleSaveWecUserInfo(state, action)
     case authActionTypes.REGISTER_SUCCESS:
       return handleSaveUserInfo(state, action)
     case authActionTypes.LOGIN_SUCCESS:
@@ -24,12 +24,12 @@ export default function authReducer(state = initialState, action) {
       return state
   }
 }
-
-function handleSaveWechatUserInfo(state, action) {
-  let wechatUserInfo = action.payload.userInfo
-  state = state.set('wechatUserInfo', wechatUserInfo)
-  return state
-}
+//
+// function handleSaveWechatUserInfo(state, action) {
+//   let wechatUserInfo = action.payload.userInfo
+//   state = state.set('wechatUserInfo', wechatUserInfo)
+//   return state
+// }
 
 function handleSaveUserInfo(state, action) {
   let payload = action.payload
@@ -49,6 +49,7 @@ function handleLoginOut(state, action) {
 }
 
 function onRehydrate(state, action) {
+
   var incoming = action.payload.AUTH
   if (!incoming) return state
 

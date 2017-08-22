@@ -5,7 +5,7 @@ import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import {browserHistory} from 'react-router'
-import {requestWechatUserinfo} from '../../actions/authActions'
+import {requestUserinfo} from '../../actions/authActions'
 import {selectUserInfo} from '../../selector/authSelector'
 import WeUI from 'react-weui'
 import './mine.css'
@@ -46,7 +46,7 @@ class Mine extends Component {
         </div>
 
         <Cells style={{marginTop: 0}}>
-          <Cell href="/modifyProfile" access>
+          <Cell access onClick={() => {browserHistory.replace('/modifyProfile')}}>
             <CellHeader>
               <img src={this.props.profile.avatar || '/defaultAvatar.svg'} alt="" style={{display: `block`, width: `3.13rem`, marginRight: `0.63rem`}}/>
             </CellHeader>
@@ -61,7 +61,7 @@ class Mine extends Component {
         </Cells>
 
         <Cells>
-          <Cell href="mine/score" access>
+          <Cell access onClick={() => {browserHistory.push('/mine/score')}}>
             <CellHeader>
               <img src="/score.png" alt="" style={{display: `block`, width: `1.3rem`, marginRight: `1.1rem`}}/>
             </CellHeader>
@@ -70,7 +70,7 @@ class Mine extends Component {
             </CellBody>
             <CellFooter/>
           </Cell>
-          <Cell href="/mine/wallet" access>
+          <Cell access onClick={() => {browserHistory.push('/mine/wallet')}}>
             <CellHeader>
               <img src="/wallet.png" alt="" style={{display: `block`, width: `1.3rem`, marginRight: `1.1rem`}}/>
             </CellHeader>
@@ -79,7 +79,7 @@ class Mine extends Component {
             </CellBody>
             <CellFooter/>
           </Cell>
-          <Cell href="mine/orders" access>
+          <Cell access onClick={() => {browserHistory.push('/mine/orders')}}>
             <CellHeader>
               <img src="/order.png" alt="" style={{display: `block`, width: `1.3rem`, marginRight: `1.1rem`}}/>
             </CellHeader>
@@ -91,7 +91,7 @@ class Mine extends Component {
         </Cells>
 
         <Cells>
-          <Cell href="/about" access>
+          <Cell access onClick={() => {browserHistory.push('/about')}}>
             <CellHeader>
               <img src="/about_us.png" alt="" style={{display: `block`, width: `1.3rem`, marginRight: `1.1rem`}}/>
             </CellHeader>

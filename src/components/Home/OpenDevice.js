@@ -5,7 +5,7 @@ import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import WeUI from 'react-weui'
-import './mine.css'
+import '../Mine/mine.css'
 
 const {
   Button,

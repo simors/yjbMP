@@ -4,9 +4,8 @@
 import querystring from 'querystring'
 import URL from  'url'
 import {store} from '../store/persistStore'
-import {selectToken, isUserLogined} from '../selector/authSelector'
+import {isUserLogined} from '../selector/authSelector'
 
-const state = store.getState()
 
 function getAuthorizeURL(redirect, state, scope) {
   var url = 'https://open.weixin.qq.com/connect/oauth2/authorize';
@@ -21,29 +20,26 @@ function getAuthorizeURL(redirect, state, scope) {
   return url + '?' + querystring.stringify(info) + '#wechat_redirect';
 }
 
-export function wechatOauth(nextState, replace, next) {
-  var redirectUrl = getAuthorizeURL(document.location.href, '', 'snsapi_userinfo')
+
+export function wechatOauth(nextState, replace) {
   var urlObj = URL.parse(document.location.href)
   const {code} = querystring.parse(urlObj.query)
-  if(code) {
-    next()
-  } else {
+  if(!code) {
+    var state = nextState.location.state
+    var nextPathname = state.nextPathname
+    var redirectUrl = getAuthorizeURL(document.location.href, nextPathname, 'snsapi_userinfo')
     document.location = redirectUrl
   }
 }
 
-export function oauth(nextState, replace, next) {
-  console.log("是否已登录", isUserLogined(state))
-  if(isUserLogined(state)) {
-    next()
-  } else {
-    var redirectUrl = getAuthorizeURL(document.location.href, '', 'snsapi_userinfo')
-    var urlObj = URL.parse(document.location.href)
-    const {code} = querystring.parse(urlObj.query)
-    if(code) {
-      next()
-    } else {
-      document.location = redirectUrl
-    }
+export function oauth(nextState, replace) {
+  var state = store.getState()
+  let authInfo = localStorage.getItem('reduxPersist:AUTH')
+  let activeUser = authInfo? JSON.parse(authInfo).activeUser : undefined
+  if(!activeUser && !isUserLogined(state)) {
+    replace({
+      pathname: '/bind',
+      state: { nextPathname: nextState.location.pathname }
+    })
   }
 }

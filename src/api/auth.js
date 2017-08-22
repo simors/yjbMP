@@ -19,11 +19,11 @@ export function become(payload) {
   })
 }
 
-export function fetchWechatInfo(payload) {
+export function fetchUserInfo(payload) {
   var params = {
     code: payload.code
   }
-  return AV.Cloud.run('authFetchWechatUserInfo', params).then((userInfo) => {
+  return AV.Cloud.run('authFetchUserInfo', params).then((userInfo) => {
     return userInfo
   }).catch((error) => {
     console.log("获取微信用户信息失败：", error)
@@ -76,6 +76,30 @@ export function register(payload) {
     })
   }).catch((error) => {
     console.log("register error", error)
+
+    throw error
+  })
+}
+
+export function login(payload) {
+  console.log("login", payload)
+
+  let authData = {
+    "openid": payload.openid,
+    "access_token": payload.accessToken,
+    "expires_at": Date.parse(payload.expires_in),
+  }
+  let platform = 'weixin'
+
+  return AV.User.signUpOrlogInWithAuthData(authData, platform).then((leanUser) => {
+    let userInfo = UserInfo.fromLeancloudObject(leanUser)
+    let token = leanUser.getSessionToken()
+    return({
+      userInfo: userInfo,
+      token: token,
+    })
+  }).catch((error) => {
+    console.log("login error", error)
 
     throw error
   })

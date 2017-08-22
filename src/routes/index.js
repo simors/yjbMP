@@ -9,7 +9,7 @@ import About from '../components/About'
 import Auth from '../components/Auth'
 import BindSuccess from '../components/Auth/BindSuccess'
 import Mine from '../components/Mine'
-import OpenDevice from '../components/Mine/OpenDevice'
+import OpenDevice from '../components/Home/OpenDevice'
 import ModifyProfile from '../components/Mine/ModifyProfile'
 import ModifyNickname from '../components/Mine/ModifyNickname'
 import Wallet from '../components/Mine/Wallet'
@@ -18,6 +18,7 @@ import Recharge from '../components/Mine/Recharge'
 import Score from '../components/Mine/Score'
 import WalletDetail from '../components/Mine/WalletDetail'
 import Orders from '../components/Mine/Orders'
+import Bind from '../components/Auth/Bind'
 
 
 const routes = (
@@ -26,13 +27,11 @@ const routes = (
   </Route>
 )
 
-
-
-
 const rootRouter = (
   <Router history={browserHistory}>
     {routes}
-    <Route path='auth' component={Auth} onEnter={wechatOauth}/>
+    <Route path='bind' component={Bind} onEnter={wechatOauth}/>
+    <Route path='auth' component={Auth}/>
     <Route path='auth/success' component={BindSuccess}/>
     <Route path='mine' component={Mine} onEnter={oauth}/>
     <Route path='mine/wallet' component={Wallet}/>
