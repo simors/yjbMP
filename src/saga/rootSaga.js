@@ -4,10 +4,12 @@
 import { all } from 'redux-saga/effects'
 import {configSaga} from './configSaga'
 import {authSaga} from  './authSaga'
+import {deviceSaga} from './deviceSaga'
 
 export default function* rootSaga() {
   yield all([
     ...configSaga,
     ...authSaga,
+    ...deviceSaga,
   ])
 }

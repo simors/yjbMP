@@ -7,6 +7,8 @@ import { bindActionCreators } from 'redux'
 import {browserHistory} from 'react-router'
 import * as WECHAT_CONFIG from '../../constants/appConfig'
 import WeUI from 'react-weui'
+import 'weui'
+import 'react-weui/build/dist/react-weui.css'
 
 import './bindsuccess.css'
 

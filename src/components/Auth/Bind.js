@@ -8,6 +8,8 @@ import {browserHistory} from 'react-router'
 import {requestUserinfo, requestSmsCode, submitRegister} from '../../actions/authActions'
 import {selectWechatUserInfo} from '../../selector/authSelector'
 import WeUI from 'react-weui'
+import 'weui'
+import 'react-weui/build/dist/react-weui.css'
 import './auth.css'
 
 const {
@@ -47,7 +49,7 @@ class Bind extends Component {
   }
 
   requestUserinfoSuccessCallback = (userInfo) => {
-    let nextPathname = this.props.location.query.state
+    let nextPathname = this.props.location.query.state || '/mine'
 
     var isBind = userInfo.isBind
     if(isBind) {
@@ -200,7 +202,7 @@ class Bind extends Component {
         if(deviceid) {
           browserHistory.replace('/openDevice?deviceid=' + deviceid)
         } else {
-          browserHistory.replace('/auth/success')
+          browserHistory.replace('/bind/success')
         }
       },
       error: (error) => {

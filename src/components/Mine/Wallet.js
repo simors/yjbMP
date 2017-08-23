@@ -6,6 +6,8 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import {browserHistory} from 'react-router'
 import WeUI from 'react-weui'
+import 'weui'
+import 'react-weui/build/dist/react-weui.css'
 import './wallet.css'
 
 const {
@@ -36,8 +38,8 @@ class Wallet extends Component {
           <text className="amountTrip">当前余额</text>
 
           <div className="buttons-area">
-            <Button type='primary' plain className="detailsButton">明细</Button>
-            <Button type='primary' plain className="rechargeButton" onClick={() => {browserHistory.replace('/mine/wallet/recharge')}}>充值</Button>
+            <Button type='primary' plain className="detailsButton" onClick={() => {browserHistory.push('/mine/wallet/walletDetail')}}>明细</Button>
+            <Button type='primary' plain className="rechargeButton" onClick={() => {browserHistory.push('/mine/wallet/recharge')}}>充值</Button>
           </div>
         </div>
         <div className="deposit">

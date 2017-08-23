@@ -7,6 +7,8 @@ import { bindActionCreators } from 'redux'
 import {browserHistory} from 'react-router'
 
 import WeUI from 'react-weui'
+import 'weui'
+import 'react-weui/build/dist/react-weui.css'
 
 const {
   Cell,

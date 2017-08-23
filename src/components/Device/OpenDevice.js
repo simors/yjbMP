@@ -4,7 +4,10 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import {requestDeviceInfo} from '../../actions/deviceActions'
 import WeUI from 'react-weui'
+import 'weui'
+import 'react-weui/build/dist/react-weui.css'
 import '../Mine/mine.css'
 
 const {
@@ -28,6 +31,9 @@ class OpenDevice extends Component {
 
   componentWillMount() {
     var deviceid = this.props.location.query.deviceid
+    this.props.requestDeviceInfo({
+      deviceid: deviceid,
+    })
     this.setState({
       deviceid: deviceid,
     })
@@ -35,7 +41,7 @@ class OpenDevice extends Component {
 
   render() {
     return(
-      <Page>
+      <Page ptr={false}>
         <div className="container">
           <img src="/logo.png" alt="" style={{display: `block`, width: `7.5rem`, height: `6.75rem`}}/>
         </div>
@@ -82,6 +88,7 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
+  requestDeviceInfo
 }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(OpenDevice)

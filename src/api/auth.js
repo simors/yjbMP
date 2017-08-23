@@ -82,8 +82,6 @@ export function register(payload) {
 }
 
 export function login(payload) {
-  console.log("login", payload)
-
   let authData = {
     "openid": payload.openid,
     "access_token": payload.accessToken,

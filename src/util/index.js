@@ -26,7 +26,7 @@ export function wechatOauth(nextState, replace) {
   const {code} = querystring.parse(urlObj.query)
   if(!code) {
     var state = nextState.location.state
-    var nextPathname = state.nextPathname
+    var nextPathname = state? state.nextPathname : ''
     var redirectUrl = getAuthorizeURL(document.location.href, nextPathname, 'snsapi_userinfo')
     document.location = redirectUrl
   }

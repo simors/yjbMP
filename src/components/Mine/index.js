@@ -8,6 +8,8 @@ import {browserHistory} from 'react-router'
 import {requestUserinfo} from '../../actions/authActions'
 import {selectUserInfo} from '../../selector/authSelector'
 import WeUI from 'react-weui'
+import 'weui'
+import 'react-weui/build/dist/react-weui.css'
 import './mine.css'
 
 const {
@@ -46,7 +48,7 @@ class Mine extends Component {
         </div>
 
         <Cells style={{marginTop: 0}}>
-          <Cell access onClick={() => {browserHistory.replace('/modifyProfile')}}>
+          <Cell access onClick={() => {browserHistory.push('/modifyProfile')}}>
             <CellHeader>
               <img src={this.props.profile.avatar || '/defaultAvatar.svg'} alt="" style={{display: `block`, width: `3.13rem`, marginRight: `0.63rem`}}/>
             </CellHeader>

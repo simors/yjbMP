@@ -5,8 +5,8 @@ import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import WeUI from 'react-weui'
-
 import 'weui'
+import 'react-weui/build/dist/react-weui.css'
 
 const {
   Button,

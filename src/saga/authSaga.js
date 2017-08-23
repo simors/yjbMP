@@ -19,12 +19,6 @@ export function* fetchUserinfoAction(action) {
         accessToken: userInfo.accessToken,
         expires_in: userInfo.expires_in
       }
-      // let loginResult = yield call(login, loginPayload)
-      // let token = loginResult.token
-      // let userInfo = loginResult.userInfo
-      // yield put(loginSuccess({token: token, userInfo: userInfo}))
-      console.log("fetchUserInfo loginPayload", loginPayload)
-
       yield call(wechatLogin, {payload: loginPayload})
     }
     if(payload.success) {
@@ -77,7 +71,6 @@ export function* submitRegister(action) {
 //自动登录
 export function* autoLogin(action) {
   let payload = action.payload
-  console.log("autoLogin payload", payload)
   try {
     let result = yield call(become, payload)
     let token = result.token
@@ -94,7 +87,6 @@ export function* autoLogin(action) {
 //微信登录
 export function* wechatLogin(action) {
   let payload = action.payload
-  console.log("autoLogin payload", payload)
 
   try {
     let result = yield call(login, payload)

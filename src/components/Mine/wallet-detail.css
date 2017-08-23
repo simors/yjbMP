@@ -1,0 +1,27 @@
+.record {
+  display: flex;
+}
+
+.record-header {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.record-content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.content-primary {
+  font-size: 1.1rem;
+  color: #000000;
+}
+
+.content-trip {
+  font-size: 0.9rem;
+  color: #888888;
+}
