@@ -221,7 +221,6 @@ class Bind extends Component {
   }
 
   render() {
-    console.log("wechatUserInfo", this.state.wechatUserInfo)
     return (
       <Page ptr={false}>
         <div className="header">
@@ -250,7 +249,13 @@ class Bind extends Component {
                 <Input name="smsCode" type="number" placeholder="请输入验证码" onChange={this.handleInputChange}/>
               </CellBody>
               <CellFooter>
-                <Button type="vcode" disabled={this.state.smsCodeDisable} onClick={this.getSmsCode}>{this.state.smsCodeTrip}</Button>
+                <Button
+                  type="vcode"
+                  disabled={this.state.smsCodeDisable}
+                  onClick={this.getSmsCode}
+                  style={this.state.smsCodeDisable? {} : {color: `#00C203`}}>
+                  {this.state.smsCodeTrip}
+                </Button>
               </CellFooter>
             </FormCell>
           </Form>

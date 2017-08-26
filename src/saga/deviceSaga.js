@@ -3,8 +3,9 @@
  */
 import { call, put, takeEvery } from 'redux-saga/effects'
 import {fetchDeviceInfo} from '../api/device'
-import {} from '../actions/deviceActions'
+import {requestDeviceInfoSuccess} from '../actions/deviceActions'
 import * as deviceActiontypes from '../constants/deviceActiontypes'
+import {DeviceInfo} from '../models/deviceModel'
 
 //获取设备信息
 export function* fetchDeviceInfoAction(action) {
@@ -12,6 +13,10 @@ export function* fetchDeviceInfoAction(action) {
 
   try {
     let deviceInfo = yield call(fetchDeviceInfo, payload)
+
+    console.log("deviceInfo:", deviceInfo)
+    var deviceRecord = DeviceInfo.fromLeancloudApi(deviceInfo)
+    yield put(requestDeviceInfoSuccess({deviceRecord}))
     if(payload.success) {
       payload.success()
     }

@@ -1,0 +1,14 @@
+.device-banner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 11.69rem;
+  background: url("/bg_mine.png");
+  background-size:100% 100%;
+}
+
+.device-button {
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+  margin-bottom: 0.9rem;
+}

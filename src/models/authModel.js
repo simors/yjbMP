@@ -16,7 +16,7 @@ export const UserInfoRecord = Record({
   city: undefined,
   createdAt: undefined,
   updatedAt: undefined,
-
+  balance: undefined,
 
 }, 'UserInfoRecord')
 

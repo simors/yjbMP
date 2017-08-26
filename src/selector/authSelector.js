@@ -9,7 +9,7 @@ export function selectWechatUserInfo(state) {
 
 export function selectUserInfo(state) {
   let AUTH = state.AUTH
-  return AUTH.profile.toJSON()
+  return AUTH.profile.toJS()
 }
 
 export function isUserLogined(state) {

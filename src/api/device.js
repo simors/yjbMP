@@ -12,6 +12,7 @@ export function fetchDeviceInfo(payload) {
   }
 
   return AV.Cloud.run('deviceFetchDeviceInfo', params).then((deviceInfo) => {
+    console.log("deviceFetchDeviceInfo result", deviceInfo)
     return deviceInfo
   }).catch((error) => {
     console.log("获取设备信息失败：", error)
