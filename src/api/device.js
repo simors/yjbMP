@@ -4,7 +4,7 @@
 import AV from 'leancloud-storage'
 import {APP_NAME} from '../constants/appConfig'
 import {UserInfo} from '../models/authModel'
-import { } from '../models/deviceModel'
+
 
 export function fetchDeviceInfo(payload) {
   var params = {

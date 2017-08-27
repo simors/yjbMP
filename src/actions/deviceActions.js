@@ -5,4 +5,6 @@ import {createAction} from 'redux-actions'
 import * as deviceActiontypes from '../constants/deviceActiontypes'
 
 export const requestDeviceInfo = createAction(deviceActiontypes.FETCH_DEVICEINFO)
-export const requestDeviceInfoSuccess = createAction(deviceActiontypes.FETCH_DEVICEINFO_SUCCESS)
+export const getDeviceInfoSuccess = createAction(deviceActiontypes.FETCH_DEVICEINFO_SUCCESS)
+
+export const requestOpenDevice = createAction(deviceActiontypes.OPEN_DEVICE)

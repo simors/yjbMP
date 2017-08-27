@@ -11,6 +11,9 @@ import WeUI from 'react-weui'
 import 'weui'
 import 'react-weui/build/dist/react-weui.css'
 import './device.css'
+import io from 'socket.io-client'
+
+const socket = io('http://localhost:3000')
 
 const {
   Button,
@@ -31,6 +34,7 @@ class OpenDevice extends Component {
     this.state = {
       deviceid: undefined,
       buttonTitle: undefined,
+      loading: false,
     }
   }
 
@@ -47,7 +51,7 @@ class OpenDevice extends Component {
   renderDeviceStatus() {
     if(this.props.userInfo.balance < 0) { //欠费
       return(
-        <PanelBody style={{height: `22rem`}}>
+        <PanelBody style={{borderBottomWidth: `0`}}>
           <Msg
             type="warn"
             title="您尚有未支付的订单"
@@ -55,9 +59,9 @@ class OpenDevice extends Component {
           />
         </PanelBody>
       )
-    } else if(this.props.deviceInfo === 0) { //空闲
+    } else if(this.props.deviceInfo.status === 0) { //空闲
       return(
-        <PanelBody>
+        <PanelBody style={{borderBottomWidth: `0`}}>
           <MediaBox type="text">
             <MediaBoxTitle>13号柜门可使用</MediaBoxTitle>
             <MediaBoxDescription>
@@ -80,9 +84,9 @@ class OpenDevice extends Component {
 
         </PanelBody>
       )
-    } else if(this.props.deviceInfo === 1) {  //使用中
+    } else if(this.props.deviceInfo.status === 1) {  //使用中
       return(
-        <PanelBody style={{height: `22rem`}}>
+        <PanelBody style={{borderBottomWidth: `0`}}>
           <Msg
             type="warn"
             title="该柜正在被使用，无法为您提供服务"
@@ -90,18 +94,86 @@ class OpenDevice extends Component {
           />
         </PanelBody>
       )
-    } else if(this.props.deviceInfo === 2) {  //下线
+    } else if(this.props.deviceInfo.status === 2) {  //下线
       return(
-        <PanelBody>
-
+        <PanelBody style={{borderBottomWidth: `0`}}>
+          <Msg
+            type="info"
+            title="设备故障"
+            description="请尝试扫码其他柜门"
+          />
         </PanelBody>
       )
     } else {
       return(
-        <PanelBody style={{height: `22rem`}}>
+        <PanelBody style={{borderWidth: `0`}}>
           <LoadMore loading>加载中</LoadMore>
         </PanelBody>
       )
+    }
+  }
+
+  getButtonTitle() {
+    if(this.state.loading) {
+      return(
+        <LoadMore className="device-loadmore" loading/>
+      )
+    } else if(this.props.userInfo.balance < 0) { //欠费
+      return "去支付"
+    } else if(this.props.deviceInfo.status === 0) { //空闲
+      return "开门"
+    } else if(this.props.deviceInfo.status === 1) {  //使用中
+      return "扫一扫"
+    } else if(this.props.deviceInfo.status === 2) {  //下线
+      return "扫一扫"
+    } else {
+      return "扫一扫"
+    }
+  }
+
+  onPress = () => {
+    var that = this
+    if(this.props.userInfo.balance < 0) { //欠费
+
+    } else if(this.props.deviceInfo.status === 0) { //空闲
+      that.setState({
+        loading: true
+      })
+      //发送开机请求
+      socket.emit('turn_on_device', {
+        deviceId: this.props.deviceInfo.deviceid,
+        userId: this.props.userInfo.id,
+      }, function (data) {
+        console.log("socket.emit", data)
+        var errorCode = data.errorCode
+        if(errorCode != 0) {
+          that.setState({
+            loading: false
+          })
+          console.log("开机请求失败", data.errorMessage)
+          //TODO 提示开机请求失败原因
+        }
+      })
+
+      //监听开机成功消息
+      socket.on('turn_on_device_success', function (data) {
+        console.log("收到开机成功消息", data)
+        that.setState({
+          loading: false
+        })
+      })
+
+      //监听开机失败消息
+      socket.on('turn_on_device_failed', function (data) {
+        console.log("收到开机失败消息", data)
+        that.setState({
+          loading: false
+        })
+
+      })
+    } else if(this.props.deviceInfo.status === 1) {  //使用中
+    } else if(this.props.deviceInfo.status === 2) {  //下线
+    } else {
     }
   }
 
@@ -115,13 +187,10 @@ class OpenDevice extends Component {
           <PanelHeader>
             {'设备编号：' + this.state.deviceid}
           </PanelHeader>
-          {/*{this.renderDeviceStatus()}*/}
-          <PanelBody style={{height: `22rem`}}>
-            <LoadMore loading>加载中</LoadMore>
-          </PanelBody>
+          {this.renderDeviceStatus()}
         </Panel>
-        <div className="device-button">
-          <Button>开门</Button>
+        <div className="device-button-area" onClick={this.onPress}>
+          <Button className='device-button'>{this.getButtonTitle()}</Button>
         </div>
       </Page>
     )

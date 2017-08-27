@@ -42,6 +42,7 @@
     "redux-persist-transform-filter": "^0.0.13",
     "redux-persist-transform-immutable": "^4.3.0",
     "redux-saga": "^0.15.4",
+    "socket.io-client": "^2.0.3",
     "wechat-oauth": "^1.2.1",
     "weui": "^1.1.2",
     "whatwg-fetch": "^2.0.3"

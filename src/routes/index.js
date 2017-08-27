@@ -30,19 +30,19 @@ const routes = (
 const rootRouter = (
   <Router history={browserHistory}>
     {routes}
-    {/*<Route path='bind' component={Bind} onEnter={wechatOauth}/>*/}
-    <Route path='bind' component={Bind}/>
+    <Route path='bind' component={Bind} onEnter={wechatOauth}/>
+    {/*<Route path='bind' component={Bind}/>*/}
     <Route path='bind/success' component={BindSuccess}/>
-    {/*<Route path='mine' component={Mine} onEnter={oauth}/>*/}
-    <Route path='mine' component={Mine}/>
+    <Route path='mine' component={Mine} onEnter={oauth}/>
+    {/*<Route path='mine' component={Mine}/>*/}
     <Route path='mine/wallet' component={Wallet}/>
     <Route path='mine/wallet/recharge' component={Recharge}/>
     <Route path='mine/wallet/walletDetail' component={WalletDetail}/>
     <Route path='mine/orders' component={Orders}/>
     <Route path='mine/orders/orderDetail' component={OrderDetail}/>
     <Route path='mine/score' component={Score} />
-    {/*<Route path='openDevice' component={OpenDevice} onEnter={oauth}/>*/}
-    <Route path='openDevice' component={OpenDevice}/>
+    <Route path='openDevice' component={OpenDevice} onEnter={oauth}/>
+    {/*<Route path='openDevice' component={OpenDevice}/>*/}
     <Route path='modifyProfile' component={ModifyProfile}/>
     <Route path='modifyProfile/nickname' component={ModifyNickname}/>
     <Route path='modifyProfile/certification' component={Certification}/>
