@@ -4,6 +4,7 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import {browserHistory} from 'react-router'
 import {requestDeviceInfo} from '../../actions/deviceActions'
 import {selectDeviceInfo} from '../../selector/deviceSelector'
 import {selectUserInfo} from '../../selector/authSelector'
@@ -161,6 +162,8 @@ class OpenDevice extends Component {
         that.setState({
           loading: false
         })
+
+        browserHistory.replace('/mine/orders')
       })
 
       //监听开机失败消息

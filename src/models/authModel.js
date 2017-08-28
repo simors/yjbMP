@@ -17,6 +17,7 @@ export const UserInfoRecord = Record({
   createdAt: undefined,
   updatedAt: undefined,
   balance: undefined,
+  deposit: undefined,
 
 }, 'UserInfoRecord')
 
@@ -43,6 +44,8 @@ export class UserInfo extends UserInfoRecord {
       record.set('province', attrs['province'])
       record.set('city', attrs['city'])
       record.set('authData', attrs['authData'])
+      record.set('balance', attrs['balance'])
+      record.set('deposit', attrs['deposit'])
     })
   }
 }

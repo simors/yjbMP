@@ -222,7 +222,7 @@ class Bind extends Component {
 
   render() {
     return (
-      <Page ptr={false}>
+      <Page ptr={false} infiniteLoader={false}>
         <div className="header">
           <img className="avatar" src={this.state.wechatUserInfo? this.state.wechatUserInfo.headimgurl: '/defaultAvatar.svg'} alt=""/>
         </div>

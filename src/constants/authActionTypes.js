@@ -11,3 +11,6 @@ export const LOGIN_SUCCESS = 'LOGIN_SUCCESS'
 export const LOGIN_OUT = 'LOGIN_OUT'
 export const AUTO_LOGIN = 'AUTO_LOGIN'
 export const LOGIN = 'LOGIN'
+
+export const PAY_DEPOSIT = 'PAY_DEPOSIT'
+export const PAY_DEPOSIT_SUCCESS = 'PAY_DEPOSIT_SUCCESS'

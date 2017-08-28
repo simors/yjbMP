@@ -2,7 +2,7 @@
  * Created by wanpeng on 2017/8/14.
  */
 import { call, put, takeEvery } from 'redux-saga/effects'
-import {fetchUserInfo, requestLeanSmsCode, register, become, login} from  '../api/auth'
+import {fetchUserInfo, requestLeanSmsCode, register, become, login, createPayment} from  '../api/auth'
 import {requestUserinfoSuccess, registerSuccess, loginSuccess, loginOut} from '../actions/authActions'
 import * as authActionTypes from '../constants/authActionTypes'
 
@@ -100,10 +100,36 @@ export function* wechatLogin(action) {
   }
 }
 
+//支付押金
+export function* payDeposit(action) {
+  let payload = action.payload
+
+  let paymentPayload = {
+    amount: payload.amount,
+    channel: payload.channel,
+    metadata: payload.metadata,
+    openid: payload.openid,
+    subject: payload.subject
+  }
+
+  try {
+    let charge = yield call(createPayment, paymentPayload)
+    if(payload.success) {
+      payload.success(charge)
+    }
+
+  } catch(error) {
+    if(payload.error) {
+      payload.error(error)
+    }
+  }
+}
+
 export const authSaga = [
   takeEvery(authActionTypes.FETCH_USERINFO, fetchUserinfoAction),
   takeEvery(authActionTypes.REQUEST_SMSCODE, requestSmsCode),
   takeEvery(authActionTypes.SUBMIT_REGISTER, submitRegister),
   takeEvery(authActionTypes.AUTO_LOGIN, autoLogin),
-  takeEvery(authActionTypes.LOGIN, wechatLogin)
+  takeEvery(authActionTypes.LOGIN, wechatLogin),
+  takeEvery(authActionTypes.PAY_DEPOSIT, payDeposit)
 ]

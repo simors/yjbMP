@@ -32,6 +32,8 @@ export const WECHAT_MP_APPID = WECHAT_MP_APPID_DEV
 export const WECHAT_MP_APPSECRET = WECHAT_MP_APPSECRET_DEV
 
 
-//Ping++支付平台参数
+// 支付类型定义
+export const DEPOSIT = 1        // 押金
+export const SERVICE_CHARGE = 2        // 服务费用
 
 

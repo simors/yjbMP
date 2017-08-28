@@ -65,6 +65,8 @@ export function register(payload) {
     authUser.set('country', payload.wechatUserInfo.country)
     authUser.set('province', payload.wechatUserInfo.province)
     authUser.set('city', payload.wechatUserInfo.city)
+    authUser.set('balance', 0)
+    authUser.set('deposit', 0)
 
     return authUser.save()
   }).then((leanUser) => {
@@ -99,6 +101,16 @@ export function login(payload) {
   }).catch((error) => {
     console.log("login error", error)
 
+    throw error
+  })
+}
+
+export function createPayment(payload) {
+
+  return AV.Cloud.run('pingppCreatePayment', payload).then((charge) => {
+    return charge
+  }).catch((error) => {
+    console.log("获取微信用户信息失败：", error)
     throw error
   })
 }
