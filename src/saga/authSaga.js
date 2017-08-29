@@ -2,9 +2,10 @@
  * Created by wanpeng on 2017/8/14.
  */
 import { call, put, takeEvery } from 'redux-saga/effects'
-import {fetchUserInfo, requestLeanSmsCode, register, become, login, createPayment} from  '../api/auth'
-import {requestUserinfoSuccess, registerSuccess, loginSuccess, loginOut} from '../actions/authActions'
+import {fetchUserInfo, requestLeanSmsCode, register, become, login, getPaymentCharge, createOrder} from  '../api/auth'
+import {registerSuccess, loginSuccess, loginOut, saveOrderInfo} from '../actions/authActions'
 import * as authActionTypes from '../constants/authActionTypes'
+import {OrderInfo} from '../models/authModel'
 
 //获取微信用户信息
 export function* fetchUserinfoAction(action) {
@@ -100,8 +101,8 @@ export function* wechatLogin(action) {
   }
 }
 
-//支付押金
-export function* payDeposit(action) {
+//创建ping++支付对象
+export function* createPayment(action) {
   let payload = action.payload
 
   let paymentPayload = {
@@ -113,7 +114,7 @@ export function* payDeposit(action) {
   }
 
   try {
-    let charge = yield call(createPayment, paymentPayload)
+    let charge = yield call(getPaymentCharge, paymentPayload)
     if(payload.success) {
       payload.success(charge)
     }
@@ -125,11 +126,30 @@ export function* payDeposit(action) {
   }
 }
 
+export function* fetchOrderInfo(action) {
+  let payload = action.payload
+  let orderInfo = payload.orderInfo
+  let orderRecord = OrderInfo.fromLeancloudApi(orderInfo)
+
+  try {
+    yield put(saveOrderInfo({orderRecord}))
+    if(payload.success) {
+      payload.success()
+    }
+  } catch(error) {
+    if(payload.error) {
+      payload.error(error)
+    }
+  }
+}
+
+
 export const authSaga = [
   takeEvery(authActionTypes.FETCH_USERINFO, fetchUserinfoAction),
   takeEvery(authActionTypes.REQUEST_SMSCODE, requestSmsCode),
   takeEvery(authActionTypes.SUBMIT_REGISTER, submitRegister),
   takeEvery(authActionTypes.AUTO_LOGIN, autoLogin),
   takeEvery(authActionTypes.LOGIN, wechatLogin),
-  takeEvery(authActionTypes.PAY_DEPOSIT, payDeposit)
+  takeEvery(authActionTypes.CREATE_PAYMENT, createPayment),
+  takeEvery(authActionTypes.FETCH_ORDER_INFO, fetchOrderInfo)
 ]

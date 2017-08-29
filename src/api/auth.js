@@ -105,12 +105,22 @@ export function login(payload) {
   })
 }
 
-export function createPayment(payload) {
+export function getPaymentCharge(payload) {
 
   return AV.Cloud.run('pingppCreatePayment', payload).then((charge) => {
     return charge
   }).catch((error) => {
     console.log("获取微信用户信息失败：", error)
+    throw error
+  })
+}
+
+export function createOrder(payload) {
+
+  return AV.Cloud.run('orderCreateOrder', payload).then((order) => {
+    return order
+  }).catch((error) => {
+    console.log("创建订单失败：", error)
     throw error
   })
 }

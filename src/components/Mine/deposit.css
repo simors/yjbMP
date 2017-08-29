@@ -1,0 +1,40 @@
+.deposit-banner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 11.69rem;
+  background: url("/bg_mine.png");
+  background-size:100% 100%;
+}
+
+.deposit-button-area {
+  position: absolute;
+  bottom: 0.9rem;
+  left: 1.25rem;
+  right: 1.25rem;
+}
+
+.deposit-button {
+  height: 2.9rem;
+}
+
+.deposit-button-trip {
+  text-align: center;
+  font-size: 0.9rem;
+  color: #888888;
+  margin-bottom: 0.6rem;
+}
+
+.deposit-amount {
+  margin-top: 0.6rem;
+  font-size: 2.3rem;
+  color: #000000;
+  text-align: center;
+}
+
+.deposit-amount-trip {
+  margin-top: 3.1rem;
+  font-size: 1.3rem;
+  color: #000000;
+  text-align: center;
+}

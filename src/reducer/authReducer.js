@@ -18,6 +18,8 @@ export default function authReducer(state = initialState, action) {
       return handleSaveUserInfo(state, action)
     case authActionTypes.LOGIN_OUT:
       return handleLoginOut(state, action)
+    case authActionTypes.SAVE_ORDER_INFO:
+      return handleSaveOrderInfo(state, action)
     case REHYDRATE:
       return onRehydrate(state, action)
     default:
@@ -47,6 +49,17 @@ function handleLoginOut(state, action) {
   state = state.set('profile', undefined)
   return state
 }
+
+function handleSaveOrderInfo(state, action) {
+  let payload = action.payload
+  let orderInfo = payload.order
+  let orderId = orderInfo.id
+
+  state = state.setIn(['orders', orderId], orderInfo)
+  return state
+}
+
+
 
 function onRehydrate(state, action) {
 

@@ -49,10 +49,38 @@ export class UserInfo extends UserInfoRecord {
     })
   }
 }
+export const OrderInfoRecord = Record({
+  id: undefined,            //订单id
+  orderNo: undefined,       //订单编号
+  status: undefined,        //订单状态
+  createTime: undefined,    //下单时间
+  deviceNo: undefined,      //设备编号
+  deviceAddr: undefined,    //设备地址
+  amount: undefined,        //服务费用
+  userId: undefined,        //用户id
+}, 'OrderInfoRecord')
+
+export class OrderInfo extends OrderInfoRecord {
+  static fromLeancloudApi(orderInfo) {
+    let info = new UserInfoRecord()
+
+    return info.withMutations((record) => {
+      record.set('id', orderInfo.id)
+      record.set('orderNo', orderInfo.orderNo)
+      record.set('status', orderInfo.status)
+      record.set('createTime', orderInfo.createTime)
+      record.set('deviceNo', orderInfo.deviceNo)
+      record.set('deviceAddr', orderInfo.deviceAddr)
+      record.set('amount', orderInfo.amount || 0)
+      record.set('userId', orderInfo.userId)
+    })
+  }
+}
 
 export const AuthRecord = Record({
-  activeUser: undefined,
-  token: undefined,
-  wechatUserInfo: undefined,
-  profile: UserInfoRecord(),
+  activeUser: undefined,              //当前用户id
+  token: undefined,                   //自动登录token
+  wechatUserInfo: undefined,          //用户微信信息
+  profile: UserInfoRecord(),          //用户信息
+  orders: Map(),                      //用户订单：键为订单id，OrderInfoRecord
 }, "AuthRecord")

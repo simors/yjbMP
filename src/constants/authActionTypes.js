@@ -12,5 +12,7 @@ export const LOGIN_OUT = 'LOGIN_OUT'
 export const AUTO_LOGIN = 'AUTO_LOGIN'
 export const LOGIN = 'LOGIN'
 
-export const PAY_DEPOSIT = 'PAY_DEPOSIT'
-export const PAY_DEPOSIT_SUCCESS = 'PAY_DEPOSIT_SUCCESS'
+export const CREATE_PAYMENT = 'CREATE_PAYMENT'
+
+export const FETCH_ORDER_INFO = 'FETCH_ORDER_INFO'
+export const SAVE_ORDER_INFO = 'SAVE_ORDER_INFO'

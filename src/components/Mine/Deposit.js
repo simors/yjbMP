@@ -1,18 +1,18 @@
 /**
- * Created by wanpeng on 2017/8/16.
+ * Created by wanpeng on 2017/8/29.
  */
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import {browserHistory} from 'react-router'
 var pingpp = require('pingpp-js')
+import {createPayment} from '../../actions/authActions'
+import {selectUserInfo} from '../../selector/authSelector'
+import * as appConfig from '../../constants/appConfig'
 import WeUI from 'react-weui'
 import 'weui'
 import 'react-weui/build/dist/react-weui.css'
-import './wallet.css'
-import {selectUserInfo} from '../../selector/authSelector'
-import { createPayment} from '../../actions/authActions'
-import * as appConfig from '../../constants/appConfig'
+import './deposit.css'
 
 const {
   Button,
@@ -23,23 +23,13 @@ const {
   MediaBox,
   MediaBoxTitle,
   MediaBoxDescription,
+  Msg,
+  LoadMore,
 } = WeUI
 
-class Wallet extends Component {
+class Deposit extends Component {
   constructor(props) {
     super(props)
-  }
-
-  componentDidMount() {
-    document.title = "钱包"
-  }
-
-  onPress = () => {
-    if(this.props.currentUser.deposit === 0) {  //交押金
-      this.payDeposit()
-    } else {  //退押金
-      this.refundDeposit()
-    }
   }
 
   createPaymentSuccessCallback = (charge) => {
@@ -58,9 +48,9 @@ class Wallet extends Component {
     console.log('onDeposit', error)
   }
 
-  payDeposit() {
+  payDeposit = () => {
     this.props.createPayment({
-      amount: 1,  //TODO 可配置，从leancloud获取
+      amount: 1,
       channel: 'wx_pub',
       metadata: {
         'fromUser': this.props.currentUser.id,
@@ -75,32 +65,25 @@ class Wallet extends Component {
     })
   }
 
-  refundDeposit() {
-
-  }
-
   render() {
     return(
-      <Page ptr={false}>
-        <div className="walletcontainer">
-          <text className="amount">{this.props.currentUser.balance + '元'}</text>
-          <text className="amountTrip">当前余额</text>
-
-          <div className="buttons-area">
-            <Button type='primary' plain className="detailsButton" onClick={() => {browserHistory.push('/mine/wallet/walletDetail')}}>明细</Button>
-            <Button type='primary' plain className="rechargeButton" onClick={() => {browserHistory.push('/mine/wallet/recharge')}}>充值</Button>
-          </div>
+      <Page ptr={false} infiniteLoader={false}>
+        <div className="deposit-banner">
+          <img src="/logo.png" alt="" style={{display: `block`, width: `7.5rem`, height: `6.75rem`}}/>
         </div>
-        <div className="deposit">
-          <text className="depositTrip">{'押金：' + this.props.currentUser.deposit + '元'}</text>
-          <div className="depositButton-area">
-            <Button type='primary' plain className="depositButton" onClick={this.onPress}>{this.props.currentUser.deposit === 0? '交押金' : '退押金'}</Button>
-          </div>
+        <div>
+          <div className="deposit-amount-trip">请支付押金</div>
+          <div className="deposit-amount">229元</div>
+        </div>
+        <div className="deposit-button-area" >
+          <div className="deposit-button-trip">押金可在“个人中心－钱包”中申请退还</div>
+          <Button className='deposit-button' onClick={this.payDeposit}>微信钱包支付</Button>
         </div>
       </Page>
     )
   }
 }
+
 
 const mapStateToProps = (state, ownProps) => {
   return {
@@ -112,4 +95,4 @@ const mapDispatchToProps = (dispatch) => bindActionCreators({
   createPayment,
 }, dispatch)
 
-export default connect(mapStateToProps, mapDispatchToProps)(Wallet)
+export default connect(mapStateToProps, mapDispatchToProps)(Deposit)

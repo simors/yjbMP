@@ -14,5 +14,8 @@ export const loginOut = createAction(authActionTypes.LOGIN_OUT)
 export const autoLogin = createAction(authActionTypes.AUTO_LOGIN)
 export const loginAction = createAction(authActionTypes.LOGIN)
 
-export const payDeposit = createAction(authActionTypes.PAY_DEPOSIT)
+export const createPayment = createAction(authActionTypes.CREATE_PAYMENT)
+
+export const fetchOrderInfo = createAction(authActionTypes.FETCH_ORDER_INFO)
+export const saveOrderInfo = createAction(authActionTypes.SAVE_ORDER_INFO)
 

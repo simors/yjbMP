@@ -7,6 +7,7 @@ import { bindActionCreators } from 'redux'
 import {browserHistory} from 'react-router'
 import {requestDeviceInfo} from '../../actions/deviceActions'
 import {selectDeviceInfo} from '../../selector/deviceSelector'
+import {fetchOrderInfo} from '../../actions/authActions'
 import {selectUserInfo} from '../../selector/authSelector'
 import WeUI from 'react-weui'
 import 'weui'
@@ -33,24 +34,24 @@ class OpenDevice extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      deviceid: undefined,
+      deviceNo: undefined,
       buttonTitle: undefined,
       loading: false,
     }
   }
 
   componentWillMount() {
-    var deviceid = this.props.location.query.deviceid
+    var deviceNo = this.props.location.query.deviceNo
     this.props.requestDeviceInfo({
-      deviceid: deviceid,
+      deviceNo: deviceNo,
     })
     this.setState({
-      deviceid: deviceid,
+      deviceNo: deviceNo,
     })
   }
 
   renderDeviceStatus() {
-    if(this.props.userInfo.balance < 0) { //欠费
+    if(this.props.currentUser.balance < 0) { //欠费
       return(
         <PanelBody style={{borderBottomWidth: `0`}}>
           <Msg
@@ -119,7 +120,7 @@ class OpenDevice extends Component {
       return(
         <LoadMore className="device-loadmore" loading/>
       )
-    } else if(this.props.userInfo.balance < 0) { //欠费
+    } else if(this.props.currentUser.balance < 0) { //欠费
       return "去支付"
     } else if(this.props.deviceInfo.status === 0) { //空闲
       return "开门"
@@ -132,48 +133,57 @@ class OpenDevice extends Component {
     }
   }
 
-  onPress = () => {
+  turnOnDevice() {
     var that = this
-    if(this.props.userInfo.balance < 0) { //欠费
+    that.setState({
+      loading: true
+    })
+    //发送开机请求
+    socket.emit('turn_on_device', {
+      deviceNo: this.props.deviceInfo.deviceNo,
+      userId: this.props.currentUser.id,
+    }, function (data) {
+      console.log("socket.emit", data)
+      var errorCode = data.errorCode
+      if(errorCode != 0) {
+        that.setState({
+          loading: false
+        })
+        console.log("开机请求失败", data.errorMessage)
+        //TODO 提示开机请求失败原因
+      }
+    })
+
+    //监听开机成功消息
+    socket.on('turn_on_device_success', function (data) {
+      console.log("收到开机成功消息", data)
+      var orderInfo = data
+      that.setState({
+        loading: false
+      })
+
+      this.props.fetchOrderInfo({
+        orderInfo: orderInfo,
+        success: () => {browserHistory.replace('/mine/orders')},
+        error: (error) => {console.log(error)}
+      })
+    })
+
+    //监听开机失败消息
+    socket.on('turn_on_device_failed', function (data) {
+      console.log("收到开机失败消息", data)
+      that.setState({
+        loading: false
+      })
+
+    })
+  }
+
+  onPress = () => {
+    if(this.props.currentUser.balance < 0) { //欠费
 
     } else if(this.props.deviceInfo.status === 0) { //空闲
-      that.setState({
-        loading: true
-      })
-      //发送开机请求
-      socket.emit('turn_on_device', {
-        deviceId: this.props.deviceInfo.deviceid,
-        userId: this.props.userInfo.id,
-      }, function (data) {
-        console.log("socket.emit", data)
-        var errorCode = data.errorCode
-        if(errorCode != 0) {
-          that.setState({
-            loading: false
-          })
-          console.log("开机请求失败", data.errorMessage)
-          //TODO 提示开机请求失败原因
-        }
-      })
-
-      //监听开机成功消息
-      socket.on('turn_on_device_success', function (data) {
-        console.log("收到开机成功消息", data)
-        that.setState({
-          loading: false
-        })
-
-        browserHistory.replace('/mine/orders')
-      })
-
-      //监听开机失败消息
-      socket.on('turn_on_device_failed', function (data) {
-        console.log("收到开机失败消息", data)
-        that.setState({
-          loading: false
-        })
-
-      })
+      this.turnOnDevice()
     } else if(this.props.deviceInfo.status === 1) {  //使用中
     } else if(this.props.deviceInfo.status === 2) {  //下线
     } else {
@@ -188,7 +198,7 @@ class OpenDevice extends Component {
         </div>
         <Panel style={{marginTop: `0`}}>
           <PanelHeader>
-            {'设备编号：' + this.state.deviceid}
+            {'设备编号：' + this.state.deviceNo}
           </PanelHeader>
           {this.renderDeviceStatus()}
         </Panel>
@@ -203,15 +213,15 @@ class OpenDevice extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   var deviceInfo = selectDeviceInfo(state)
-  var userInfo = selectUserInfo(state)
   return {
     deviceInfo: deviceInfo,
-    userInfo: userInfo,
+    currentUser: selectUserInfo(state),
   }
 };
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
-  requestDeviceInfo
+  requestDeviceInfo,
+  fetchOrderInfo
 }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(OpenDevice)

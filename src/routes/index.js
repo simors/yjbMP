@@ -19,6 +19,7 @@ import WalletDetail from '../components/Mine/WalletDetail'
 import Orders from '../components/Mine/Orders'
 import OrderDetail from '../components/Mine/OrderDetail'
 import Bind from '../components/Auth/Bind'
+import Deposit from '../components/Mine/Deposit'
 
 
 const routes = (
@@ -41,6 +42,7 @@ const rootRouter = (
     <Route path='mine/orders' component={Orders}/>
     <Route path='mine/orders/orderDetail' component={OrderDetail}/>
     <Route path='mine/score' component={Score} />
+    <Route path='mine/deposit' component={Deposit} />
     <Route path='openDevice' component={OpenDevice} onEnter={oauth}/>
     {/*<Route path='openDevice' component={OpenDevice}/>*/}
     <Route path='modifyProfile' component={ModifyProfile}/>

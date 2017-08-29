@@ -198,9 +198,9 @@ class Bind extends Component {
       smsCode: this.state.smsCode,
       wechatUserInfo: this.state.wechatUserInfo,
       success: () => {
-        let deviceid = this.props.location.query.deviceid
-        if(deviceid) {
-          browserHistory.replace('/openDevice?deviceid=' + deviceid)
+        let deviceNo = this.props.location.query.deviceNo
+        if(deviceNo) {
+          browserHistory.replace('/openDevice?deviceNo=' + deviceNo)
         } else {
           browserHistory.replace('/bind/success')
         }

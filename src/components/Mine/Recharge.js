@@ -4,6 +4,10 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+var pingpp = require('pingpp-js')
+import {createPayment} from '../../actions/authActions'
+import * as appConfig from '../../constants/appConfig'
+import {selectUserInfo} from '../../selector/authSelector'
 import WeUI from 'react-weui'
 import 'weui'
 import 'react-weui/build/dist/react-weui.css'
@@ -89,6 +93,39 @@ class Recharge extends Component {
     }
   }
 
+  createPaymentSuccessCallback = (charge) => {
+    pingpp.createPayment(charge, function (result, err) {
+      if (result == "success") {
+        // 只有微信公众账号 wx_pub 支付成功的结果会在这里返回，其他的支付结果都会跳转到 extra 中对应的 URL。
+      } else if (result == "fail") {
+        // charge 不正确或者微信公众账号支付失败时会在此处返回
+      } else if (result == "cancel") {
+        // 微信公众账号支付取消支付
+      }
+    })
+  }
+
+  createPaymentFailedCallback = (error) => {
+    console.log('onRecharge', error)
+  }
+
+  onRecharge = () => {
+    this.props.createPayment({
+      amount: this.state.selectAmount,
+      channel: 'wx_pub',
+      metadata: {
+        'fromUser': this.props.currentUser.id,
+        'toUser': 'platform',
+        'dealType': appConfig.RECHARGE
+      },
+      // openid: this.props.currentUser.authData.weixin.openid,
+      openid: "osChqwZcLGd9j6RSYTw1t1YRDiDc", //测试
+      subject: '衣家宝押金支付',
+      success: this.createPaymentSuccessCallback,
+      error: this.createPaymentFailedCallback,
+    })
+  }
+
   render() {
     return(
       <Page>
@@ -113,7 +150,7 @@ class Recharge extends Component {
           <text className="tripDesc">{this.getTripDesc()}</text>
         </div>
         <div className="rechargeButton">
-          <Button>{"充值" + this.state.selectAmount + '元'}</Button>
+          <Button onClick={this.onRecharge}>{"充值" + this.state.selectAmount + '元'}</Button>
         </div>
       </Page>
     )
@@ -123,11 +160,12 @@ class Recharge extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-
+    currentUser: selectUserInfo(state)
   }
 };
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
+  createPayment,
 }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(Recharge)

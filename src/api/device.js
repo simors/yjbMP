@@ -8,7 +8,7 @@ import {UserInfo} from '../models/authModel'
 
 export function fetchDeviceInfo(payload) {
   var params = {
-    deviceid: payload.deviceid
+    deviceNo: payload.deviceNo
   }
 
   return AV.Cloud.run('deviceFetchDeviceInfo', params).then((deviceInfo) => {
