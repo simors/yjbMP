@@ -117,11 +117,11 @@ export function getPaymentCharge(payload) {
 
 export function fetchOrderByStatus(payload) {
   let orderPayload = {
-    userId: '',
-    orderStatus: '',
-    limit: '',
-    lastTurnOnTime: '',
-    isRefresh: '',
+    userId: payload.userId,
+    orderStatus: payload.orderStatus,
+    limit: payload.limit,
+    lastTurnOnTime: payload.lastTurnOnTime,
+    isRefresh: payload.isRefresh,
   }
 
   return AV.Cloud.run('orderFetchOrdersByStatus', orderPayload).then((orders) => {
