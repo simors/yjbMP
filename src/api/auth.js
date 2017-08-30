@@ -115,12 +115,20 @@ export function getPaymentCharge(payload) {
   })
 }
 
-export function createOrder(payload) {
+export function fetchOrderByStatus(payload) {
+  let orderPayload = {
+    userId: '',
+    orderStatus: '',
+    limit: '',
+    lastTurnOnTime: '',
+    isRefresh: '',
+  }
 
-  return AV.Cloud.run('orderCreateOrder', payload).then((order) => {
-    return order
+  return AV.Cloud.run('orderFetchOrdersByStatus', orderPayload).then((orders) => {
+    return orders
   }).catch((error) => {
-    console.log("创建订单失败：", error)
+    console.log("获取订单失败：", error)
     throw error
   })
 }
+

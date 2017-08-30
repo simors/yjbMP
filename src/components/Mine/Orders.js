@@ -4,6 +4,9 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import {fetchOrders} from '../../actions/authActions'
+import {selectUserInfo, selectUnpaidOrders, selectOccupiedOrders, selectPaidOrders} from '../../selector/authSelector'
+import {ORDER_STATUS_OCCUPIED, ORDER_STATUS_PAID, ORDER_STATUS_UNPAID} from '../../constants/appConfig'
 import WeUI from 'react-weui'
 import 'weui'
 import 'react-weui/build/dist/react-weui.css'
@@ -36,7 +39,7 @@ class Orders extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      tab: 0,
+      orderStatus: appConfig.ORDER_STATUS_UNPAID,
       unpaidOrders: [
         {title: '普通干衣服务', id: '123456789', date: '2017/08/04 15:32', address: '中电软件园13栋2号柜13门', duration: '0:34:43', type: '实时计费', amount: 8.3, status: '已取出'},
         {title: '普通干衣服务', id: '123456789', date: '2017/08/04 15:32', address: '中电软件园13栋2号柜13门', duration: '0:34:43', type: '实时计费', amount: 8.3, status: '已取出'},
@@ -66,6 +69,15 @@ class Orders extends Component {
     document.title = "历史订单"
   }
 
+  componentWillMount() {
+    this.props.fetchOrders({
+      userId: this.props.currentUser.id,
+      orderStatus: ORDER_STATUS_UNPAID,
+      limit: 10,
+      isRefresh: true,
+    })
+  }
+
   renderOrder = (item, i) => {
     return (
       <Panel key={i} onClick={() => {}}>
@@ -93,17 +105,16 @@ class Orders extends Component {
   }
 
   onLoadMoreOrders = (resolve, finish) => {
-    if(this.state.tab === 0) {
-      console.log("加载未支付订单")
-      setTimeout(function () {
-        resolve()
-      }, 1000)
-    } else if(this.state.tab === 1) {
-      setTimeout(function () {
-        resolve()
-      }, 1000)
-      console.log("加载已支付订单")
-    }
+    this.props.fetchOrders({
+      userId: this.props.currentUser.id,
+      orderStatus: this.state.orderStatus,
+      isRefresh: false,
+      lastTurnOnTime: '',
+      success: (orders) => {
+        orders.length === 0? finish() : resolve()
+      },
+      error: (error) => {console.log(error)}
+    })
   }
 
   render() {
@@ -111,16 +122,31 @@ class Orders extends Component {
     <InfiniteLoader onLoadMore={this.onLoadMoreOrders}>
       <Tab>
         <NavBar>
-          <NavBarItem active={this.state.tab == 0} onClick={e=>this.setState({tab:0})}>未支付</NavBarItem>
-          <NavBarItem active={this.state.tab == 1} onClick={e=>this.setState({tab:1})}>已完成</NavBarItem>
+          <NavBarItem active={this.state.orderStatus == ORDER_STATUS_UNPAID}
+                      onClick={e=>this.setState({orderStatus: ORDER_STATUS_UNPAID})}>
+            未支付
+          </NavBarItem>
+          <NavBarItem active={this.state.orderStatus == ORDER_STATUS_OCCUPIED}
+                      onClick={e=>this.setState({orderStatus: ORDER_STATUS_OCCUPIED})}>
+            使用中
+          </NavBarItem>
+          <NavBarItem active={this.state.orderStatus == ORDER_STATUS_PAID}
+                      onClick={e=>this.setState({orderStatus: ORDER_STATUS_PAID})}>
+            已完成
+          </NavBarItem>
         </NavBar>
         <TabBody style={{backgroundColor: `#EFEFF4`}}>
-          <Cells style={{display: this.state.tab == 0 ? null : 'none', backgroundColor: `#EFEFF4`, marginTop: `0.6rem`}}>
+          <Cells style={{display: this.state.orderStatus == ORDER_STATUS_UNPAID ? null : 'none', backgroundColor: `#EFEFF4`, marginTop: `0.6rem`}}>
             {
               this.state.unpaidOrders.map(this.renderOrder)
             }
           </Cells>
-          <Cells style={{display: this.state.tab == 1 ? null : 'none'}}>
+          <Cells style={{display: this.state.orderStatus == ORDER_STATUS_OCCUPIED ? null : 'none', backgroundColor: `#EFEFF4`, marginTop: `0.6rem`}}>
+            {
+
+            }
+          </Cells>
+          <Cells style={{display: this.state.orderStatus == ORDER_STATUS_PAID ? null : 'none'}}>
             {
               this.state.prepaidOrders.map((item, i) => {
                 return (
@@ -142,11 +168,15 @@ class Orders extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-
+    currentUser: selectUserInfo(state),
+    unpaidOrders: selectUnpaidOrders(state),
+    paidOrders: selectPaidOrders(state),
+    occupiedOrders: selectOccupiedOrders(state)
   }
 };
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
+  fetchOrders,
 }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(Orders)

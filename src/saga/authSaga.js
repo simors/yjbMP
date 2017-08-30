@@ -2,8 +2,8 @@
  * Created by wanpeng on 2017/8/14.
  */
 import { call, put, takeEvery } from 'redux-saga/effects'
-import {fetchUserInfo, requestLeanSmsCode, register, become, login, getPaymentCharge, createOrder} from  '../api/auth'
-import {registerSuccess, loginSuccess, loginOut, saveOrderInfo} from '../actions/authActions'
+import {fetchUserInfo, requestLeanSmsCode, register, become, login, getPaymentCharge, fetchOrderByStatus} from  '../api/auth'
+import {registerSuccess, loginSuccess, loginOut, saveOrderInfo, fetchOrdersSuccess} from '../actions/authActions'
 import * as authActionTypes from '../constants/authActionTypes'
 import {OrderInfo} from '../models/authModel'
 
@@ -143,6 +143,26 @@ export function* fetchOrderInfo(action) {
   }
 }
 
+export function* fetchOrders(action) {
+  let payload = action.payload
+
+  try {
+    let orders = yield call(fetchOrderByStatus, payload)
+    let orderRecordList = []
+    orders.forEach((orderInfo) => {
+      orderRecordList.push(OrderInfo.fromLeancloudApi(orderInfo))
+    })
+    yield put(fetchOrdersSuccess({orderRecordList}))
+    if(payload.success) {
+      payload.success(orders)
+    }
+  } catch(error) {
+    if(payload.error) {
+      payload.error(error)
+    }
+  }
+}
+
 
 export const authSaga = [
   takeEvery(authActionTypes.FETCH_USERINFO, fetchUserinfoAction),
@@ -151,5 +171,6 @@ export const authSaga = [
   takeEvery(authActionTypes.AUTO_LOGIN, autoLogin),
   takeEvery(authActionTypes.LOGIN, wechatLogin),
   takeEvery(authActionTypes.CREATE_PAYMENT, createPayment),
-  takeEvery(authActionTypes.FETCH_ORDER_INFO, fetchOrderInfo)
+  takeEvery(authActionTypes.FETCH_ORDER_INFO, fetchOrderInfo),
+  takeEvery(authActionTypes.FETCH_ORDERS, fetchOrders)
 ]

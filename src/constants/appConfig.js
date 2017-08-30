@@ -37,4 +37,15 @@ export const DEPOSIT = 1                // 押金
 export const RECHARGE = 2               // 充值
 export const SERVICE_CHARGE = 2         // 服务费用
 
+//订单状态
+export const ORDER_STATUS_UNPAID = 0    //未支付
+export const ORDER_STATUS_OCCUPIED = 1  //使用中
+export const ORDER_STATUS_PAID = 2      //已支付
+
+//websocket
+export const LC_SERVER_DOMAIN = 'http://yiijiabao.leanapp.cn'
+export const TURN_ON_DEVICE = 'turn_on_device'         //设备开机请求&应答
+export const TURN_ON_DEVICE_SUCCESS = 'turn_on_device_success'
+export const TURN_ON_DEVICE_FAILED = 'turn_on_device_failed'
+
 

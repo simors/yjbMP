@@ -18,4 +18,6 @@ export const createPayment = createAction(authActionTypes.CREATE_PAYMENT)
 
 export const fetchOrderInfo = createAction(authActionTypes.FETCH_ORDER_INFO)
 export const saveOrderInfo = createAction(authActionTypes.SAVE_ORDER_INFO)
+export const fetchOrders = createAction(authActionTypes.FETCH_ORDERS)
+export const fetchOrdersSuccess = createAction(authActionTypes.FETCH_ORDERS_SUCCESS)
 

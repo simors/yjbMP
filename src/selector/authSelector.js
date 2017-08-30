@@ -22,3 +22,22 @@ export function selectToken(state) {
   let AUTH = state.AUTH
   return AUTH.token
 }
+
+export function selectUnpaidOrders(state) {
+  let AUTH = state.AUTH
+
+  return {}
+}
+
+export function selectPaidOrders(state) {
+
+  let AUTH = state.AUTH
+
+  return {}
+}
+
+export function selectOccupiedOrders(state) {
+  let AUTH = state.AUTH
+
+  return {}
+}
