@@ -39,7 +39,7 @@ class Orders extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      orderStatus: appConfig.ORDER_STATUS_UNPAID,
+      orderStatus: ORDER_STATUS_UNPAID,
       unpaidOrders: [
         {title: '普通干衣服务', id: '123456789', date: '2017/08/04 15:32', address: '中电软件园13栋2号柜13门', duration: '0:34:43', type: '实时计费', amount: 8.3, status: '已取出'},
         {title: '普通干衣服务', id: '123456789', date: '2017/08/04 15:32', address: '中电软件园13栋2号柜13门', duration: '0:34:43', type: '实时计费', amount: 8.3, status: '已取出'},
