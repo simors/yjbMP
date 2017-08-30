@@ -124,6 +124,7 @@ export function fetchOrderByStatus(payload) {
     isRefresh: payload.isRefresh,
   }
 
+  console.log("orderFetchOrdersByStatus payload", orderPayload)
   return AV.Cloud.run('orderFetchOrdersByStatus', orderPayload).then((orders) => {
     return orders
   }).catch((error) => {

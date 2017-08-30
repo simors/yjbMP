@@ -148,6 +148,7 @@ export function* fetchOrders(action) {
 
   try {
     let orders = yield call(fetchOrderByStatus, payload)
+    console.log("fetchOrders", orders)
     let orderRecordList = []
     orders.forEach((orderInfo) => {
       orderRecordList.push(OrderInfo.fromLeancloudApi(orderInfo))
