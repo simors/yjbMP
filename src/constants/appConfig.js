@@ -35,7 +35,6 @@ export const WECHAT_MP_APPSECRET = WECHAT_MP_APPSECRET_DEV
 // 支付类型定义
 export const DEPOSIT = 1                // 押金
 export const RECHARGE = 2               // 充值
-export const SERVICE_CHARGE = 2         // 服务费用
 
 //订单状态
 export const ORDER_STATUS_UNPAID = 0    //未支付

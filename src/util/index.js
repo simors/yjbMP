@@ -43,3 +43,30 @@ export function oauth(nextState, replace) {
     })
   }
 }
+
+export function formatTime(milliseconds, format) {
+  let time = new Date(milliseconds)
+  let fullYear = ''
+  let month = ''
+  let date = ''
+  let hours = ''
+  let minutes = ''
+  let seconds = ''
+  format = format || 'YYYY-MM-DD HH:mm:SS'
+  if(time) {
+    fullYear = time.getFullYear()
+    month = time.getMonth() + 1
+    month = month < 10 ? '0' + month : month
+    date = time.getDate()
+    date = date < 10 ? '0' + date : date
+    hours = time.getHours()
+    hours = hours < 10 ? '0' + hours : hours
+    minutes = time.getMinutes()
+    minutes = minutes < 10 ? '0' + minutes : minutes
+    seconds = time.getSeconds()
+    seconds = seconds < 10 ? '0' + seconds : seconds
+  }
+  const result = format.replace('YYYY', fullYear).replace('MM', month).replace('DD', date)
+    .replace('HH', hours).replace('mm', minutes).replace('SS', seconds)
+  return result
+}
