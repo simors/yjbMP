@@ -50,10 +50,10 @@ class Mine extends Component {
         <Cells style={{marginTop: 0}}>
           <Cell access onClick={() => {browserHistory.push('/modifyProfile')}}>
             <CellHeader>
-              <img src={this.props.profile.avatar || '/defaultAvatar.svg'} alt="" style={{display: `block`, width: `3.13rem`, marginRight: `0.63rem`}}/>
+              <img src={this.props.currentUser.avatar || '/defaultAvatar.svg'} alt="" style={{display: `block`, width: `3.13rem`, marginRight: `0.63rem`}}/>
             </CellHeader>
             <CellBody primary={true}>
-              <h6>{this.props.profile.nickname || '衣家宝'}</h6>
+              <h6>{this.props.currentUser.nickname || '衣家宝'}</h6>
               <p style={{fontSize: `0.9rem`, marginTop: `0.1rem`}}>普通用户</p>
             </CellBody>
             <CellFooter style={{fontSize: `1.1rem`}}>
@@ -110,7 +110,7 @@ class Mine extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    profile: selectUserInfo(state)
+    currentUser: selectUserInfo(state)
   }
 };
 

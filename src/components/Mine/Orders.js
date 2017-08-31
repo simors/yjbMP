@@ -34,6 +34,7 @@ const {
   CellBody,
   CellMore,
   CellFooter,
+  Icon,
 } = WeUI
 
 class Orders extends Component {
@@ -84,17 +85,7 @@ class Orders extends Component {
     return duration
   }
 
-  getStatus(status) {
-    if(status === ORDER_STATUS_OCCUPIED) {
-      return '正在烘干'
-    } else if(status === ORDER_STATUS_PAID) {
-      return '已完成'
-    } else if(status === ORDER_STATUS_UNPAID) {
-      return '已烘干'
-    }
-  }
-
-  renderOrder = (item, i) => {
+  renderOccupiedOrder = (item, i) => {
     return (
       <Panel key={i} onClick={() => {}}>
         <div className="order-header">
@@ -105,7 +96,7 @@ class Orders extends Component {
           <div className="order-content-primary">
             <text style={{fontSize: `1.1rem`, color: `#000000`}}>使用时长</text>
             <text>{this.getDuration(item.createTime) + '分钟'}</text>
-            <div className="status">{this.getStatus(item.status)}</div>
+            <div className="status">正在烘干</div>
             <text style={{fontSize: `1.5rem`}}>{item.amount + '元'}</text>
           </div>
           <div className="order-content-secondary">
@@ -115,6 +106,58 @@ class Orders extends Component {
         </div>
         <div className="order-footer">
           <div className="order-button">取出衣物</div>
+        </div>
+      </Panel>
+    )
+  }
+
+  renderUnpaidOrder = (item, i) => {
+    return (
+      <Panel key={i} onClick={() => {}}>
+        <div className="order-header">
+          <text>{'订单编号：' + item.orderNo}</text>
+          <text>{formatTime(item.createTime, 'YYYY/MM/DD HH:mm')}</text>
+        </div>
+        <div className="order-content">
+          <div className="order-content-primary">
+            <text style={{fontSize: `1.1rem`, color: `#000000`}}>使用时长</text>
+            <text>{this.getDuration(item.createTime) + '分钟'}</text>
+            <div className="unpaid-status">已烘干</div>
+            <text style={{fontSize: `1.5rem`}}>{item.amount + '元'}</text>
+          </div>
+          <div className="order-content-secondary">
+            <text>{item.deviceAddr}</text>
+            <text className="unpaid-trip">待支付费用</text>
+          </div>
+        </div>
+        <div className="order-footer">
+          <div className="pay-button">支付</div>
+        </div>
+      </Panel>
+    )
+  }
+
+  renderPaidOrder = (item, i) => {
+    return (
+      <Panel key={i} onClick={() => {}}>
+        <div className="order-header">
+          <text>{'订单编号：' + item.orderNo}</text>
+          <text>{formatTime(item.createTime, 'YYYY/MM/DD HH:mm')}</text>
+        </div>
+        <div className="order-content">
+          <div className="order-content-primary">
+            <text style={{fontSize: `1.1rem`, color: `#000000`}}>使用时长</text>
+            <text>{this.getDuration(item.createTime) + '分钟'}</text>
+            <div className="status">已完成</div>
+            <text style={{fontSize: `1.5rem`}}>{item.amount + '元'}</text>
+          </div>
+          <div className="order-content-secondary">
+            <text>{item.deviceAddr}</text>
+            <text>本次费用</text>
+          </div>
+        </div>
+        <div className="order-footer">
+          <div className="paid-success-trip"><Icon value="success"/> 交易成功</div>
         </div>
       </Panel>
     )
@@ -133,46 +176,48 @@ class Orders extends Component {
     })
   }
 
+  onClickNavBar(status) {
+    this.setState({orderStatus: status})
+    this.props.fetchOrders({
+      userId: this.props.currentUser.id,
+      orderStatus: status,
+      limit: 10,
+      isRefresh: true,
+    })
+  }
+
   render() {
     return(
     <InfiniteLoader onLoadMore={this.onLoadMoreOrders}>
       <Tab>
         <NavBar>
           <NavBarItem active={this.state.orderStatus == ORDER_STATUS_UNPAID}
-                      onClick={e=>this.setState({orderStatus: ORDER_STATUS_UNPAID})}>
+                      onClick={e=>{this.onClickNavBar(ORDER_STATUS_UNPAID)}}>
             未支付
           </NavBarItem>
           <NavBarItem active={this.state.orderStatus == ORDER_STATUS_OCCUPIED}
-                      onClick={e=>this.setState({orderStatus: ORDER_STATUS_OCCUPIED})}>
+                      onClick={e=>{this.onClickNavBar(ORDER_STATUS_OCCUPIED)}}>
             使用中
           </NavBarItem>
           <NavBarItem active={this.state.orderStatus == ORDER_STATUS_PAID}
-                      onClick={e=>this.setState({orderStatus: ORDER_STATUS_PAID})}>
+                      onClick={e=>{this.onClickNavBar(ORDER_STATUS_PAID)}}>
             已完成
           </NavBarItem>
         </NavBar>
         <TabBody style={{backgroundColor: `#EFEFF4`}}>
           <Cells style={{display: this.state.orderStatus == ORDER_STATUS_UNPAID ? null : 'none', backgroundColor: `#EFEFF4`, marginTop: `0.6rem`}}>
             {
-              this.props.unpaidOrders.map(this.renderOrder)
+              this.props.unpaidOrders.map(this.renderUnpaidOrder)
             }
           </Cells>
           <Cells style={{display: this.state.orderStatus == ORDER_STATUS_OCCUPIED ? null : 'none', backgroundColor: `#EFEFF4`, marginTop: `0.6rem`}}>
             {
-
+              this.props.occupiedOrders.map(this.renderOccupiedOrder)
             }
           </Cells>
-          <Cells style={{display: this.state.orderStatus == ORDER_STATUS_PAID ? null : 'none'}}>
+          <Cells style={{display: this.state.orderStatus == ORDER_STATUS_PAID ? null : 'none', backgroundColor: `#EFEFF4`, marginTop: `0.6rem`}}>
             {
-              this.state.prepaidOrders.map((item, i) => {
-                return (
-                  <Cell key={i} access onClick={() => {}}>
-                    <CellBody>
-                      <div>{item.title}</div>
-                    </CellBody>
-                  </Cell>
-                )
-              })
+              this.props.paidOrders.map(this.renderPaidOrder)
             }
           </Cells>
         </TabBody>

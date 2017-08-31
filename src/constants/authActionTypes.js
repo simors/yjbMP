@@ -13,6 +13,7 @@ export const AUTO_LOGIN = 'AUTO_LOGIN'
 export const LOGIN = 'LOGIN'
 
 export const CREATE_PAYMENT = 'CREATE_PAYMENT'
+export const CREATE_TRANSFER = 'CREATE_TRANSFER'
 
 export const FETCH_ORDER_INFO = 'FETCH_ORDER_INFO'
 export const SAVE_ORDER_INFO = 'SAVE_ORDER_INFO'

@@ -27,29 +27,38 @@ export function selectToken(state) {
 export function selectUnpaidOrders(state) {
   let AUTH = state.AUTH
   let ordersMap = AUTH.orders
-  let unpaidOrders = ordersMap.filter((order) => {
+  let unpaidOrderList = []
+  let unpaidOrderMap = ordersMap.filter((order) => {
     return order.status === ORDER_STATUS_UNPAID
   })
-
-  return unpaidOrders.toJS()
+  unpaidOrderMap.toArray().forEach((orderRecord) => {
+    unpaidOrderList.push(orderRecord.toJS())
+  })
+  return unpaidOrderList
 }
 
 export function selectPaidOrders(state) {
   let AUTH = state.AUTH
   let ordersMap = AUTH.orders
-
-  let paidOrders = ordersMap.filter((order) => {
+  let paidOrderList = []
+  let paidOrderMap = ordersMap.filter((order) => {
     return order.status === ORDER_STATUS_PAID
   })
-  return paidOrders.toJS()
+  paidOrderMap.toArray().forEach((orderRecord) => {
+    paidOrderList.push(orderRecord.toJS())
+  })
+  return paidOrderList
 }
 
 export function selectOccupiedOrders(state) {
   let AUTH = state.AUTH
   let ordersMap = AUTH.orders
-
-  let occupiedOrders = ordersMap.filter((order) => {
+  let occupiedOrderList = []
+  let occupiedOrdersMap = ordersMap.filter((order) => {
     return order.status === ORDER_STATUS_OCCUPIED
   })
-  return occupiedOrders.toJS()
+  occupiedOrdersMap.toArray().forEach((orderRecord) => {
+    occupiedOrderList.push(orderRecord.toJS())
+  })
+  return occupiedOrderList
 }

@@ -11,7 +11,7 @@ import 'weui'
 import 'react-weui/build/dist/react-weui.css'
 import './wallet.css'
 import {selectUserInfo} from '../../selector/authSelector'
-import { createPayment} from '../../actions/authActions'
+import { createPayment, createTransfer} from '../../actions/authActions'
 import * as appConfig from '../../constants/appConfig'
 
 const {
@@ -76,7 +76,7 @@ class Wallet extends Component {
   }
 
   refundDeposit() {
-
+    browserHistory.push('/mine/refund')
   }
 
   render() {
@@ -110,6 +110,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
   createPayment,
+  createTransfer,
 }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(Wallet)

@@ -3,7 +3,7 @@
  */
 import AV from 'leancloud-storage'
 import {APP_NAME} from '../constants/appConfig'
-import {UserInfo} from '../models/authModel'
+import {UserInfo, OrderInfo} from '../models/authModel'
 
 export function become(payload) {
   return AV.User.become(payload.token).then((leanUser) => {
@@ -110,7 +110,7 @@ export function getPaymentCharge(payload) {
   return AV.Cloud.run('pingppCreatePayment', payload).then((charge) => {
     return charge
   }).catch((error) => {
-    console.log("获取微信用户信息失败：", error)
+    console.log("提交支付请求失败：", error)
     throw error
   })
 }
@@ -124,11 +124,24 @@ export function fetchOrderByStatus(payload) {
     isRefresh: payload.isRefresh,
   }
 
-  console.log("orderFetchOrdersByStatus payload", orderPayload)
-  return AV.Cloud.run('orderFetchOrdersByStatus', orderPayload).then((orders) => {
-    return orders
+  return AV.Cloud.run('orderFetchOrdersByStatus', orderPayload).then((result) => {
+    let orders = result.orders
+    let orderRecordList = []
+    orders.forEach((orderInfo) => {
+      orderRecordList.push(OrderInfo.fromLeancloudApi(orderInfo))
+    })
+    return orderRecordList
   }).catch((error) => {
     console.log("获取订单失败：", error)
+    throw error
+  })
+}
+
+export function getTransfer(payload) {
+  return AV.Cloud.run('pingppCreateTransfer', payload).then((transfer) => {
+    return transfer
+  }).catch((error) => {
+    console.log("提交提现请求失败：", error)
     throw error
   })
 }

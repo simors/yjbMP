@@ -2,7 +2,7 @@
  * Created by wanpeng on 2017/8/14.
  */
 import { call, put, takeEvery } from 'redux-saga/effects'
-import {fetchUserInfo, requestLeanSmsCode, register, become, login, getPaymentCharge, fetchOrderByStatus} from  '../api/auth'
+import {fetchUserInfo, requestLeanSmsCode, register, become, login, getPaymentCharge, fetchOrderByStatus, getTransfer} from  '../api/auth'
 import {registerSuccess, loginSuccess, loginOut, saveOrderInfo, fetchOrdersSuccess} from '../actions/authActions'
 import * as authActionTypes from '../constants/authActionTypes'
 import {OrderInfo} from '../models/authModel'
@@ -147,15 +147,10 @@ export function* fetchOrders(action) {
   let payload = action.payload
 
   try {
-    let orders = yield call(fetchOrderByStatus, payload)
-    console.log("fetchOrders", orders)
-    let orderRecordList = []
-    orders.forEach((orderInfo) => {
-      orderRecordList.push(OrderInfo.fromLeancloudApi(orderInfo))
-    })
+    let orderRecordList = yield call(fetchOrderByStatus, payload)
     yield put(fetchOrdersSuccess({orderRecordList}))
     if(payload.success) {
-      payload.success(orders)
+      payload.success(orderRecordList)
     }
   } catch(error) {
     if(payload.error) {
@@ -164,6 +159,29 @@ export function* fetchOrders(action) {
   }
 }
 
+export function* createTransfer(action) {
+  let payload = action.payload
+
+  let transferPayload = {
+    amount: payload.amount,
+    channel: payload.channel,
+    metadata: payload.metadata,
+    openid: payload.openid,
+    username: payload.username,
+  }
+
+  try {
+    let transfer = yield call(getTransfer, transferPayload)
+    if(payload.success) {
+      payload.success(transfer)
+    }
+
+  } catch(error) {
+    if(payload.error) {
+      payload.error(error)
+    }
+  }
+}
 
 export const authSaga = [
   takeEvery(authActionTypes.FETCH_USERINFO, fetchUserinfoAction),
@@ -173,5 +191,6 @@ export const authSaga = [
   takeEvery(authActionTypes.LOGIN, wechatLogin),
   takeEvery(authActionTypes.CREATE_PAYMENT, createPayment),
   takeEvery(authActionTypes.FETCH_ORDER_INFO, fetchOrderInfo),
-  takeEvery(authActionTypes.FETCH_ORDERS, fetchOrders)
+  takeEvery(authActionTypes.FETCH_ORDERS, fetchOrders),
+  takeEvery(authActionTypes.CREATE_TRANSFER, createTransfer)
 ]

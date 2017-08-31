@@ -59,6 +59,18 @@
   color: #737373;
 }
 
+.pay-button {
+  width: 6.4rem;
+  height: 1.6rem;
+  text-align: center;
+  border-radius: 5px;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #1AAD19;
+  font-size: 0.9rem;
+  color: #1AAD19;
+}
+
 .status {
   width: 3.2rem;
   height: 1.1rem;
@@ -68,4 +80,24 @@
   text-align: center;
   color: #ffffff;
   margin-right: 3.3rem;
+}
+
+.unpaid-status {
+  width: 3.2rem;
+  height: 1.1rem;
+  border-radius: 8px;
+  background-color: #1AAD19;
+  font-size: 0.6rem;
+  text-align: center;
+  color: #ffffff;
+  margin-right: 3.3rem;
+}
+
+.paid-success-trip {
+  font-size: 0.9rem;
+  color: #1AAD19;
+}
+
+.unpaid-trip {
+  color: #FFA22A;
 }

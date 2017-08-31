@@ -62,7 +62,7 @@ export const OrderInfoRecord = Record({
 
 export class OrderInfo extends OrderInfoRecord {
   static fromLeancloudApi(orderInfo) {
-    let info = new UserInfoRecord()
+    let info = new OrderInfoRecord()
 
     return info.withMutations((record) => {
       record.set('id', orderInfo.id)
