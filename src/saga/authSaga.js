@@ -2,8 +2,8 @@
  * Created by wanpeng on 2017/8/14.
  */
 import { call, put, takeEvery } from 'redux-saga/effects'
-import {fetchUserInfo, requestLeanSmsCode, register, become, login, getPaymentCharge, fetchOrderByStatus, getTransfer} from  '../api/auth'
-import {registerSuccess, loginSuccess, loginOut, saveOrderInfo, fetchOrdersSuccess} from '../actions/authActions'
+import {fetchUserInfo, requestLeanSmsCode, register, become, login, getPaymentCharge, fetchOrderByStatus, getTransfer, payOrder} from  '../api/auth'
+import {registerSuccess, loginSuccess, loginOut, saveOrderInfo, fetchOrdersSuccess, paymentOrderSuccess} from '../actions/authActions'
 import * as authActionTypes from '../constants/authActionTypes'
 import {OrderInfo} from '../models/authModel'
 
@@ -183,6 +183,24 @@ export function* createTransfer(action) {
   }
 }
 
+export function* paymentOrder(action) {
+  let payload = action.payload
+  let paymentPayload = {
+
+  }
+
+  try {
+    let orderRecord = yield call(payOrder, paymentPayload)
+
+    yield put(paymentOrderSuccess({order: orderRecord}))
+
+  } catch(error) {
+    if(payload.error) {
+      payload.error(error)
+    }
+  }
+}
+
 export const authSaga = [
   takeEvery(authActionTypes.FETCH_USERINFO, fetchUserinfoAction),
   takeEvery(authActionTypes.REQUEST_SMSCODE, requestSmsCode),
@@ -192,5 +210,6 @@ export const authSaga = [
   takeEvery(authActionTypes.CREATE_PAYMENT, createPayment),
   takeEvery(authActionTypes.FETCH_ORDER_INFO, fetchOrderInfo),
   takeEvery(authActionTypes.FETCH_ORDERS, fetchOrders),
-  takeEvery(authActionTypes.CREATE_TRANSFER, createTransfer)
+  takeEvery(authActionTypes.CREATE_TRANSFER, createTransfer),
+  takeEvery(authActionTypes.PAYMENT_ORDER, paymentOrder),
 ]

@@ -146,3 +146,12 @@ export function getTransfer(payload) {
   })
 }
 
+export function payOrder(payload) {
+  return AV.Cloud.run('orderOrderPayment', payload).then((orderInfo) => {
+    return OrderInfo.fromLeancloudApi(orderInfo)
+  }).catch((error) => {
+    console.log("服务订单支付失败：", error)
+    throw error
+  })
+}
+

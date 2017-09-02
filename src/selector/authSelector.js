@@ -62,3 +62,10 @@ export function selectOccupiedOrders(state) {
   })
   return occupiedOrderList
 }
+
+export function selectOrderById(state, orderId) {
+  let AUTH = state.AUTH
+  let orderRecord = AUTH.getIn(['orders', orderId])
+
+  return orderRecord? orderRecord.toJS() : undefined
+}

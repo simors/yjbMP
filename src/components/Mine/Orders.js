@@ -4,7 +4,8 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import {fetchOrders} from '../../actions/authActions'
+import {browserHistory} from 'react-router'
+import {fetchOrders, paymentOrder} from '../../actions/authActions'
 import {selectUserInfo, selectUnpaidOrders, selectOccupiedOrders, selectPaidOrders} from '../../selector/authSelector'
 import {ORDER_STATUS_OCCUPIED, ORDER_STATUS_PAID, ORDER_STATUS_UNPAID} from '../../constants/appConfig'
 import {formatTime} from '../../util'
@@ -35,6 +36,7 @@ const {
   CellMore,
   CellFooter,
   Icon,
+  Dialog,
 } = WeUI
 
 class Orders extends Component {
@@ -42,28 +44,24 @@ class Orders extends Component {
     super(props)
     this.state = {
       orderStatus: ORDER_STATUS_OCCUPIED,
-      unpaidOrders: [
-        {title: '普通干衣服务', id: '123456789', date: '2017/08/04 15:32', address: '中电软件园13栋2号柜13门', duration: '0:34:43', type: '实时计费', amount: 8.3, status: '已取出'},
-        {title: '普通干衣服务', id: '123456789', date: '2017/08/04 15:32', address: '中电软件园13栋2号柜13门', duration: '0:34:43', type: '实时计费', amount: 8.3, status: '已取出'},
-      ],
-      prepaidOrders: [
-        {title: '已支付订单-0'},
-        {title: '已支付订单-1'},
-        {title: '已支付订单-2'},
-        {title: '已支付订单-3'},
-        {title: '已支付订单-4'},
-        {title: '已支付订单-5'},
-        {title: '已支付订单-5'},
-        {title: '已支付订单-5'},
-        {title: '已支付订单-5'},
-        {title: '已支付订单-5'},
-        {title: '已支付订单-5'},
-        {title: '已支付订单-5'},
-        {title: '已支付订单-5'},
-        {title: '已支付订单-5'},
-        {title: '已支付订单-5'},
-        {title: '已支付订单-5'},
-      ],
+      showPayDialog: false,
+      payAmount: 0,
+      payOrderId: '',
+      PayDialog: {
+        title: '确认支付',
+        buttons: [
+          {
+            type: 'default',
+            label: '取消',
+            onClick: () => {this.setState({showPayDialog: false})}
+          },
+          {
+            type: 'primary',
+            label: '确认',
+            onClick: this.onPaymentService
+          }
+        ]
+      }
     }
   }
 
@@ -85,9 +83,25 @@ class Orders extends Component {
     return duration
   }
 
+  getAmount(order) {
+    let duration = 0
+    switch (order.status) {
+      case ORDER_STATUS_PAID:
+      case ORDER_STATUS_UNPAID:
+        duration = ((order.endTime - order.createTime) * 0.001 / 60).toFixed(0)
+        break
+      case ORDER_STATUS_OCCUPIED:
+        duration = ((Date.now() - order.createTime) * 0.001 / 60).toFixed(0)
+        break
+      default:
+        break
+    }
+    return (duration * order.unitPrice)
+  }
+
   renderOccupiedOrder = (item, i) => {
     return (
-      <Panel key={i} onClick={() => {}}>
+      <Panel key={i} onClick={() => {browserHistory.push('/mine/orders/' + item.id)}}>
         <div className="order-header">
           <text>{'订单编号：' + item.orderNo}</text>
           <text>{formatTime(item.createTime, 'YYYY/MM/DD HH:mm')}</text>
@@ -97,7 +111,7 @@ class Orders extends Component {
             <text style={{fontSize: `1.1rem`, color: `#000000`}}>使用时长</text>
             <text>{this.getDuration(item.createTime) + '分钟'}</text>
             <div className="status">正在烘干</div>
-            <text style={{fontSize: `1.5rem`}}>{item.amount + '元'}</text>
+            <text style={{fontSize: `1.5rem`}}>{this.getAmount(item) + '元'}</text>
           </div>
           <div className="order-content-secondary">
             <text>{item.deviceAddr}</text>
@@ -105,15 +119,34 @@ class Orders extends Component {
           </div>
         </div>
         <div className="order-footer">
-          <div className="order-button">取出衣物</div>
+          <div className="order-button" onClick={() => this.triggerPayment(item)}>取出衣物</div>
         </div>
       </Panel>
     )
   }
 
+  //触发支付动作
+  triggerPayment(order) {
+    var amount = this.getAmount(order)
+    this.setState({
+      showPayDialog: true,
+      payAmount: amount,
+      payOrderId: order.id,
+    })
+  }
+
+  //支付服务订单
+  onPaymentService = () => {
+    this.props.paymentOrder({
+      userId: this.props.currentUser.id,
+      amount: this.state.payAmount,
+      orderId: this.state.payOrderId
+    })
+  }
+
   renderUnpaidOrder = (item, i) => {
     return (
-      <Panel key={i} onClick={() => {}}>
+      <Panel key={i} onClick={() => {browserHistory.push('/mine/orders/' + item.id)}}>
         <div className="order-header">
           <text>{'订单编号：' + item.orderNo}</text>
           <text>{formatTime(item.createTime, 'YYYY/MM/DD HH:mm')}</text>
@@ -123,7 +156,7 @@ class Orders extends Component {
             <text style={{fontSize: `1.1rem`, color: `#000000`}}>使用时长</text>
             <text>{this.getDuration(item.createTime) + '分钟'}</text>
             <div className="unpaid-status">已烘干</div>
-            <text style={{fontSize: `1.5rem`}}>{item.amount + '元'}</text>
+            <text style={{fontSize: `1.5rem`}}>{this.getAmount(item) + '元'}</text>
           </div>
           <div className="order-content-secondary">
             <text>{item.deviceAddr}</text>
@@ -131,7 +164,7 @@ class Orders extends Component {
           </div>
         </div>
         <div className="order-footer">
-          <div className="pay-button">支付</div>
+          <div className="pay-button" onClick={() => this.triggerPayment(item)}>支付</div>
         </div>
       </Panel>
     )
@@ -139,7 +172,7 @@ class Orders extends Component {
 
   renderPaidOrder = (item, i) => {
     return (
-      <Panel key={i} onClick={() => {}}>
+      <Panel key={i} onClick={() => {browserHistory.push('/mine/orders/' + item.id )}}>
         <div className="order-header">
           <text>{'订单编号：' + item.orderNo}</text>
           <text>{formatTime(item.createTime, 'YYYY/MM/DD HH:mm')}</text>
@@ -149,7 +182,7 @@ class Orders extends Component {
             <text style={{fontSize: `1.1rem`, color: `#000000`}}>使用时长</text>
             <text>{this.getDuration(item.createTime) + '分钟'}</text>
             <div className="status">已完成</div>
-            <text style={{fontSize: `1.5rem`}}>{item.amount + '元'}</text>
+            <text style={{fontSize: `1.5rem`}}>{this.getAmount(item) + '元'}</text>
           </div>
           <div className="order-content-secondary">
             <text>{item.deviceAddr}</text>
@@ -222,6 +255,9 @@ class Orders extends Component {
           </Cells>
         </TabBody>
       </Tab>
+      <Dialog type="ios" title={this.state.PayDialog.title} buttons={this.state.PayDialog.buttons} show={this.state.showPayDialog}>
+        {"即将使用余额支付，本次扣费" + this.state.payAmount + "元"}
+      </Dialog>
     </InfiniteLoader>
     )
   }
@@ -238,6 +274,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
   fetchOrders,
+  paymentOrder
 }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(Orders)

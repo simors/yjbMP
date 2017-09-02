@@ -54,10 +54,12 @@ export const OrderInfoRecord = Record({
   orderNo: undefined,       //订单编号
   status: undefined,        //订单状态
   createTime: undefined,    //下单时间
+  endTime: undefined,       //结单时间
   deviceNo: undefined,      //设备编号
   deviceAddr: undefined,    //设备地址
   amount: undefined,        //服务费用
   userId: undefined,        //用户id
+  unitPrice: undefined,     //单价 元／分钟
 }, 'OrderInfoRecord')
 
 export class OrderInfo extends OrderInfoRecord {
@@ -69,10 +71,12 @@ export class OrderInfo extends OrderInfoRecord {
       record.set('orderNo', orderInfo.orderNo)
       record.set('status', orderInfo.status)
       record.set('createTime', orderInfo.createTime)
+      record.set('endTime', orderInfo.endTime)
       record.set('deviceNo', orderInfo.deviceNo)
       record.set('deviceAddr', orderInfo.deviceAddr)
       record.set('amount', orderInfo.amount || 0)
       record.set('userId', orderInfo.userId)
+      record.set('unitPrice', orderInfo.unitPrice)
     })
   }
 }
