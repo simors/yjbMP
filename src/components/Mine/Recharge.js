@@ -128,7 +128,7 @@ class Recharge extends Component {
 
   render() {
     return(
-      <Page>
+      <Page ptr={false} infiniteLoader={false}>
         <div className="banner">
         </div>
         <div className="button-area">
