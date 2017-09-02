@@ -5,18 +5,18 @@ import querystring from 'querystring'
 import URL from  'url'
 import {store} from '../store/persistStore'
 import {isUserLogined} from '../selector/authSelector'
+import {WECHAT_MP_APPID} from '../constants/appConfig'
 
 
 function getAuthorizeURL(redirect, state, scope) {
   var url = 'https://open.weixin.qq.com/connect/oauth2/authorize';
   var info = {
-    appid: 'wx2c7e7f1a67c78900',
+    appid: WECHAT_MP_APPID,
     redirect_uri: redirect,
     response_type: 'code',
     scope: scope || 'snsapi_base',
     state: state || ''
   };
-
   return url + '?' + querystring.stringify(info) + '#wechat_redirect';
 }
 
