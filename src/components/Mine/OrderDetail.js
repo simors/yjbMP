@@ -10,6 +10,7 @@ import 'weui'
 import 'react-weui/build/dist/react-weui.css'
 import './orderDetail.css'
 import {formatTime} from '../../util'
+import {ORDER_STATUS_OCCUPIED, ORDER_STATUS_PAID, ORDER_STATUS_UNPAID} from '../../constants/appConfig'
 
 
 const {
@@ -24,6 +25,24 @@ class OrderDetail extends Component {
 
   componentDidMount() {
     document.title = "订单详细"
+  }
+
+  getAmount(order) {
+    let duration = 0
+    switch (order.status) {
+      case ORDER_STATUS_PAID:
+        return order.amount
+        break
+      case ORDER_STATUS_UNPAID:
+        duration = ((order.endTime - order.createTime) * 0.001 / 60).toFixed(0)
+        break
+      case ORDER_STATUS_OCCUPIED:
+        duration = ((Date.now() - order.createTime) * 0.001 / 60).toFixed(0)
+        break
+      default:
+        break
+    }
+    return (duration * order.unitPrice).toFixed(2)
   }
 
   getDuration(createTime) {
@@ -43,7 +62,7 @@ class OrderDetail extends Component {
           </div>
           <div className="order-detail-item">
             <div>服务名称：普通干衣</div>
-            <div>{'进行时长：0:34:32' + this.getDuration(this.props.orderInfo.createTime)}</div>
+            <div>{'进行时长：' + this.getDuration(this.props.orderInfo.createTime) + '分钟'}</div>
             <div>所在柜门：13号</div>
           </div>
           <div className="order-detail-item">
@@ -51,7 +70,7 @@ class OrderDetail extends Component {
             <div>{'衣柜位置：' + this.props.orderInfo.deviceAddr}</div>
           </div>
           <div className="order-detail-item">
-            {'实时计费：' + + '元'}
+            {'实时计费：' + this.getAmount(this.props.orderInfo) + '元'}
           </div>
         </div>
         <div className="order-detail-buttom-area">

@@ -87,6 +87,8 @@ class Orders extends Component {
     let duration = 0
     switch (order.status) {
       case ORDER_STATUS_PAID:
+        return order.amount
+        break
       case ORDER_STATUS_UNPAID:
         duration = ((order.endTime - order.createTime) * 0.001 / 60).toFixed(0)
         break
@@ -96,17 +98,17 @@ class Orders extends Component {
       default:
         break
     }
-    return (duration * order.unitPrice)
+    return (duration * order.unitPrice).toFixed(2)
   }
 
   renderOccupiedOrder = (item, i) => {
     return (
-      <Panel key={i} onClick={() => {browserHistory.push('/mine/orders/' + item.id)}}>
+      <Panel key={i}>
         <div className="order-header">
           <text>{'订单编号：' + item.orderNo}</text>
           <text>{formatTime(item.createTime, 'YYYY/MM/DD HH:mm')}</text>
         </div>
-        <div className="order-content">
+        <div className="order-content" onClick={() => {browserHistory.push('/mine/orders/' + item.id)}}>
           <div className="order-content-primary">
             <text style={{fontSize: `1.1rem`, color: `#000000`}}>使用时长</text>
             <text>{this.getDuration(item.createTime) + '分钟'}</text>
@@ -146,12 +148,12 @@ class Orders extends Component {
 
   renderUnpaidOrder = (item, i) => {
     return (
-      <Panel key={i} onClick={() => {browserHistory.push('/mine/orders/' + item.id)}}>
+      <Panel key={i}>
         <div className="order-header">
           <text>{'订单编号：' + item.orderNo}</text>
           <text>{formatTime(item.createTime, 'YYYY/MM/DD HH:mm')}</text>
         </div>
-        <div className="order-content">
+        <div className="order-content" onClick={() => {browserHistory.push('/mine/orders/' + item.id)}}>
           <div className="order-content-primary">
             <text style={{fontSize: `1.1rem`, color: `#000000`}}>使用时长</text>
             <text>{this.getDuration(item.createTime) + '分钟'}</text>
@@ -177,7 +179,7 @@ class Orders extends Component {
           <text>{'订单编号：' + item.orderNo}</text>
           <text>{formatTime(item.createTime, 'YYYY/MM/DD HH:mm')}</text>
         </div>
-        <div className="order-content">
+        <div className="order-content" onClick={() => {browserHistory.push('/mine/orders/' + item.id)}}>
           <div className="order-content-primary">
             <text style={{fontSize: `1.1rem`, color: `#000000`}}>使用时长</text>
             <text>{this.getDuration(item.createTime) + '分钟'}</text>

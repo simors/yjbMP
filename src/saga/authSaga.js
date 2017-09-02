@@ -186,7 +186,10 @@ export function* createTransfer(action) {
 export function* paymentOrder(action) {
   let payload = action.payload
   let paymentPayload = {
-
+    userId: payload.userId,
+    amount: payload.amount,
+    orderId: payload.orderId,
+    endTime: payload.endTime,
   }
 
   try {
