@@ -189,14 +189,15 @@ export function* paymentOrder(action) {
     userId: payload.userId,
     amount: payload.amount,
     orderId: payload.orderId,
-    endTime: payload.endTime,
+    endTime: Date.now(),
   }
 
   try {
     let orderRecord = yield call(payOrder, paymentPayload)
-
     yield put(paymentOrderSuccess({order: orderRecord}))
-
+    if(payload.success) {
+      payload.success(orderRecord)
+    }
   } catch(error) {
     if(payload.error) {
       payload.error(error)

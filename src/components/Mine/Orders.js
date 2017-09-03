@@ -137,12 +137,27 @@ class Orders extends Component {
     })
   }
 
+  paymentServiceSuccessCallback = (orderRecord) => {
+    console.log("orderRecord: status", orderRecord.status)
+    if(orderRecord.status === ORDER_STATUS_PAID) {
+
+    } else if(orderRecord.status === ORDER_STATUS_UNPAID) {
+
+    }
+  }
+
+  paymentServiceFailedCallback = (error) => {
+
+  }
+
   //支付服务订单
   onPaymentService = () => {
     this.props.paymentOrder({
       userId: this.props.currentUser.id,
       amount: this.state.payAmount,
-      orderId: this.state.payOrderId
+      orderId: this.state.payOrderId,
+      success: this.paymentServiceSuccessCallback,
+      error: this.paymentServiceFailedCallback,
     })
   }
 
