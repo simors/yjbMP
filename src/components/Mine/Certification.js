@@ -56,6 +56,7 @@ class Certification extends Component {
   }
 
   submit = () => {
+    var that = this
     if(!this.state.idName) {
       this.setState({
         showWarn: true,
