@@ -145,6 +145,7 @@ export function getTransfer(payload) {
 }
 
 export function payOrder(payload) {
+  console.log("payOrder payload", payload)
   return AV.Cloud.run('orderOrderPayment', payload).then((orderInfo) => {
     return OrderInfo.fromLeancloudApi(orderInfo)
   }).catch((error) => {
