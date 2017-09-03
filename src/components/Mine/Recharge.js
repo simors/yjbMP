@@ -4,6 +4,7 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import {browserHistory} from 'react-router'
 var pingpp = require('pingpp-js')
 import {createPayment} from '../../actions/authActions'
 import * as appConfig from '../../constants/appConfig'
@@ -97,6 +98,7 @@ class Recharge extends Component {
     pingpp.createPayment(charge, function (result, err) {
       if (result == "success") {
         // 只有微信公众账号 wx_pub 支付成功的结果会在这里返回，其他的支付结果都会跳转到 extra 中对应的 URL。
+        browserHistory.push('/mine/wallet')
       } else if (result == "fail") {
         // charge 不正确或者微信公众账号支付失败时会在此处返回
       } else if (result == "cancel") {
@@ -111,7 +113,8 @@ class Recharge extends Component {
 
   onRecharge = () => {
     this.props.createPayment({
-      amount: this.state.selectAmount,
+      // amount: this.state.selectAmount,
+      amount: 1, //TODO 测试
       channel: 'wx_pub',
       metadata: {
         'fromUser': this.props.currentUser.id,

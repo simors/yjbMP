@@ -50,7 +50,7 @@ class Deposit extends Component {
 
   payDeposit = () => {
     this.props.createPayment({
-      amount: 1,
+      amount: 1, //TODO 从后台配置
       channel: 'wx_pub',
       metadata: {
         'fromUser': this.props.currentUser.id,
