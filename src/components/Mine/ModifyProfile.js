@@ -55,6 +55,16 @@ class ModifyProfile extends  Component {
     }
   }
 
+  onIdVerify = () => {
+    if(this.props.currentUser.idNameVerified) {
+      return
+    } else if(this.props.currentUser.idName && this.props.currentUser.idNumber) {
+      return
+    } else {
+      browserHistory.push('/modifyProfile/certification')
+    }
+  }
+
   render() {
     return(
       <Page>
@@ -85,7 +95,7 @@ class ModifyProfile extends  Component {
               {this.props.currentUser.idName || ""}
             </CellFooter>
           </Cell>
-          <Cell access={this.getIdLinkAccess()} onClick={() => {browserHistory.push('/modifyProfile/certification')}}>
+          <Cell access={this.getIdLinkAccess()} onClick={this.onIdVerify}>
             <CellBody>
               实名认证
             </CellBody>
