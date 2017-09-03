@@ -69,3 +69,13 @@ export function selectOrderById(state, orderId) {
 
   return orderRecord? orderRecord.toJS() : undefined
 }
+
+export function selectDealRecord(state) {
+  let AUTH = state.AUTH
+  let dealRecordsMap = AUTH.dealRecords
+  let dealRecordList = []
+  dealRecordsMap.toArray().forEach((dealRecord) => {
+    dealRecordList.push(dealRecord.toJS())
+  })
+  return dealRecordList
+}

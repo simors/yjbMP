@@ -6,7 +6,9 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import WeUI from 'react-weui'
 import {fetchDealRecords} from '../../actions/authActions'
-import {selectUserInfo} from '../../selector/authSelector'
+import {selectUserInfo, selectDealRecord} from '../../selector/authSelector'
+import {DEPOSIT, RECHARGE, SERVICE, REFUND, WITHDRAW} from '../../constants/appConfig'
+  import {formatTime} from  '../../util'
 import 'weui'
 import 'react-weui/build/dist/react-weui.css'
 import './wallet-detail.css'
@@ -70,6 +72,49 @@ class WalletDetail extends Component {
 
   }
 
+  getDealTitle(record) {
+    switch (record.dealType) {
+      case DEPOSIT:
+        return "付款成功-押金"
+        break
+      case RECHARGE:
+        return "付款成功-充值"
+        break
+      case SERVICE:
+        return "付款成功-干衣"
+        break
+      case REFUND:
+        return "退款成功-押金"
+        break
+      case WITHDRAW:
+        return "提现成功-余额"
+        break
+      default:
+        break
+    }
+  }
+
+  getDealType(record) {
+    switch (record.dealType) {
+      case DEPOSIT:
+        return "押金"
+        break
+      case RECHARGE:
+        return "平台充值"
+        break
+      case SERVICE:
+        return "干衣消费"
+        break
+      case REFUND:
+        return "押金退款"
+        break
+      case WITHDRAW:
+        return "余额提现"
+        break
+      default:
+        break
+    }
+  }
 
   render(){
     return (
@@ -77,18 +122,18 @@ class WalletDetail extends Component {
       <Page ptr={false}>
         <Cells>
           {
-            this.state.records.map( (item, i) => {
+            this.props.dealRecords.map( (item, i) => {
               return (
                 <Cell key={i} access onClick={() => {this.showRecordDetail(item)}}>
                   <CellBody>
                     <div className="record">
                       <div className="record-header">
-                        <text className="content-primary">{item.title}</text>
-                        <text className="content-trip">{item.date}</text>
+                        <text className="content-primary">{this.getDealTitle(item)}</text>
+                        <text className="content-trip">{formatTime(Date(item.dealTime).getTime(), 'YYYY-MM-DD HH:mm)}</text>
                       </div>
                       <div className="record-content">
-                        <text className="content-primary">{item.amount}</text>
-                        <text className="content-trip">{item.type}</text>
+                        <text className="content-primary">{item.cost + '元'}</text>
+                        <text className="content-trip">{this.getDealType(item)}</text>
                       </div>
                     </div>
                   </CellBody>
@@ -107,6 +152,7 @@ class WalletDetail extends Component {
 const mapStateToProps = (state, ownProps) => {
   return {
     currentUser: selectUserInfo(state),
+    dealRecords: selectDealRecord(state)
   }
 };
 
