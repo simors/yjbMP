@@ -52,7 +52,7 @@ class OpenDevice extends Component {
   }
 
   renderDeviceStatus() {
-    if(this.props.currentUser.balance < 0) { //欠费
+    if(this.props.currentUser.debt > 0) { //欠费
       return(
         <PanelBody style={{borderBottomWidth: `0`}}>
           <Msg
@@ -121,7 +121,7 @@ class OpenDevice extends Component {
       return(
         <LoadMore className="device-loadmore" loading/>
       )
-    } else if(this.props.currentUser.balance < 0) { //欠费
+    } else if(this.props.currentUser.debt > 0) { //欠费
       return "去支付"
     } else if(this.props.deviceInfo.status === 0) { //空闲
       return "开门"
@@ -182,7 +182,7 @@ class OpenDevice extends Component {
   }
 
   onPress = () => {
-    if(this.props.currentUser.balance < 0) { //欠费
+    if(this.props.currentUser.debt > 0) { //欠费
 
     } else if(this.props.deviceInfo.status === 0) { //空闲
       this.turnOnDevice()

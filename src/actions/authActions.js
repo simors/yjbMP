@@ -24,3 +24,6 @@ export const fetchOrdersSuccess = createAction(authActionTypes.FETCH_ORDERS_SUCC
 export const paymentOrder = createAction(authActionTypes.PAYMENT_ORDER)
 export const paymentOrderSuccess = createAction(authActionTypes.PAYMENT_ORDER_SUCCESS)
 
+export const fetchWalletInfo = createAction(authActionTypes.FETCH_WALLET_INFO)
+export const fetchWalletInfoSuccess = createAction(authActionTypes.FETCH_WALLET_INFO_SUCCESS)
+

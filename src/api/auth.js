@@ -65,8 +65,6 @@ export function register(payload) {
     authUser.set('country', payload.wechatUserInfo.country)
     authUser.set('province', payload.wechatUserInfo.province)
     authUser.set('city', payload.wechatUserInfo.city)
-    authUser.set('balance', 0)
-    authUser.set('deposit', 0)
 
     return authUser.save()
   }).then((leanUser) => {
@@ -151,6 +149,15 @@ export function payOrder(payload) {
     return OrderInfo.fromLeancloudApi(orderInfo)
   }).catch((error) => {
     console.log("服务订单支付失败：", error)
+    throw error
+  })
+}
+
+export function getWalletInfo(payload) {
+  return AV.Cloud.run('59ab4a2544d90400585c082f', payload).then((walletInfo) => {
+    return walletInfo
+  }).catch((error) => {
+    console.log("获取钱包信息失败：", error)
     throw error
   })
 }

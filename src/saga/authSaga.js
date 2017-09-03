@@ -2,8 +2,8 @@
  * Created by wanpeng on 2017/8/14.
  */
 import { call, put, takeEvery } from 'redux-saga/effects'
-import {fetchUserInfo, requestLeanSmsCode, register, become, login, getPaymentCharge, fetchOrderByStatus, getTransfer, payOrder} from  '../api/auth'
-import {registerSuccess, loginSuccess, loginOut, saveOrderInfo, fetchOrdersSuccess, paymentOrderSuccess} from '../actions/authActions'
+import {fetchUserInfo, requestLeanSmsCode, register, become, login, getPaymentCharge, fetchOrderByStatus, getTransfer, payOrder, getWalletInfo} from  '../api/auth'
+import {registerSuccess, loginSuccess, loginOut, saveOrderInfo, fetchOrdersSuccess, paymentOrderSuccess, fetchWalletInfoSuccess} from '../actions/authActions'
 import * as authActionTypes from '../constants/authActionTypes'
 import {OrderInfo} from '../models/authModel'
 
@@ -204,6 +204,28 @@ export function* paymentOrder(action) {
   }
 }
 
+export function* fetchWalletInfo(action) {
+  let payload = action.payload
+
+  let walletPayload = {
+    userId: payload.userId
+  }
+  try {
+    let walletInfo = yield call(fetchWalletInfo, walletPayload)
+    if(walletInfo) {
+      yield put(fetchWalletInfoSuccess(walletInfo))
+    }
+    if(payload.success) {
+      payload.success(walletInfo)
+    }
+  } catch(error) {
+    if(payload.error) {
+      payload.error(error)
+    }
+  }
+
+}
+
 export const authSaga = [
   takeEvery(authActionTypes.FETCH_USERINFO, fetchUserinfoAction),
   takeEvery(authActionTypes.REQUEST_SMSCODE, requestSmsCode),
@@ -215,4 +237,5 @@ export const authSaga = [
   takeEvery(authActionTypes.FETCH_ORDERS, fetchOrders),
   takeEvery(authActionTypes.CREATE_TRANSFER, createTransfer),
   takeEvery(authActionTypes.PAYMENT_ORDER, paymentOrder),
+  takeEvery(authActionTypes.FETCH_WALLET_INFO, fetchWalletInfo),
 ]

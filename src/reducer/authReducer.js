@@ -24,6 +24,8 @@ export default function authReducer(state = initialState, action) {
       return handleFetchOrders(state, action)
     case authActionTypes.PAYMENT_ORDER_SUCCESS:
       return handleUpdateOrderInfo(state, action)
+    case authActionTypes.FETCH_WALLET_INFO_SUCCESS:
+      return handleSaveWalletInfo(state, action)
     case REHYDRATE:
       return onRehydrate(state, action)
     default:
@@ -43,6 +45,16 @@ function handleSaveUserInfo(state, action) {
   state = state.set('profile', payload.userInfo)
   state = state.set('token', payload.token)
   state = state.set('activeUser', userId)
+  return state
+}
+
+function handleSaveWalletInfo(state, action) {
+  let payload = action.payload
+  let walletInfo = payload.walletInfo
+
+  state = state.setIn(['profile', 'balance'], walletInfo.balance)
+  state = state.setIn(['profile', 'deposit'], walletInfo.deposit)
+  state = state.setIn(['profile', 'debt'], walletInfo.debt)
   return state
 }
 

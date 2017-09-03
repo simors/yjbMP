@@ -11,7 +11,7 @@ import 'weui'
 import 'react-weui/build/dist/react-weui.css'
 import './wallet.css'
 import {selectUserInfo} from '../../selector/authSelector'
-import { createPayment, createTransfer} from '../../actions/authActions'
+import { createPayment, createTransfer, fetchWalletInfo} from '../../actions/authActions'
 import * as appConfig from '../../constants/appConfig'
 
 const {
@@ -28,6 +28,12 @@ const {
 class Wallet extends Component {
   constructor(props) {
     super(props)
+  }
+
+  componentWillMount() {
+    this.props.fetchWalletInfo({
+      userId: this.props.currentUser.id
+    })
   }
 
   componentDidMount() {
@@ -82,7 +88,7 @@ class Wallet extends Component {
     return(
       <Page ptr={false}>
         <div className="walletcontainer">
-          <text className="amount">{this.props.currentUser.balance + '元'}</text>
+          <text className="amount">{this.props.currentUser.balance || 0 + '元'}</text>
           <text className="amountTrip">当前余额</text>
 
           <div className="buttons-area">
@@ -110,6 +116,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => bindActionCreators({
   createPayment,
   createTransfer,
+  fetchWalletInfo
 }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(Wallet)
