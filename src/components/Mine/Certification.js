@@ -43,6 +43,7 @@ class Certification extends Component {
       showWarn: false,
       warnTips: ""
     }
+    this.handleInputChange = this.handleInputChange.bind(this)
   }
 
   componentDidMount() {
