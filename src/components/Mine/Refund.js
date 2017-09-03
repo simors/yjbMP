@@ -14,23 +14,8 @@ import 'react-weui/build/dist/react-weui.css'
 import './refund.css'
 
 const {
-  Cell,
-  Cells,
-  CellBody,
-  CellFooter,
   Button,
-  Panel,
   Page,
-  PanelHeader,
-  PanelBody,
-  MediaBox,
-  MediaBoxTitle,
-  MediaBoxDescription,
-  Form,
-  FormCell,
-  CellHeader,
-  Label,
-  Input
 } = WeUI
 
 class Refund extends Component {
@@ -47,8 +32,8 @@ class Refund extends Component {
       amount: this.props.currentUser.deposit,
       channel: 'wx_pub',
       metadata: {
-        'fromUser': this.props.currentUser.id,
-        'toUser': 'platform',
+        'fromUser': 'platform',
+        'toUser': this.props.currentUser.id,
         'dealType': appConfig.REFUND
       },
       openid: this.props.currentUser.authData.weixin.openid,
