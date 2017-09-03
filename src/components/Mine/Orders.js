@@ -144,7 +144,7 @@ class Orders extends Component {
     var amount = this.getAmount(order)
     this.setState({
       showPayDialog: true,
-      payAmount: amount,
+      payAmount: Number(amount),
       payOrderId: order.id,
     })
   }
