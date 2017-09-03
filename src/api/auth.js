@@ -163,6 +163,7 @@ export function getWalletInfo(payload) {
 }
 
 export function getDealRecords(payload) {
+  console.log("getDealRecords payload", payload)
   return AV.Cloud.run('authFetchDealRecords', payload).then((records) => {
     return records
   }).catch((error) => {

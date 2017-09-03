@@ -228,7 +228,7 @@ export function* fetchWalletInfo(action) {
 
 export function* fetchDealRecords(action) {
   let payload = action.payload
-
+  console,login("fetchDealRecords payload", payload)
   let dealPayload = {
     userId: payload.userId
   }
