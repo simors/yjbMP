@@ -235,7 +235,7 @@ export function* fetchDealRecords(action) {
     let dealRecordList = yield call(getDealRecords, dealPayload)
     console.log("fetchDealRecords records:", dealRecordList)
     if(dealRecordList.length > 0) {
-      yield put(fetchDealRecordsSuccess(dealRecordList))
+      yield put(fetchDealRecordsSuccess({dealRecordList}))
     }
     if(payload.success) {
       payload.success(dealRecordList)
