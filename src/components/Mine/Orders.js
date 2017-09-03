@@ -61,6 +61,18 @@ class Orders extends Component {
             onClick: this.onPaymentService
           }
         ]
+      },
+      showTripDialog: false,
+      TripDialogTitle: '支付成功',
+      TripDialog: {
+        buttons: [
+          {
+            label: '确定',
+            onClick: () => {
+              this.setState({showTripDialog: false})
+            }
+          },
+        ]
       }
     }
   }
@@ -137,17 +149,24 @@ class Orders extends Component {
     })
   }
 
+
   paymentServiceSuccessCallback = (orderRecord) => {
     console.log("orderRecord: status", orderRecord.status)
     if(orderRecord.status === ORDER_STATUS_PAID) {
-
+      this.setState({
+        showTripDialog: true,
+        TripDialogTitle: '支付成功'
+      })
     } else if(orderRecord.status === ORDER_STATUS_UNPAID) {
-
+      this.setState({
+        showTripDialog: true,
+        TripDialogTitle: '余额不足'
+      })
     }
   }
 
   paymentServiceFailedCallback = (error) => {
-
+    console.log("onPaymentService", error)
   }
 
   //支付服务订单
@@ -274,6 +293,8 @@ class Orders extends Component {
       </Tab>
       <Dialog type="ios" title={this.state.PayDialog.title} buttons={this.state.PayDialog.buttons} show={this.state.showPayDialog}>
         {"即将使用余额支付，本次扣费" + this.state.payAmount + "元"}
+      </Dialog>
+      <Dialog type="ios" title={this.state.TripDialogTitle} buttons={this.state.TripDialog.buttons} show={this.state.showTripDialog}>
       </Dialog>
     </InfiniteLoader>
     )
