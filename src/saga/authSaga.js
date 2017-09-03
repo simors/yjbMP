@@ -211,7 +211,7 @@ export function* fetchWalletInfo(action) {
     userId: payload.userId
   }
   try {
-    let walletInfo = yield call(fetchWalletInfo, walletPayload)
+    let walletInfo = yield call(getWalletInfo, walletPayload)
     if(walletInfo) {
       yield put(fetchWalletInfoSuccess(walletInfo))
     }

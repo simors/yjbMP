@@ -154,7 +154,7 @@ export function payOrder(payload) {
 }
 
 export function getWalletInfo(payload) {
-  return AV.Cloud.run('59ab4a2544d90400585c082f', payload).then((walletInfo) => {
+  return AV.Cloud.run('authFetchWalletInfo', payload).then((walletInfo) => {
     return walletInfo
   }).catch((error) => {
     console.log("获取钱包信息失败：", error)
