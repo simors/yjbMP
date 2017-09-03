@@ -66,7 +66,7 @@ class OpenDevice extends Component {
       return(
         <PanelBody style={{borderBottomWidth: `0`}}>
           <MediaBox type="text">
-            <MediaBoxTitle>13号柜门可使用{this.props.deviceInfo.}</MediaBoxTitle>
+            <MediaBoxTitle>{this.props.deviceInfo.deviceAddr}</MediaBoxTitle>
             <MediaBoxDescription>
               请将衣物平整放入干衣柜，注意保持间隙。放置后请关门。
             </MediaBoxDescription>
