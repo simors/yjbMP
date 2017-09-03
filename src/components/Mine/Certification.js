@@ -30,7 +30,8 @@ const {
   CellHeader,
   CellsTitle,
   Label,
-  Input
+  Input,
+  Toptips
 } = WeUI
 
 class Certification extends Component {
