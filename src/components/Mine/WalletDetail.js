@@ -129,7 +129,7 @@ class WalletDetail extends Component {
                     <div className="record">
                       <div className="record-header">
                         <text className="content-primary">{this.getDealTitle(item)}</text>
-                        <text className="content-trip">{formatTime(Date(item.dealTime).getTime(), 'YYYY-MM-DD HH:mm)}</text>
+                        <text className="content-trip">{formatTime(Date(item.dealTime).getTime(),'YYYY-MM-DD HH:mm')}</text>
                       </div>
                       <div className="record-content">
                         <text className="content-primary">{item.cost + '元'}</text>
