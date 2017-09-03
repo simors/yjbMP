@@ -185,6 +185,7 @@ export function* createTransfer(action) {
 
 export function* paymentOrder(action) {
   let payload = action.payload
+  console.log("paymentOrder: payload", payload)
   let paymentPayload = {
     userId: payload.userId,
     amount: payload.amount,
