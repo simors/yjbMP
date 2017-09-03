@@ -8,7 +8,7 @@ import WeUI from 'react-weui'
 import {fetchDealRecords} from '../../actions/authActions'
 import {selectUserInfo, selectDealRecord} from '../../selector/authSelector'
 import {DEPOSIT, RECHARGE, SERVICE, REFUND, WITHDRAW} from '../../constants/appConfig'
-  import {formatTime} from  '../../util'
+import {formatTime} from  '../../util'
 import 'weui'
 import 'react-weui/build/dist/react-weui.css'
 import './wallet-detail.css'
@@ -33,22 +33,6 @@ const {
 class WalletDetail extends Component {
   constructor(props) {
     super(props)
-    this.state = {
-      items: [...Array(20).keys()],
-      records: [{title: '付款成功－充值', date: '2017-03-30 14:23', amount: 50, type: '平台充值'},
-        {title: '付款成功－干衣', date: '2017-03-30 15:30', amount: 8, type: '干衣消费'},
-        {title: '付款成功－干衣', date: '2017-03-30 15:30', amount: 8, type: '干衣消费'},
-        {title: '付款成功－干衣', date: '2017-03-30 15:30', amount: 8, type: '干衣消费'},
-        {title: '付款成功－干衣', date: '2017-03-30 15:30', amount: 8, type: '干衣消费'},
-        {title: '付款成功－干衣', date: '2017-03-30 15:30', amount: 8, type: '干衣消费'},
-        {title: '付款成功－干衣', date: '2017-03-30 15:30', amount: 8, type: '干衣消费'},
-        {title: '付款成功－干衣', date: '2017-03-30 15:30', amount: 8, type: '干衣消费'},
-        {title: '付款成功－干衣', date: '2017-03-30 15:30', amount: 8, type: '干衣消费'},
-        {title: '付款成功－干衣', date: '2017-03-30 15:30', amount: 8, type: '干衣消费'},
-        {title: '付款成功－干衣', date: '2017-03-30 15:30', amount: 8, type: '干衣消费'},
-        {title: '付款成功－干衣', date: '2017-03-30 15:30', amount: 8, type: '干衣消费'},
-      ]
-    }
   }
 
   componentWillMount() {
