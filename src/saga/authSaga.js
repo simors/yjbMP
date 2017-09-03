@@ -230,7 +230,7 @@ export function* fetchDealRecords(action) {
   let payload = action.payload
 
   let dealPayload = {
-
+    userId: payload.userId
   }
   try {
     let records = yield call(getDealRecords, dealPayload)
