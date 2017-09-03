@@ -51,8 +51,7 @@ class Refund extends Component {
         'toUser': 'platform',
         'dealType': appConfig.REFUND
       },
-      // openid: this.props.currentUser.authData.weixin.openid,
-      openid: "osChqwZcLGd9j6RSYTw1t1YRDiDc", //测试
+      openid: this.props.currentUser.authData.weixin.openid,
       username: '',
       success: () => {},
       error: () => {}

@@ -57,8 +57,7 @@ class Deposit extends Component {
         'toUser': 'platform',
         'dealType': appConfig.DEPOSIT
       },
-      // openid: this.props.currentUser.authData.weixin.openid,
-      openid: "osChqwZcLGd9j6RSYTw1t1YRDiDc", //测试
+      openid: this.props.currentUser.authData.weixin.openid,
       subject: '衣家宝押金支付',
       success: this.createPaymentSuccessCallback,
       error: this.createPaymentFailedCallback,
