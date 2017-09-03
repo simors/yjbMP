@@ -26,6 +26,8 @@ export default function authReducer(state = initialState, action) {
       return handleUpdateOrderInfo(state, action)
     case authActionTypes.FETCH_WALLET_INFO_SUCCESS:
       return handleSaveWalletInfo(state, action)
+    case authActionTypes.FETCH_DEAL_RECORDS_SUCCESS:
+      return handleFetchDealRecords(state, action)
     case REHYDRATE:
       return onRehydrate(state, action)
     default:
@@ -80,6 +82,15 @@ function handleFetchOrders(state, action) {
   let orderRecordList = payload.orderRecordList
   orderRecordList.forEach((orderRecord) => {
     state = state.setIn(['orders', orderRecord.id], orderRecord)
+  })
+  return state
+}
+
+function handleFetchDealRecords(state, action) {
+  let payload = action.payload
+  let dealRecordList = payload.dealRecordList
+  dealRecordList.forEach((dealRecord) => {
+    state = state.setIn(['dealRecords', dealRecord.orderNo], dealRecord)
   })
   return state
 }

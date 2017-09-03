@@ -3,7 +3,7 @@
  */
 import { call, put, takeEvery } from 'redux-saga/effects'
 import {fetchUserInfo, requestLeanSmsCode, register, become, login, getPaymentCharge, fetchOrderByStatus, getTransfer, payOrder, getWalletInfo, getDealRecords} from  '../api/auth'
-import {registerSuccess, loginSuccess, loginOut, saveOrderInfo, fetchOrdersSuccess, paymentOrderSuccess, fetchWalletInfoSuccess} from '../actions/authActions'
+import {registerSuccess, loginSuccess, loginOut, saveOrderInfo, fetchOrdersSuccess, paymentOrderSuccess, fetchWalletInfoSuccess, fetchDealRecordsSuccess} from '../actions/authActions'
 import * as authActionTypes from '../constants/authActionTypes'
 import {OrderInfo} from '../models/authModel'
 
@@ -228,16 +228,17 @@ export function* fetchWalletInfo(action) {
 
 export function* fetchDealRecords(action) {
   let payload = action.payload
-  console,login("fetchDealRecords payload", payload)
   let dealPayload = {
     userId: payload.userId
   }
   try {
-    let records = yield call(getDealRecords, dealPayload)
-    console.log("fetchDealRecords records:", records)
-
+    let dealRecordList = yield call(getDealRecords, dealPayload)
+    console.log("fetchDealRecords records:", dealRecordList)
+    if(dealRecordList.length > 0) {
+      yield put(fetchDealRecordsSuccess(dealRecordList))
+    }
     if(payload.success) {
-      payload.success(records)
+      payload.success(dealRecordList)
     }
   } catch(error) {
     if(payload.error) {

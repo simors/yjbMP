@@ -3,7 +3,7 @@
  */
 import AV from 'leancloud-storage'
 import {APP_NAME} from '../constants/appConfig'
-import {UserInfo, OrderInfo} from '../models/authModel'
+import {UserInfo, OrderInfo, DealInfo} from '../models/authModel'
 
 export function become(payload) {
   return AV.User.become(payload.token).then((leanUser) => {
@@ -163,9 +163,12 @@ export function getWalletInfo(payload) {
 }
 
 export function getDealRecords(payload) {
-  console.log("getDealRecords payload", payload)
   return AV.Cloud.run('authFetchDealRecords', payload).then((records) => {
-    return records
+    let dealRecordList = []
+    records.forEach((record) => {
+      dealRecordList.push(DealInfo.fromLeancloudApi(record))
+    })
+    return dealRecordList
   }).catch((error) => {
     console.log("获取交易信息失败：", error)
     throw error
