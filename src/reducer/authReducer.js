@@ -49,12 +49,12 @@ function handleSaveUserInfo(state, action) {
 }
 
 function handleSaveWalletInfo(state, action) {
-  let payload = action.payload
-  let walletInfo = payload.walletInfo
+  let walletInfo = action.payload
 
   state = state.setIn(['profile', 'balance'], walletInfo.balance)
   state = state.setIn(['profile', 'deposit'], walletInfo.deposit)
   state = state.setIn(['profile', 'debt'], walletInfo.debt)
+
   return state
 }
 
