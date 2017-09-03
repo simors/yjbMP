@@ -38,8 +38,8 @@ class Refund extends Component {
       },
       openid: this.props.currentUser.authData.weixin.openid,
       username: '',
-      success: () => {},
-      error: () => {}
+      success: () => {browserHistory.push('/mine/wallet')},
+      error: (error) => {console.log("退押金失败", error)}
     })
   }
 
