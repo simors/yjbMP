@@ -65,12 +65,12 @@ class ModifyProfile extends  Component {
               绿蚁网络
             </CellFooter>
           </Cell>
-          <Cell access>
+          <Cell access onClick={() => {browserHistory.push('/modifyProfile/certification')}}>
             <CellBody>
               实名认证
             </CellBody>
             <CellFooter>
-              已认证
+              {this.props.currentUser.idNameVerified? "已认证": "未认证"}
             </CellFooter>
           </Cell>
           <Cell>

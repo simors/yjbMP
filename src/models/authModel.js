@@ -19,6 +19,9 @@ export const UserInfoRecord = Record({
   balance: 0,
   deposit: 0,
   debt: 0,
+  idName: undefined,    //真实姓名
+  idNumber: undefined,    //身份证号码
+  idNameVerified: false,//实名认证
 }, 'UserInfoRecord')
 
 export class UserInfo extends UserInfoRecord {
@@ -44,6 +47,12 @@ export class UserInfo extends UserInfoRecord {
       record.set('province', attrs['province'])
       record.set('city', attrs['city'])
       record.set('authData', attrs['authData'])
+      if(attrs.idName)
+        record.set('idName', attrs['idName'])
+      if(attrs.idNumber)
+        record.set('idNumber', attrs['idNumber'])
+      if(attrs.idNameVerified)
+        record.set('idNameVerified', attrs['idNameVerified'])
     })
   }
 }

@@ -176,3 +176,11 @@ export function getDealRecords(payload) {
   })
 }
 
+export function verifyIdName(payload) {
+  return AV.Cloud.run('authVerifyIdName', payload).then((userInfo) => {
+    return userInfo
+  }).catch((error) => {
+    console.log("发送实名认证请求失败：", error)
+    throw error
+  })
+}

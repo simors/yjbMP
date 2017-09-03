@@ -28,6 +28,8 @@ export default function authReducer(state = initialState, action) {
       return handleSaveWalletInfo(state, action)
     case authActionTypes.FETCH_DEAL_RECORDS_SUCCESS:
       return handleFetchDealRecords(state, action)
+    case authActionTypes.SAVE_IDNAME_INFO:
+      return handleSaveIdNameInfo(state, action)
     case REHYDRATE:
       return onRehydrate(state, action)
     default:
@@ -57,6 +59,15 @@ function handleSaveWalletInfo(state, action) {
   state = state.setIn(['profile', 'deposit'], walletInfo.deposit)
   state = state.setIn(['profile', 'debt'], walletInfo.debt)
 
+  return state
+}
+
+function handleSaveIdNameInfo(state, action) {
+  let idInfo = action.payload
+
+  state = state.setIn(['profile', 'idName'], idInfo.idName)
+  state = state.setIn(['profile', 'idNumber'], idInfo.idNumber)
+  state = state.setIn(['profile', 'idNameVerified'], idInfo.idNameVerified)
   return state
 }
 

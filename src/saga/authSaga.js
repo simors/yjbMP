@@ -2,8 +2,8 @@
  * Created by wanpeng on 2017/8/14.
  */
 import { call, put, takeEvery } from 'redux-saga/effects'
-import {fetchUserInfo, requestLeanSmsCode, register, become, login, getPaymentCharge, fetchOrderByStatus, getTransfer, payOrder, getWalletInfo, getDealRecords} from  '../api/auth'
-import {registerSuccess, loginSuccess, loginOut, saveOrderInfo, fetchOrdersSuccess, paymentOrderSuccess, fetchWalletInfoSuccess, fetchDealRecordsSuccess} from '../actions/authActions'
+import {fetchUserInfo, requestLeanSmsCode, register, become, login, getPaymentCharge, fetchOrderByStatus, getTransfer, payOrder, getWalletInfo, getDealRecords, verifyIdName} from  '../api/auth'
+import {registerSuccess, loginSuccess, loginOut, saveOrderInfo, fetchOrdersSuccess, paymentOrderSuccess, fetchWalletInfoSuccess, fetchDealRecordsSuccess, saveIdNameInfo} from '../actions/authActions'
 import * as authActionTypes from '../constants/authActionTypes'
 import {OrderInfo} from '../models/authModel'
 
@@ -249,6 +249,26 @@ export function* fetchDealRecords(action) {
   }
 }
 
+export function* requestVerifyIdName(action) {
+  let payload = action.payload
+  let verifyPayload = {
+    userId: payload.userId,
+    idName: payload.idName,
+    idNumber: payload.idNumber
+  }
+  try {
+    let idInfo = yield call(verifyIdName, verifyPayload)
+    yield put(saveIdNameInfo(idInfo))
+    if(payload.success) {
+      payload.success(idInfo)
+    }
+  } catch(error) {
+    if(payload.error) {
+      payload.error(error)
+    }
+  }
+}
+
 export const authSaga = [
   takeEvery(authActionTypes.FETCH_USERINFO, fetchUserinfoAction),
   takeEvery(authActionTypes.REQUEST_SMSCODE, requestSmsCode),
@@ -261,5 +281,6 @@ export const authSaga = [
   takeEvery(authActionTypes.CREATE_TRANSFER, createTransfer),
   takeEvery(authActionTypes.PAYMENT_ORDER, paymentOrder),
   takeEvery(authActionTypes.FETCH_WALLET_INFO, fetchWalletInfo),
-  takeEvery(authActionTypes.FETCH_DEAL_RECORDS, fetchDealRecords)
+  takeEvery(authActionTypes.FETCH_DEAL_RECORDS, fetchDealRecords),
+  takeEvery(authActionTypes.REQUEST_VERIFY_IDNAME, requestVerifyIdName)
 ]
