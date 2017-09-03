@@ -54,15 +54,15 @@ class ModifyProfile extends  Component {
               昵称
             </CellBody>
             <CellFooter>
-              绿蚁网络
+              绿蚁网络{this.props.currentUser.nickname}
             </CellFooter>
           </Cell>
-          <Cell access>
+          <Cell>
             <CellBody>
               姓名
             </CellBody>
             <CellFooter>
-              绿蚁网络
+              {this.props.currentUser.idName || ""}
             </CellFooter>
           </Cell>
           <Cell access onClick={() => {browserHistory.push('/modifyProfile/certification')}}>
@@ -78,7 +78,7 @@ class ModifyProfile extends  Component {
               手机号码
             </CellBody>
             <CellFooter>
-              13888888888
+              {this.props.currentUser.mobilePhoneNumber}
             </CellFooter>
           </Cell>
           <Cell>
@@ -86,7 +86,7 @@ class ModifyProfile extends  Component {
               微信号
             </CellBody>
             <CellFooter>
-              7gdf837e24iu3254iuy
+              {this.props.currentUser.authData.weixin.openid}
             </CellFooter>
           </Cell>
 
