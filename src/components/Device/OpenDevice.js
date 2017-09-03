@@ -66,13 +66,13 @@ class OpenDevice extends Component {
       return(
         <PanelBody style={{borderBottomWidth: `0`}}>
           <MediaBox type="text">
-            <MediaBoxTitle>13号柜门可使用</MediaBoxTitle>
+            <MediaBoxTitle>13号柜门可使用{this.props.deviceInfo.}</MediaBoxTitle>
             <MediaBoxDescription>
               请将衣物平整放入干衣柜，注意保持间隙。放置后请关门。
             </MediaBoxDescription>
           </MediaBox>
           <MediaBox type="text">
-            <MediaBoxTitle>2元/小时</MediaBoxTitle>
+            <MediaBoxTitle>{this.props.deviceInfo.unitPrice + '元／分钟'}</MediaBoxTitle>
             <MediaBoxDescription>
               计费标准
             </MediaBoxDescription>

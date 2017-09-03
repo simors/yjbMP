@@ -5,6 +5,7 @@ import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import {browserHistory} from 'react-router'
+import {selectUserInfo} from '../../selector/authSelector'
 
 import WeUI from 'react-weui'
 import 'weui'
@@ -43,7 +44,7 @@ class ModifyProfile extends  Component {
               头像
             </CellBody>
             <CellFooter>
-              <img src="http://wx.qlogo.cn/mmopen/Ric56ibJEmQMY9d3xqXy0tlwRS4iaZkdttpMJghTGoKwq0mt04lcH3bV1gyJaQsuXia4X6aicdNTmaBy5YGauKLwyoMiaUSs3l3Com/0" alt="" style={{display: `block`, width: `3.13rem`, marginRight: `0.63rem`}}/>
+              <img src={this.props.currentUser.avatar || '/defaultAvatar.svg'} alt="" style={{display: `block`, width: `3.13rem`, marginRight: `0.63rem`}}/>
             </CellFooter>
           </Cell>
         </Cells>
@@ -98,6 +99,7 @@ class ModifyProfile extends  Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
+    currentUser: selectUserInfo(state)
   }
 };
 

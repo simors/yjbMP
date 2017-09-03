@@ -9,6 +9,8 @@ export const DeviceInfoRecord = Record({
   status: undefined,
   onlineTime: undefined,
   updateTime: undefined,
+  unitPrice: undefined,
+  deviceAddr: undefined,
 }, 'DeviceInfoRecord')
 
 export class DeviceInfo extends DeviceInfoRecord {
@@ -23,6 +25,8 @@ export class DeviceInfo extends DeviceInfoRecord {
       record.set('status', attrs['status'])
       record.set('onlineTime', attrs['onlineTime'])
       record.set('updateTime', attrs['updateTime'])
+      record.set('unitPrice', attrs['unitPrice'])
+      record.set('deviceAddr', attrs['deviceAddr'])
     })
   }
 
@@ -35,6 +39,8 @@ export class DeviceInfo extends DeviceInfoRecord {
       record.set('status', apiObj.status)
       record.set('onlineTime', apiObj.onlineTime)
       record.set('updateTime', apiObj.updateTime)
+      record.set('unitPrice', apiObj.unitPrice)
+      record.set('deviceAddr', apiObj.deviceAddr)
     })
   }
 }
