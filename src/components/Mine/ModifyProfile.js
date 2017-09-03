@@ -35,6 +35,26 @@ class ModifyProfile extends  Component {
     document.title = "修改资料"
   }
 
+  idVerifyStatus() {
+    if(this.props.currentUser.idNameVerified) {
+      return "已认证"
+    } else if(this.props.currentUser.idName && this.props.currentUser.idNumber) {
+      return '审核中'
+    } else {
+      return "未认证"
+    }
+  }
+
+  getIdLinkAccess() {
+    if(this.props.currentUser.idNameVerified) {
+      return false
+    } else if(this.props.currentUser.idName && this.props.currentUser.idNumber) {
+      return false
+    } else {
+      return true
+    }
+  }
+
   render() {
     return(
       <Page>
@@ -54,7 +74,7 @@ class ModifyProfile extends  Component {
               昵称
             </CellBody>
             <CellFooter>
-              绿蚁网络{this.props.currentUser.nickname}
+              {this.props.currentUser.nickname}
             </CellFooter>
           </Cell>
           <Cell>
@@ -65,12 +85,12 @@ class ModifyProfile extends  Component {
               {this.props.currentUser.idName || ""}
             </CellFooter>
           </Cell>
-          <Cell access onClick={() => {browserHistory.push('/modifyProfile/certification')}}>
+          <Cell access={this.getIdLinkAccess()} onClick={() => {browserHistory.push('/modifyProfile/certification')}}>
             <CellBody>
               实名认证
             </CellBody>
             <CellFooter>
-              {this.props.currentUser.idNameVerified? "已认证": "未认证"}
+              {this.idVerifyStatus()}
             </CellFooter>
           </Cell>
           <Cell>
