@@ -79,10 +79,35 @@ export class OrderInfo extends OrderInfoRecord {
   }
 }
 
+export const DealInfoRecord = Record({
+  orderNo: undefined,
+  from: undefined,
+  to: undefined,
+  cost: undefined,
+  dealTime: undefined,
+  dealType: undefined,
+}, 'DealInfoRecord')
+
+export class DealInfo extends DealInfoRecord {
+  static fromLeancloudApi(DealInfo) {
+    let info = new DealInfoRecord()
+
+    return info.withMutations((record) => {
+      record.set('orderNo', DealInfo.order_no)
+      record.set('from', DealInfo.from)
+      record.set('to', DealInfo.to)
+      record.set('cost', DealInfo.cost)
+      record.set('dealTime', DealInfo.dealTime)
+      record.set('dealType', DealInfo.dealType)
+    })
+  }
+}
+
 export const AuthRecord = Record({
   activeUser: undefined,              //当前用户id
   token: undefined,                   //自动登录token
   wechatUserInfo: undefined,          //用户微信信息
   profile: UserInfoRecord(),          //用户信息
-  orders: Map(),                      //用户订单：键为订单id，OrderInfoRecord
+  orders: Map(),                      //用户订单：键为订单id，值为OrderInfoRecord
+  dealRecords: Map(),                 //交易记录：键为order_no,值为DealInfoRecord
 }, "AuthRecord")

@@ -5,6 +5,8 @@ import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import WeUI from 'react-weui'
+import {fetchDealRecords} from '../../actions/authActions'
+import {selectUserInfo} from '../../selector/authSelector'
 import 'weui'
 import 'react-weui/build/dist/react-weui.css'
 import './wallet-detail.css'
@@ -45,6 +47,12 @@ class WalletDetail extends Component {
         {title: '付款成功－干衣', date: '2017-03-30 15:30', amount: 8, type: '干衣消费'},
       ]
     }
+  }
+
+  componentWillMount() {
+    this.props.fetchDealRecords({
+      userId: this.props.currentUser.id
+    })
   }
 
   componentDidMount() {
@@ -98,11 +106,12 @@ class WalletDetail extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-
+    currentUser: selectUserInfo(state),
   }
 };
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
+  fetchDealRecords
 }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(WalletDetail)

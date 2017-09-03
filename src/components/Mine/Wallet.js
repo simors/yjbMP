@@ -88,7 +88,7 @@ class Wallet extends Component {
     return(
       <Page ptr={false}>
         <div className="walletcontainer">
-          <text className="amount">{this.props.currentUser.balance || 0 + '元'}</text>
+          <text className="amount">{(this.props.currentUser.balance || 0) + '元'}</text>
           <text className="amountTrip">当前余额</text>
 
           <div className="buttons-area">

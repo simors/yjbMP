@@ -162,3 +162,12 @@ export function getWalletInfo(payload) {
   })
 }
 
+export function getDealRecords(payload) {
+  return AV.Cloud.run('authFetchDealRecords', payload).then((records) => {
+    return records
+  }).catch((error) => {
+    console.log("获取交易信息失败：", error)
+    throw error
+  })
+}
+
