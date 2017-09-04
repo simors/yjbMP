@@ -139,7 +139,7 @@ class Orders extends Component {
   //触发支付动作
   triggerPayment(order) {
     var amount = this.getAmount(order)
-    if(order.balance < amount) {  //余额不足
+    if(this.props.currentUser.balance < amount) {  //余额不足
       this.setState({
         showTripDialog: true,
         TripDialogTitle: '余额不足'
