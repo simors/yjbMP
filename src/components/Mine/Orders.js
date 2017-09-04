@@ -156,6 +156,7 @@ class Orders extends Component {
               type: 'primary',
               label: '充值',
               onClick: () => {
+                browserHistory.push('/mine/wallet/recharge')
                 this.setState({showTripDialog: false})
               }
             }
