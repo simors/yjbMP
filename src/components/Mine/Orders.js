@@ -90,9 +90,19 @@ class Orders extends Component {
     })
   }
 
-  getDuration(createTime) {
-    let duration = ((Date.now() - createTime) * 0.001 / 60).toFixed(0) //分钟
-    return duration
+  getDuration(order) {
+    switch (order.status) {
+      case ORDER_STATUS_PAID:
+      case ORDER_STATUS_UNPAID:
+        return ((order.endTime - order.createTime) * 0.001 / 60).toFixed(0)
+        break
+      case ORDER_STATUS_OCCUPIED:
+        return ((Date.now() - order.createTime) * 0.001 / 60).toFixed(0)
+        break
+      default:
+        return 0
+        break
+    }
   }
 
   getAmount(order) {
@@ -123,7 +133,7 @@ class Orders extends Component {
         <div className="order-content" onClick={() => {browserHistory.push('/mine/orders/' + item.id)}}>
           <div className="order-content-primary">
             <text style={{fontSize: `1.1rem`, color: `#000000`}}>使用时长</text>
-            <text>{this.getDuration(item.createTime) + '分钟'}</text>
+            <text>{this.getDuration(item) + '分钟'}</text>
             <div className="status">正在烘干</div>
             <text style={{fontSize: `1.5rem`}}>{this.getAmount(item) + '元'}</text>
           </div>
@@ -190,7 +200,7 @@ class Orders extends Component {
         <div className="order-content" onClick={() => {browserHistory.push('/mine/orders/' + item.id)}}>
           <div className="order-content-primary">
             <text style={{fontSize: `1.1rem`, color: `#000000`}}>使用时长</text>
-            <text>{this.getDuration(item.createTime) + '分钟'}</text>
+            <text>{this.getDuration(item) + '分钟'}</text>
             <div className="unpaid-status">已烘干</div>
             <text style={{fontSize: `1.5rem`}}>{this.getAmount(item) + '元'}</text>
           </div>
@@ -216,7 +226,7 @@ class Orders extends Component {
         <div className="order-content" onClick={() => {browserHistory.push('/mine/orders/' + item.id)}}>
           <div className="order-content-primary">
             <text style={{fontSize: `1.1rem`, color: `#000000`}}>使用时长</text>
-            <text>{this.getDuration(item.createTime) + '分钟'}</text>
+            <text>{this.getDuration(item) + '分钟'}</text>
             <div className="status">已完成</div>
             <text style={{fontSize: `1.5rem`}}>{this.getAmount(item) + '元'}</text>
           </div>
