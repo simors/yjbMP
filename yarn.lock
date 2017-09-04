@@ -6607,6 +6607,10 @@ tar@^2.0.0, tar@^2.2.1:
     fstream "^1.0.2"
     inherits "2"
 
+tencent-wx-jssdk@^1.2.1-dev.201708161655:
+  version "1.2.1-dev.201708161655"
+  resolved "http://registry.npm.taobao.org/tencent-wx-jssdk/download/tencent-wx-jssdk-1.2.1-dev.201708161655.tgz#3d7508a84f9e55e5afc28c78500ec49ca466cfab"
+
 text-encoding@0.6.4:
   version "0.6.4"
   resolved "http://registry.npm.taobao.org/text-encoding/download/text-encoding-0.6.4.tgz#e399a982257a276dae428bb92845cb71bdc26d19"
