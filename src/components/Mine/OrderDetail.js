@@ -6,6 +6,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import {browserHistory} from 'react-router'
 import {selectOrderById, selectUserInfo} from '../../selector/authSelector'
+import {paymentOrder} from '../../actions/authActions'
 import WeUI from 'react-weui'
 import 'weui'
 import 'react-weui/build/dist/react-weui.css'
@@ -128,10 +129,38 @@ class OrderDetail extends Component {
     } else {
       this.setState({
         showPayDialog: true,
-        payAmount: Number(amount),
-        payOrderId: order.id,
       })
     }
+  }
+
+  paymentServiceSuccessCallback = (orderRecord) => {
+    console.log("orderRecord: status", orderRecord.status)
+    if(orderRecord.status === ORDER_STATUS_PAID) {
+      this.setState({
+        showTripDialog: true,
+        TripDialogTitle: '支付成功'
+      })
+    } else if(orderRecord.status === ORDER_STATUS_UNPAID) {
+      this.setState({
+        showTripDialog: true,
+        TripDialogTitle: '余额不足'
+      })
+    }
+  }
+
+  paymentServiceFailedCallback = (error) => {
+    console.log("onPaymentService", error)
+  }
+
+  //支付服务订单
+  onPaymentService = () => {
+    this.props.paymentOrder({
+      userId: this.props.currentUser.id,
+      amount: this.getAmount(this.props.orderInfo),
+      orderId: this.props.orderInfo.id,
+      success: this.paymentServiceSuccessCallback,
+      error: this.paymentServiceFailedCallback,
+    })
   }
 
   onButtonPress = () => {
@@ -175,7 +204,7 @@ class OrderDetail extends Component {
           <Button onClick={this.onButtonPress}>{this.getButtonTitle(this.props.orderInfo)}</Button>
         </div>
         <Dialog type="ios" title={this.state.PayDialog.title} buttons={this.state.PayDialog.buttons} show={this.state.showPayDialog}>
-          {"即将使用余额支付，本次扣费" + this.state.payAmount + "元"}
+          {"即将使用余额支付，本次扣费" + this.getAmount(this.props.orderInfo) + "元"}
         </Dialog>
         <Dialog type="ios" title={this.state.TripDialogTitle} buttons={this.state.TripDialog.buttons} show={this.state.showTripDialog}>
         </Dialog>
@@ -195,6 +224,7 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
+  paymentOrder
 }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(OrderDetail)
