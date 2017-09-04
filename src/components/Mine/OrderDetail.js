@@ -4,7 +4,8 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import {selectOrderById} from '../../selector/authSelector'
+import {browserHistory} from 'react-router'
+import {selectOrderById, selectUserInfo} from '../../selector/authSelector'
 import WeUI from 'react-weui'
 import 'weui'
 import 'react-weui/build/dist/react-weui.css'
@@ -21,6 +22,36 @@ const {
 class OrderDetail extends Component {
   constructor(props) {
     super(props)
+    this.state = {
+      showPayDialog: false,
+      PayDialog: {
+        title: '确认支付',
+        buttons: [
+          {
+            type: 'default',
+            label: '取消',
+            onClick: () => {this.setState({showPayDialog: false})}
+          },
+          {
+            type: 'primary',
+            label: '确认',
+            onClick: this.onPaymentService
+          }
+        ]
+      },
+      showTripDialog: false,
+      TripDialogTitle: '支付成功',
+      TripDialog: {
+        buttons: [
+          {
+            label: '确定',
+            onClick: () => {
+              this.setState({showTripDialog: false})
+            }
+          },
+        ]
+      }
+    }
   }
 
   componentDidMount() {
@@ -50,6 +81,72 @@ class OrderDetail extends Component {
     return duration
   }
 
+  getButtonTitle(order) {
+    switch (order.status) {
+      case ORDER_STATUS_PAID:
+        return "返回"
+        break
+      case ORDER_STATUS_UNPAID:
+        return "支付"
+        break
+      case ORDER_STATUS_OCCUPIED:
+        return "取出衣物"
+        break
+      default:
+        break
+    }
+  }
+
+  //触发支付动作
+  triggerPayment(order) {
+    var amount = this.getAmount(order)
+    if(this.props.currentUser.balance < amount) {  //余额不足
+      this.setState({
+        showTripDialog: true,
+        TripDialogTitle: '余额不足',
+        TripDialog: {
+          buttons: [
+            {
+              type: 'default',
+              label: '返回',
+              onClick: () => {
+                this.setState({showTripDialog: false})
+              }
+            },
+            {
+              type: 'primary',
+              label: '充值',
+              onClick: () => {
+                browserHistory.push('/mine/wallet/recharge')
+                this.setState({showTripDialog: false})
+              }
+            }
+          ]
+        }
+      })
+    } else {
+      this.setState({
+        showPayDialog: true,
+        payAmount: Number(amount),
+        payOrderId: order.id,
+      })
+    }
+  }
+
+  onButtonPress = () => {
+    switch (this.props.orderInfo.status) {
+      case ORDER_STATUS_PAID:
+        browserHistory.goBack()
+        break
+      case ORDER_STATUS_UNPAID:
+      case ORDER_STATUS_OCCUPIED:
+        this.triggerPayment(this.props.orderInfo)
+        break
+      default:
+        break
+    }
+  }
+
   render() {
     console.log("orderInfo", this.props.orderInfo)
     return(
@@ -74,8 +171,13 @@ class OrderDetail extends Component {
           </div>
         </div>
         <div className="order-detail-buttom-area">
-          <Button onClick={() => {}}>取出衣物</Button>
+          <Button onClick={this.onButtonPress}>{this.getButtonTitle(this.props.orderInfo)}</Button>
         </div>
+        <Dialog type="ios" title={this.state.PayDialog.title} buttons={this.state.PayDialog.buttons} show={this.state.showPayDialog}>
+          {"即将使用余额支付，本次扣费" + this.state.payAmount + "元"}
+        </Dialog>
+        <Dialog type="ios" title={this.state.TripDialogTitle} buttons={this.state.TripDialog.buttons} show={this.state.showTripDialog}>
+        </Dialog>
       </Page>
     )
   }
@@ -86,6 +188,7 @@ class OrderDetail extends Component {
 const mapStateToProps = (state, ownProps) => {
   var orderId = ownProps.params.id
   return {
+    currentUser: selectUserInfo(state),
     orderInfo: selectOrderById(state, orderId)
   }
 };
