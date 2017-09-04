@@ -15,26 +15,13 @@ import 'react-weui/build/dist/react-weui.css'
 import './orders.css'
 
 const {
-  Button,
   Panel,
-  Page,
-  PanelHeader,
-  PanelBody,
-  PanelFooter,
-  MediaBox,
-  MediaBoxTitle,
-  MediaBoxDescription,
   Tab,
   NavBar,
   NavBarItem,
   TabBody,
   InfiniteLoader,
   Cells,
-  Cell,
-  CellHeader,
-  CellBody,
-  CellMore,
-  CellFooter,
   Icon,
   Dialog,
 } = WeUI
@@ -152,11 +139,18 @@ class Orders extends Component {
   //触发支付动作
   triggerPayment(order) {
     var amount = this.getAmount(order)
-    this.setState({
-      showPayDialog: true,
-      payAmount: Number(amount),
-      payOrderId: order.id,
-    })
+    if(order.balance < amount) {  //余额不足
+      this.setState({
+        showTripDialog: true,
+        TripDialogTitle: '余额不足'
+      })
+    } else {
+      this.setState({
+        showPayDialog: true,
+        payAmount: Number(amount),
+        payOrderId: order.id,
+      })
+    }
   }
 
 
