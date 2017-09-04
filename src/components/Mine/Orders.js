@@ -142,7 +142,25 @@ class Orders extends Component {
     if(this.props.currentUser.balance < amount) {  //余额不足
       this.setState({
         showTripDialog: true,
-        TripDialogTitle: '余额不足'
+        TripDialogTitle: '余额不足',
+        TripDialog: {
+          buttons: [
+            {
+              type: 'default',
+              label: '返回',
+              onClick: () => {
+                this.setState({showTripDialog: false})
+              }
+            },
+            {
+              type: 'primary',
+              label: '充值',
+              onClick: () => {
+                this.setState({showTripDialog: false})
+              }
+            }
+          ]
+        }
       })
     } else {
       this.setState({
