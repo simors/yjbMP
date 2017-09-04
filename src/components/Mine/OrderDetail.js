@@ -17,6 +17,7 @@ import {ORDER_STATUS_OCCUPIED, ORDER_STATUS_PAID, ORDER_STATUS_UNPAID} from '../
 const {
   Button,
   Page,
+  Dialog,
 } = WeUI
 
 class OrderDetail extends Component {
