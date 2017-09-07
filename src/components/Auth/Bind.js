@@ -75,10 +75,6 @@ class Bind extends Component {
   }
 
   getSmsCode = () => {
-    var result = this.phoneCheck()
-    if(!result) {
-      return
-    }
     var that = this
     if(this.wait === 0) {
       this.setState({
@@ -87,6 +83,10 @@ class Bind extends Component {
       })
       this.wait = 60
     } else if(this.wait === 60) {
+      var result = this.phoneCheck()
+      if(!result) {
+        return
+      }
       this.props.requestSmsCode({
         phone: this.state.areaCode + this.state.phone,
         success: () => {
