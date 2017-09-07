@@ -21,9 +21,9 @@ class Home extends Component {
     wx.config({
       "debug": true,
       "appId": "wx792bf5a51051d512",
-      "timestamp": "1504520345",
-      "nonceStr": "a0eh123ysra10yn",
-      "signature": "82307404e403487f00704a3aa81a876ea1db5618",
+      "timestamp": "1504580023",
+      "nonceStr": "e0a767m4825kncv",
+      "signature": "fb08c8e269d874206a19ef59104705ee4082ea38",
       "jsApiList": [
         "scanQRCode"
       ]

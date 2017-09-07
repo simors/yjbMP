@@ -19,12 +19,12 @@
   border-radius: 0.63rem;
 }
 
-.footer {
+.bind-footer {
   position: absolute;
   bottom: 1.6rem;
   width: 100%;
 }
-.footer .logo {
+.bind-footer .logo {
   width: 6.25rem;
   height: 5.63rem;
 }

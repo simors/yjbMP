@@ -263,7 +263,7 @@ class Bind extends Component {
         <div className="button">
           <Button onClick={this.submit}>绑定</Button>
         </div>
-        <div className="footer">
+        <div className="bind-footer">
           <img className="logo" src="/logo_gray.png" alt=""/>
         </div>
         <Toptips type="warn" show={this.state.showWarn}>{this.state.warnTips}</Toptips>
