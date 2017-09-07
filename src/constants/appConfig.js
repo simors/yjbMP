@@ -1,6 +1,9 @@
 /**
  * Created by wanpeng on 2017/8/7.
  */
+const project = require('../../project.config')
+
+
 //LeanCloud环境参数
 var LC_APP_ID = ""
 var LC_APP_KEY = ""
@@ -39,19 +42,20 @@ const TURN_ON_DEVICE = 'turn_on_device'         //设备开机请求&应答
 const TURN_ON_DEVICE_SUCCESS = 'turn_on_device_success'
 const TURN_ON_DEVICE_FAILED = 'turn_on_device_failed'
 
-if(process.env.LEANCLOUD_APP_ID === LC_DEV_APP_ID) {          //开发环境
+
+if(project.env === 'development') {          //开发环境
   LC_APP_ID = LC_DEV_APP_ID
   LC_APP_KEY = LC_DEV_APP_KEY
   WECHAT_MP_APPID = WECHAT_MP_APPID_DEV
   LC_SERVER_DOMAIN = LC_SERVER_DOMAIN_DEV
 
-} else if(process.env.LEANCLOUD_APP_ID === LC_STAGE_APP_ID) { //预上线环境
+} else if(project.env === 'stage') { //预上线环境
   LC_APP_ID = LC_STAGE_APP_ID
   LC_APP_KEY = LC_STAGE_APP_KEY
   WECHAT_MP_APPID = WECHAT_MP_APPID_PRE
   LC_SERVER_DOMAIN = LC_SERVER_DOMAIN_PRE
 
-} else if(process.env.LEANCLOUD_APP_ID === LC_PRO_APP_ID) {   //生产环境
+} else if(project.env === 'production') {   //生产环境
   LC_APP_ID = LC_PRO_APP_ID
   LC_APP_KEY = LC_PRO_APP_KEY
   WECHAT_MP_APPID = WECHAT_MP_APPID_PRO
