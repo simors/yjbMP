@@ -178,9 +178,8 @@ class OrderDetail extends Component {
   }
 
   render() {
-    console.log("orderInfo", this.props.orderInfo)
     return(
-      <Page style={{backgroundColor: `#EFEFF4`, overflow: `hidden`}}>
+      <Page className="order-detail-page">
         <div className="item-area">
           <div className="order-detail-item">当前状态：正在烘干</div>
           <div className="order-detail-item">
