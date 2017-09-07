@@ -10,7 +10,7 @@ import {selectWechatUserInfo} from '../../selector/authSelector'
 import WeUI from 'react-weui'
 import 'weui'
 import 'react-weui/build/dist/react-weui.css'
-import './auth.css'
+import './bind.css'
 
 const {
   Page,

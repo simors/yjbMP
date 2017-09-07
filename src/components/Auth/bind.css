@@ -19,13 +19,12 @@
   border-radius: 0.63rem;
 }
 
-.logo {
+.footer {
+  position: absolute;
+  bottom: 1.6rem;
+  width: 100%;
+}
+.footer .logo {
   width: 6.25rem;
   height: 5.63rem;
-}
-
-.footer {
-  display: flex;
-  justify-content: center;
-
 }
