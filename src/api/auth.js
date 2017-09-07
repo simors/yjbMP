@@ -2,7 +2,7 @@
  * Created by wanpeng on 2017/8/14.
  */
 import AV from 'leancloud-storage'
-import {APP_NAME} from '../constants/appConfig'
+import * as appConfig from '../constants/appConfig'
 import {UserInfo, OrderInfo, DealInfo} from '../models/authModel'
 
 export function become(payload) {
@@ -35,7 +35,7 @@ export function requestLeanSmsCode(payload) {
   let phone = payload.phone
   return AV.Cloud.requestSmsCode({
     mobilePhoneNumber:phone,
-    name: APP_NAME,
+    name: appConfig.APP_NAME,
     op: '绑定手机',
     ttl: 10}).then(function () {
     // do nothing

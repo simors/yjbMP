@@ -7,7 +7,7 @@ import { bindActionCreators } from 'redux'
 import WeUI from 'react-weui'
 import {fetchDealRecords} from '../../actions/authActions'
 import {selectUserInfo, selectDealRecord} from '../../selector/authSelector'
-import {DEPOSIT, RECHARGE, SERVICE, REFUND, WITHDRAW} from '../../constants/appConfig'
+import * as appConfig from '../../constants/appConfig'
 import {formatTime} from  '../../util'
 import 'weui'
 import 'react-weui/build/dist/react-weui.css'
@@ -58,19 +58,19 @@ class WalletDetail extends Component {
 
   getDealTitle(record) {
     switch (record.dealType) {
-      case DEPOSIT:
+      case appConfig.DEPOSIT:
         return "付款成功-押金"
         break
-      case RECHARGE:
+      case appConfig.RECHARGE:
         return "付款成功-充值"
         break
-      case SERVICE:
+      case appConfig.SERVICE:
         return "付款成功-干衣"
         break
-      case REFUND:
+      case appConfig.REFUND:
         return "退款成功-押金"
         break
-      case WITHDRAW:
+      case appConfig.WITHDRAW:
         return "提现成功-余额"
         break
       default:
@@ -80,19 +80,19 @@ class WalletDetail extends Component {
 
   getDealType(record) {
     switch (record.dealType) {
-      case DEPOSIT:
+      case appConfig.DEPOSIT:
         return "押金"
         break
-      case RECHARGE:
+      case appConfig.RECHARGE:
         return "平台充值"
         break
-      case SERVICE:
+      case appConfig.SERVICE:
         return "干衣消费"
         break
-      case REFUND:
+      case appConfig.REFUND:
         return "押金退款"
         break
-      case WITHDRAW:
+      case appConfig.WITHDRAW:
         return "余额提现"
         break
       default:

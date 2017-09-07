@@ -1,7 +1,7 @@
 /**
  * Created by wanpeng on 2017/8/14.
  */
-import {ORDER_STATUS_OCCUPIED, ORDER_STATUS_PAID, ORDER_STATUS_UNPAID} from '../constants/appConfig'
+import * as appConfig from '../constants/appConfig'
 
 export function selectWechatUserInfo(state) {
   let AUTH = state.AUTH
@@ -29,7 +29,7 @@ export function selectUnpaidOrders(state) {
   let ordersMap = AUTH.orders
   let unpaidOrderList = []
   let unpaidOrderMap = ordersMap.filter((order) => {
-    return order.status === ORDER_STATUS_UNPAID
+    return order.status === appConfig.ORDER_STATUS_UNPAID
   })
   unpaidOrderMap.toArray().forEach((orderRecord) => {
     unpaidOrderList.push(orderRecord.toJS())
@@ -42,7 +42,7 @@ export function selectPaidOrders(state) {
   let ordersMap = AUTH.orders
   let paidOrderList = []
   let paidOrderMap = ordersMap.filter((order) => {
-    return order.status === ORDER_STATUS_PAID
+    return order.status === appConfig.ORDER_STATUS_PAID
   })
   paidOrderMap.toArray().forEach((orderRecord) => {
     paidOrderList.push(orderRecord.toJS())
@@ -55,7 +55,7 @@ export function selectOccupiedOrders(state) {
   let ordersMap = AUTH.orders
   let occupiedOrderList = []
   let occupiedOrdersMap = ordersMap.filter((order) => {
-    return order.status === ORDER_STATUS_OCCUPIED
+    return order.status === appConfig.ORDER_STATUS_OCCUPIED
   })
   occupiedOrdersMap.toArray().forEach((orderRecord) => {
     occupiedOrderList.push(orderRecord.toJS())

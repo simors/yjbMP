@@ -7,7 +7,7 @@ import { bindActionCreators } from 'redux'
 import {browserHistory} from 'react-router'
 import {fetchOrders, paymentOrder} from '../../actions/authActions'
 import {selectUserInfo, selectUnpaidOrders, selectOccupiedOrders, selectPaidOrders} from '../../selector/authSelector'
-import {ORDER_STATUS_OCCUPIED, ORDER_STATUS_PAID, ORDER_STATUS_UNPAID} from '../../constants/appConfig'
+import * as appConfig from '../../constants/appConfig'
 import {formatTime} from '../../util'
 import WeUI from 'react-weui'
 import 'weui'
@@ -30,7 +30,7 @@ class Orders extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      orderStatus: ORDER_STATUS_OCCUPIED,
+      orderStatus: appConfig.ORDER_STATUS_OCCUPIED,
       showPayDialog: false,
       payAmount: 0,
       payOrderId: '',
@@ -71,7 +71,7 @@ class Orders extends Component {
   componentWillMount() {
     this.props.fetchOrders({
       userId: this.props.currentUser.id,
-      orderStatus: ORDER_STATUS_OCCUPIED,
+      orderStatus: appConfig.ORDER_STATUS_OCCUPIED,
       limit: 10,
       isRefresh: true,
     })
@@ -79,11 +79,11 @@ class Orders extends Component {
 
   getDuration(order) {
     switch (order.status) {
-      case ORDER_STATUS_PAID:
-      case ORDER_STATUS_UNPAID:
+      case appConfig.ORDER_STATUS_PAID:
+      case appConfig.ORDER_STATUS_UNPAID:
         return ((order.endTime - order.createTime) * 0.001 / 60).toFixed(0)
         break
-      case ORDER_STATUS_OCCUPIED:
+      case appConfig.ORDER_STATUS_OCCUPIED:
         return ((Date.now() - order.createTime) * 0.001 / 60).toFixed(0)
         break
       default:
@@ -95,13 +95,13 @@ class Orders extends Component {
   getAmount(order) {
     let duration = 0
     switch (order.status) {
-      case ORDER_STATUS_PAID:
+      case appConfig.ORDER_STATUS_PAID:
         return order.amount
         break
-      case ORDER_STATUS_UNPAID:
+      case appConfig.ORDER_STATUS_UNPAID:
         duration = ((order.endTime - order.createTime) * 0.001 / 60).toFixed(0)
         break
-      case ORDER_STATUS_OCCUPIED:
+      case appConfig.ORDER_STATUS_OCCUPIED:
         duration = ((Date.now() - order.createTime) * 0.001 / 60).toFixed(0)
         break
       default:
@@ -283,31 +283,31 @@ class Orders extends Component {
     <InfiniteLoader onLoadMore={this.onLoadMoreOrders}>
       <Tab>
         <NavBar>
-          <NavBarItem active={this.state.orderStatus == ORDER_STATUS_UNPAID}
-                      onClick={e=>{this.onClickNavBar(ORDER_STATUS_UNPAID)}}>
+          <NavBarItem active={this.state.orderStatus == appConfig.ORDER_STATUS_UNPAID}
+                      onClick={e=>{this.onClickNavBar(appConfig.ORDER_STATUS_UNPAID)}}>
             未支付
           </NavBarItem>
-          <NavBarItem active={this.state.orderStatus == ORDER_STATUS_OCCUPIED}
-                      onClick={e=>{this.onClickNavBar(ORDER_STATUS_OCCUPIED)}}>
+          <NavBarItem active={this.state.orderStatus == appConfig.ORDER_STATUS_OCCUPIED}
+                      onClick={e=>{this.onClickNavBar(appConfig.ORDER_STATUS_OCCUPIED)}}>
             使用中
           </NavBarItem>
-          <NavBarItem active={this.state.orderStatus == ORDER_STATUS_PAID}
-                      onClick={e=>{this.onClickNavBar(ORDER_STATUS_PAID)}}>
+          <NavBarItem active={this.state.orderStatus == appConfig.ORDER_STATUS_PAID}
+                      onClick={e=>{this.onClickNavBar(appConfig.ORDER_STATUS_PAID)}}>
             已完成
           </NavBarItem>
         </NavBar>
         <TabBody style={{backgroundColor: `#EFEFF4`}}>
-          <Cells style={{display: this.state.orderStatus == ORDER_STATUS_UNPAID ? null : 'none', backgroundColor: `#EFEFF4`, marginTop: `0.6rem`}}>
+          <Cells style={{display: this.state.orderStatus == appConfig.ORDER_STATUS_UNPAID ? null : 'none', backgroundColor: `#EFEFF4`, marginTop: `0.6rem`}}>
             {
               this.props.unpaidOrders.map(this.renderUnpaidOrder)
             }
           </Cells>
-          <Cells style={{display: this.state.orderStatus == ORDER_STATUS_OCCUPIED ? null : 'none', backgroundColor: `#EFEFF4`, marginTop: `0.6rem`}}>
+          <Cells style={{display: this.state.orderStatus == appConfig.ORDER_STATUS_OCCUPIED ? null : 'none', backgroundColor: `#EFEFF4`, marginTop: `0.6rem`}}>
             {
               this.props.occupiedOrders.map(this.renderOccupiedOrder)
             }
           </Cells>
-          <Cells style={{display: this.state.orderStatus == ORDER_STATUS_PAID ? null : 'none', backgroundColor: `#EFEFF4`, marginTop: `0.6rem`}}>
+          <Cells style={{display: this.state.orderStatus == appConfig.ORDER_STATUS_PAID ? null : 'none', backgroundColor: `#EFEFF4`, marginTop: `0.6rem`}}>
             {
               this.props.paidOrders.map(this.renderPaidOrder)
             }

@@ -9,14 +9,14 @@ import {requestDeviceInfo} from '../../actions/deviceActions'
 import {selectDeviceInfo} from '../../selector/deviceSelector'
 import {fetchOrderInfo} from '../../actions/authActions'
 import {selectUserInfo} from '../../selector/authSelector'
-import {LC_SERVER_DOMAIN, TURN_ON_DEVICE, TURN_ON_DEVICE_FAILED, TURN_ON_DEVICE_SUCCESS} from '../../constants/appConfig'
+import * as appConfig from '../../constants/appConfig'
 import WeUI from 'react-weui'
 import 'weui'
 import 'react-weui/build/dist/react-weui.css'
 import './device.css'
 import io from 'socket.io-client'
 
-const socket = io('http://yiijiabao.leanapp.cn')
+const socket = io(appConfig.LC_SERVER_DOMAIN)
 
 const {
   Button,
@@ -140,7 +140,7 @@ class OpenDevice extends Component {
       loading: true
     })
     //发送开机请求
-    socket.emit(TURN_ON_DEVICE, {
+    socket.emit(appConfig.TURN_ON_DEVICE, {
       deviceNo: this.props.deviceInfo.deviceNo,
       userId: this.props.currentUser.id,
     }, function (data) {
@@ -156,7 +156,7 @@ class OpenDevice extends Component {
     })
 
     //监听开机成功消息
-    socket.on(TURN_ON_DEVICE_SUCCESS, function (data) {
+    socket.on(appConfig.TURN_ON_DEVICE_SUCCESS, function (data) {
       console.log("收到开机成功消息", data)
       var orderInfo = data
       that.setState({
@@ -172,7 +172,7 @@ class OpenDevice extends Component {
     })
 
     //监听开机失败消息
-    socket.on(TURN_ON_DEVICE_FAILED, function (data) {
+    socket.on(appConfig.TURN_ON_DEVICE_FAILED, function (data) {
       console.log("收到开机失败消息", data)
       that.setState({
         loading: false

@@ -19,6 +19,7 @@ const {
   Button,
   Page,
   Dialog,
+  Mask,
 } = WeUI
 
 class OrderDetail extends Component {
@@ -208,6 +209,7 @@ class OrderDetail extends Component {
         <Dialog type="android" title={this.state.TripDialogTitle} buttons={this.state.TripDialog.buttons} show={this.state.showTripDialog}>
           请充值
         </Dialog>
+        <Mask />
       </Page>
     )
   }

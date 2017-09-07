@@ -1,69 +1,84 @@
 import React from 'react';
-import { Button, Dialog } from '../../../build/packages';
+import { Button, Popup, Grids, PopupHeader, Article } from '../../../build/packages';
 import Page from '../../component/page';
+import iconSrc from '../grid/icon_tabbar.png';
+import srcArticle from '../article/pic_article.png';
 
-export default class DialogDemo extends React.Component {
+const data = Array(6).fill({
+  icon: <img src={iconSrc}/>,
+  label: 'Grid',
+  href: 'javascript:;'
+})
+
+class PopupDemo extends React.Component {
+
   state = {
-    showIOS1: false,
-    showIOS2: false,
-    showAndroid1: false,
-    showAndroid2: false,
-    style1: {
-      buttons: [
-        {
-          label: 'Ok',
-          onClick: this.hideDialog.bind(this)
-        }
-      ]
-    },
-    style2: {
-      title: 'Heading',
-      buttons: [
-        {
-          type: 'default',
-          label: 'Cancel',
-          onClick: this.hideDialog.bind(this)
-        },
-        {
-          type: 'primary',
-          label: 'Ok',
-          onClick: this.hideDialog.bind(this)
-        }
-      ]
-    }
+    bottom_show: false,
+    fullpage_show: false,
   };
 
-  hideDialog() {
+  hide(){
     this.setState({
-      showIOS1: false,
-      showIOS2: false,
-      showAndroid1: false,
-      showAndroid2: false,
-    });
+      bottom_show: false,
+      fullpage_show: false,
+    })
   }
 
   render() {
     return (
-      <Page className="dialog" title="Dialog" subTitle="对话框" spacing>
-        <Button type="default" onClick={ e=> this.setState({ showIOS1: true}) } >iOS Style1</Button>
-        <Button type="default" onClick={ e=> this.setState({ showIOS2: true}) }>iOS Style2</Button>
-        <Button type="default" onClick={ e=> this.setState({ showAndroid1: true}) } >Android Style1</Button>
-        <Button type="default" onClick={ e=> this.setState({ showAndroid2: true}) }>Android Style2</Button>
+      <Page className="popup" title="Popup" subTitle="pop pop pop it up" spacing>
 
-        <Dialog type="ios" title={this.state.style1.title} buttons={this.state.style1.buttons} show={this.state.showIOS1}>
-          This is iOS Style 1
-        </Dialog>
-        <Dialog type="ios" title={this.state.style2.title} buttons={this.state.style2.buttons} show={this.state.showIOS2}>
-          This is iOS Style 2
-        </Dialog>
+        <Button type="default" onClick={e=>this.setState({bottom_show: true})}>Popup</Button>
+        <Popup
+          show={this.state.bottom_show}
+          onRequestClose={e=>this.setState({bottom_show: false})}
+        >
+          <PopupHeader
+            left="Cancel"
+            right="Ok"
+            leftOnClick={e=>this.setState({bottom_show: false})}
+            rightOnClick={e=>this.setState({bottom_show: false})}
+          />
+          <Grids data={data}/>
+        </Popup>
 
-        <Dialog type="android" title={this.state.style1.title} buttons={this.state.style1.buttons} show={this.state.showAndroid1}>
-          This is Android Style 1
-        </Dialog>
-        <Dialog type="android" title={this.state.style2.title} buttons={this.state.style2.buttons} show={this.state.showAndroid2}>
-          This is Android Style 2
-        </Dialog>
+        <br />
+        <Button type="default" onClick={e=>this.setState({fullpage_show: true})}>Full pagePopup</Button>
+        <Popup
+          show={this.state.fullpage_show}
+          onRequestClose={e=>this.setState({fullpage_show: false})}
+        >
+          <div style={{height: '100vh', overflow: 'scroll'}}>
+            <Article>
+              <h1>H1 Heading</h1>
+              <section>
+                <h2 className="title">H2 Title</h2>
+                <section>
+                  <h3>H3 Heading</h3>
+                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                    quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                    consequat. Duis aute</p>
+                  <p>
+                    <img src={srcArticle} alt/>
+                    <img src={srcArticle} alt/>
+                  </p>
+                </section>
+                <section>
+                  <h3>H3 Heading</h3>
+                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                    cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                    proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                </section>
+              </section>
+              <Button onClick={e=>this.setState({fullpage_show: false})}>Close Popup</Button>
+            </Article>
+          </div>
+        </Popup>
+
       </Page>
     );
   }
 };
+export default PopupDemo;
