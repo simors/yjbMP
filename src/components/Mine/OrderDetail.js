@@ -206,7 +206,7 @@ class OrderDetail extends Component {
         <Dialog type="ios" title={this.state.PayDialog.title} buttons={this.state.PayDialog.buttons} show={this.state.showPayDialog}>
           {"即将使用余额支付，本次扣费" + this.getAmount(this.props.orderInfo) + "元"}
         </Dialog>
-        <Dialog type="ios" title={this.state.TripDialogTitle} buttons={this.state.TripDialog.buttons} show={this.state.showTripDialog}>
+        <Dialog type="android" title={this.state.TripDialogTitle} buttons={this.state.TripDialog.buttons} show={this.state.showTripDialog}>
           请充值
         </Dialog>
       </Page>
