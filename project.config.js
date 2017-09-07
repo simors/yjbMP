@@ -30,4 +30,6 @@ module.exports = {
     'redux-saga',
     'react-router',
   ],
+  /** leancloud后台环境 */
+  leanEnv: process.env.LEAN_ENV || 'pro',
 }
