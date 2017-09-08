@@ -1,8 +1,10 @@
 .order-page {
   display: flex;
+  flex-direction: column;
 }
 .order-tab {
   flex: 1;
+
 }
 .order-header {
   display: flex;

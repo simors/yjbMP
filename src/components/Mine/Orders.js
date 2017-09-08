@@ -110,32 +110,6 @@ class Orders extends Component {
     return (duration * order.unitPrice).toFixed(2)
   }
 
-  renderOccupiedOrder = (item, i) => {
-    return (
-      <Panel key={i}>
-        <div className="order-header">
-          <text>{'订单编号：' + item.orderNo}</text>
-          <text>{formatTime(item.createTime, 'YYYY/MM/DD HH:mm')}</text>
-        </div>
-        <div className="order-content" onClick={() => {browserHistory.push('/mine/orders/' + item.id)}}>
-          <div className="order-content-primary">
-            <text style={{fontSize: `1.1rem`, color: `#000000`}}>使用时长</text>
-            <text>{this.getDuration(item) + '分钟'}</text>
-            <div className="status">正在烘干</div>
-            <text style={{fontSize: `1.5rem`}}>{this.getAmount(item) + '元'}</text>
-          </div>
-          <div className="order-content-secondary">
-            <text>{item.deviceAddr}</text>
-            <text>实时计费</text>
-          </div>
-        </div>
-        <div className="order-footer">
-          <div className="order-button" onClick={() => this.triggerPayment(item)}>取出衣物</div>
-        </div>
-      </Panel>
-    )
-  }
-
   //触发支付动作
   triggerPayment(order) {
     var amount = this.getAmount(order)
@@ -224,6 +198,32 @@ class Orders extends Component {
         </div>
         <div className="order-footer">
           <div className="pay-button" onClick={() => this.triggerPayment(item)}>支付</div>
+        </div>
+      </Panel>
+    )
+  }
+
+  renderOccupiedOrder = (item, i) => {
+    return (
+      <Panel key={i}>
+        <div className="order-header">
+          <text>{'订单编号：' + item.orderNo}</text>
+          <text>{formatTime(item.createTime, 'YYYY/MM/DD HH:mm')}</text>
+        </div>
+        <div className="order-content" onClick={() => {browserHistory.push('/mine/orders/' + item.id)}}>
+          <div className="order-content-primary">
+            <text style={{fontSize: `1.1rem`, color: `#000000`}}>使用时长</text>
+            <text>{this.getDuration(item) + '分钟'}</text>
+            <div className="status">正在烘干</div>
+            <text style={{fontSize: `1.5rem`}}>{this.getAmount(item) + '元'}</text>
+          </div>
+          <div className="order-content-secondary">
+            <text>{item.deviceAddr}</text>
+            <text>实时计费</text>
+          </div>
+        </div>
+        <div className="order-footer">
+          <div className="order-button" onClick={() => this.triggerPayment(item)}>取出衣物</div>
         </div>
       </Panel>
     )
