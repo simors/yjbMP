@@ -280,7 +280,7 @@ class Orders extends Component {
 
   render() {
     return(
-    <InfiniteLoader className="order-page" onLoadMore={this.onLoadMoreOrders}>
+    <InfiniteLoader onLoadMore={this.onLoadMoreOrders}>
       <Tab className="order-tab">
         <NavBar>
           <NavBarItem active={this.state.orderStatus == appConfig.ORDER_STATUS_UNPAID}

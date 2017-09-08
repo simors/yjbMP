@@ -1,10 +1,6 @@
-.order-page {
-  display: flex;
-  flex-direction: column;
-}
-.order-tab {
-  flex: 1;
 
+.order-tab {
+  height: 100vh;
 }
 .order-header {
   display: flex;
