@@ -50,8 +50,8 @@ class Orders extends Component {
         ]
       },
       showTripDialog: false,
-      TripDialogTitle: '支付成功',
       TripDialog: {
+        title: '支付成功',
         buttons: [
           {
             label: '确定',
@@ -60,7 +60,23 @@ class Orders extends Component {
             }
           },
         ]
-      }
+      },
+      showBalanceDialog: false,
+      BalanceDialog: {
+        title: '余额不足',
+        buttons: [
+          {
+            type: 'default',
+            label: '取消',
+            onClick: () => {this.setState({showBalanceDialog: false})}
+          },
+          {
+            type: 'primary',
+            label: '结束服务',
+            onClick: this.onPaymentService
+          }
+        ]
+      },
     }
   }
 
@@ -115,27 +131,9 @@ class Orders extends Component {
     var amount = this.getAmount(order)
     if(this.props.currentUser.balance < amount) {  //余额不足
       this.setState({
-        showTripDialog: true,
-        TripDialogTitle: '余额不足',
-        TripDialog: {
-          buttons: [
-            {
-              type: 'default',
-              label: '返回',
-              onClick: () => {
-                this.setState({showTripDialog: false})
-              }
-            },
-            {
-              type: 'primary',
-              label: '充值',
-              onClick: () => {
-                browserHistory.push('/mine/wallet/recharge')
-                this.setState({showTripDialog: false})
-              }
-            }
-          ]
-        }
+        payAmount: Number(amount),
+        payOrderId: order.id,
+        showBalanceDialog: true,
       })
     } else {
       this.setState({
@@ -149,21 +147,38 @@ class Orders extends Component {
 
   paymentServiceSuccessCallback = (orderRecord) => {
     console.log("orderRecord: status", orderRecord.status)
-    if(orderRecord.status === ORDER_STATUS_PAID) {
+    if(orderRecord.status === appConfig.ORDER_STATUS_PAID) {
       this.setState({
         showTripDialog: true,
-        TripDialogTitle: '支付成功'
       })
-    } else if(orderRecord.status === ORDER_STATUS_UNPAID) {
+    } else if(orderRecord.status === appConfig.ORDER_STATUS_UNPAID) {
       this.setState({
-        showTripDialog: true,
-        TripDialogTitle: '余额不足'
+        showBalanceDialog: true,
+        BalanceDialog: {
+          title: '干衣服务结束',
+          buttons: [
+            {
+              type: 'default',
+              label: '返回',
+              onClick: () => {this.setState({showBalanceDialog: false})}
+            },
+            {
+              type: 'primary',
+              label: '充值',
+              onClick: () => {
+                browserHistory.push('/mine/wallet/recharge')
+                this.setState({showBalanceDialog: false})
+              }
+            }
+          ]
+        },
       })
     }
   }
 
   paymentServiceFailedCallback = (error) => {
     console.log("onPaymentService", error)
+    //TODO 跳转到错误提示页面
   }
 
   //支付服务订单
@@ -317,7 +332,9 @@ class Orders extends Component {
       <Dialog type="ios" title={this.state.PayDialog.title} buttons={this.state.PayDialog.buttons} show={this.state.showPayDialog}>
         {"即将使用余额支付，本次扣费" + this.state.payAmount + "元"}
       </Dialog>
-      <Dialog type="ios" title={this.state.TripDialogTitle} buttons={this.state.TripDialog.buttons} show={this.state.showTripDialog}>
+      <Dialog type="ios" title={this.state.TripDialog.title} buttons={this.state.TripDialog.buttons} show={this.state.showTripDialog}>
+      </Dialog>
+      <Dialog type="ios" title={this.state.BalanceDialog.title} buttons={this.state.BalanceDialog.buttons} show={this.state.showBalanceDialog}>
       </Dialog>
     </InfiniteLoader>
     )

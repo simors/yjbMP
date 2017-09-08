@@ -19,7 +19,6 @@ const {
   Button,
   Page,
   Dialog,
-  Mask,
 } = WeUI
 
 class OrderDetail extends Component {
@@ -43,8 +42,8 @@ class OrderDetail extends Component {
         ]
       },
       showTripDialog: false,
-      TripDialogTitle: '支付成功',
       TripDialog: {
+        title: '支付成功',
         buttons: [
           {
             label: '确定',
@@ -53,7 +52,23 @@ class OrderDetail extends Component {
             }
           },
         ]
-      }
+      },
+      showBalanceDialog: false,
+      BalanceDialog: {
+        title: '余额不足',
+        buttons: [
+          {
+            type: 'default',
+            label: '取消',
+            onClick: () => {this.setState({showBalanceDialog: false})}
+          },
+          {
+            type: 'primary',
+            label: '结束服务',
+            onClick: this.onPaymentService
+          }
+        ]
+      },
     }
   }
 
@@ -100,42 +115,41 @@ class OrderDetail extends Component {
     }
   }
 
+  getOrderStatus(order) {
+    switch (order.status) {
+      case ORDER_STATUS_PAID:
+        return "已完成"
+        break
+      case ORDER_STATUS_UNPAID:
+        return "未支付"
+        break
+      case ORDER_STATUS_OCCUPIED:
+        return "正在烘干"
+        break
+      default:
+        break
+    }
+  }
+
   //触发支付动作
   triggerPayment(order) {
     var amount = this.getAmount(order)
     if(this.props.currentUser.balance < amount) {  //余额不足
       this.setState({
-        showTripDialog: true,
-        TripDialogTitle: '余额不足',
-        TripDialog: {
-          buttons: [
-            {
-              type: 'default',
-              label: '返回',
-              onClick: () => {
-                this.setState({showTripDialog: false})
-              }
-            },
-            {
-              type: 'primary',
-              label: '充值',
-              onClick: () => {
-                browserHistory.push('/mine/wallet/recharge')
-                this.setState({showTripDialog: false})
-              }
-            }
-          ]
-        }
+        payAmount: Number(amount),
+        payOrderId: order.id,
+        showBalanceDialog: true,
       })
     } else {
       this.setState({
         showPayDialog: true,
+        payAmount: Number(amount),
+        payOrderId: order.id,
       })
     }
   }
 
   paymentServiceSuccessCallback = (orderRecord) => {
-    console.log("orderRecord: status", orderRecord.status)
     if(orderRecord.status === ORDER_STATUS_PAID) {
       this.setState({
         showTripDialog: true,
@@ -143,14 +157,32 @@ class OrderDetail extends Component {
       })
     } else if(orderRecord.status === ORDER_STATUS_UNPAID) {
       this.setState({
-        showTripDialog: true,
-        TripDialogTitle: '余额不足'
+        showBalanceDialog: true,
+        BalanceDialog: {
+          title: '干衣服务结束',
+          buttons: [
+            {
+              type: 'default',
+              label: '返回',
+              onClick: () => {this.setState({showBalanceDialog: false})}
+            },
+            {
+              type: 'primary',
+              label: '充值',
+              onClick: () => {
+                browserHistory.push('/mine/wallet/recharge')
+                this.setState({showBalanceDialog: false})
+              }
+            }
+          ]
+        },
       })
     }
   }
 
   paymentServiceFailedCallback = (error) => {
     console.log("onPaymentService", error)
+    //TODO 跳转到错误提示页面
   }
 
   //支付服务订单
@@ -179,10 +211,11 @@ class OrderDetail extends Component {
   }
 
   render() {
+
     return(
       <Page ptr={false} infiniteLoader={false} className="order-detail-page">
         <div className="item-area">
-          <div className="order-detail-item">当前状态：正在烘干</div>
+          <div className="order-detail-item">{"当前状态：" + this.getOrderStatus(this.props.orderInfo)}</div>
           <div className="order-detail-item">
             <div>{'订单编号：' + this.props.orderInfo.orderNo}</div>
             <div>{'下单时间：' + formatTime(this.props.orderInfo.createTime, 'YYYY/MM/DD HH:mm')}</div>
@@ -206,8 +239,10 @@ class OrderDetail extends Component {
         <Dialog type="ios" title={this.state.PayDialog.title} buttons={this.state.PayDialog.buttons} show={this.state.showPayDialog}>
           {"即将使用余额支付，本次扣费" + this.getAmount(this.props.orderInfo) + "元"}
         </Dialog>
-        <Dialog type="ios" title={this.state.TripDialogTitle} buttons={this.state.TripDialog.buttons} show={this.state.showTripDialog}>
+        <Dialog type="ios" title={this.state.TripDialog.title} buttons={this.state.TripDialog.buttons} show={this.state.showTripDialog}>
           请充值
+        </Dialog>
+        <Dialog type="ios" title={this.state.BalanceDialog.title} buttons={this.state.BalanceDialog.buttons} show={this.state.showBalanceDialog}>
         </Dialog>
       </Page>
     )
