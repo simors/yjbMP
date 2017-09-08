@@ -1,16 +1,24 @@
-
+.page {
+  display: flex;
+  flex-direction: column;
+}
 .header {
   display: flex;
-  height: 9.69rem;
+  height: 9.7rem;
   justify-content: center;
   align-items: center;
 }
 
+.form {
+  margin-top: 0;
+}
+
 .button {
+  flex: 1;
   margin-top: 1.63rem;
+  margin-bottom: 10.6rem;
   padding-left: 1.31rem;
   padding-right: 1.19rem;
-  margin-bottom: 10.63rem;
 }
 
 .avatar {
@@ -22,9 +30,8 @@
 .bind-footer {
   display: flex;
   justify-content: center;
-  position: absolute;
-  bottom: 1.6rem;
-  width: 100%;
+  align-items: flex-end;
+  padding-bottom: 1.6rem;
 }
 .bind-logo {
   width: 6.25rem;

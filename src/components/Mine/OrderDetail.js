@@ -180,7 +180,7 @@ class OrderDetail extends Component {
 
   render() {
     return(
-      <Page className="order-detail-page">
+      <Page ptr={false} infiniteLoader={false} className="order-detail-page">
         <div className="item-area">
           <div className="order-detail-item">当前状态：正在烘干</div>
           <div className="order-detail-item">
@@ -206,10 +206,9 @@ class OrderDetail extends Component {
         <Dialog type="ios" title={this.state.PayDialog.title} buttons={this.state.PayDialog.buttons} show={this.state.showPayDialog}>
           {"即将使用余额支付，本次扣费" + this.getAmount(this.props.orderInfo) + "元"}
         </Dialog>
-        <Dialog type="android" title={this.state.TripDialogTitle} buttons={this.state.TripDialog.buttons} show={this.state.showTripDialog}>
+        <Dialog type="ios" title={this.state.TripDialogTitle} buttons={this.state.TripDialog.buttons} show={this.state.showTripDialog}>
           请充值
         </Dialog>
-        <Mask />
       </Page>
     )
   }

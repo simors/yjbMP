@@ -1,6 +1,5 @@
 .order-detail-page {
   background-color: #EFEFF4;
-  overflow: hidden;
 }
 .item-area {
   font-size: 1.1rem;
@@ -16,6 +15,8 @@
 }
 
 .order-detail-buttom-area {
-  padding-left: 1.25rem;
-  padding-right: 1.25rem;
+  position: absolute;
+  bottom: 1.2rem;
+  left: 1.3rem;
+  right: 1.2rem;
 }

@@ -1,4 +1,9 @@
-
+.order-page {
+  display: flex;
+}
+.order-tab {
+  flex: 1;
+}
 .order-header {
   display: flex;
   justify-content: space-between;
