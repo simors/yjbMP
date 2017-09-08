@@ -184,3 +184,12 @@ export function verifyIdName(payload) {
     throw error
   })
 }
+
+export function getJssdkConfig(payload) {
+  return AV.Cloud.run('getJsConfig', payload).then((configInfo) => {
+    return configInfo
+  }).catch((error) => {
+    console.log("获取微信js-sdk config失败：", error)
+    throw error
+  })
+}

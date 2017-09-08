@@ -12,7 +12,7 @@ import 'weui'
 import 'react-weui/build/dist/react-weui.css'
 import './orderDetail.css'
 import {formatTime} from '../../util'
-import {ORDER_STATUS_OCCUPIED, ORDER_STATUS_PAID, ORDER_STATUS_UNPAID} from '../../constants/appConfig'
+import * as appConfig from '../../constants/appConfig'
 
 
 const {
@@ -79,13 +79,13 @@ class OrderDetail extends Component {
   getAmount(order) {
     let duration = 0
     switch (order.status) {
-      case ORDER_STATUS_PAID:
+      case appConfig.ORDER_STATUS_PAID:
         return order.amount
         break
-      case ORDER_STATUS_UNPAID:
+      case appConfig.ORDER_STATUS_UNPAID:
         duration = ((order.endTime - order.createTime) * 0.001 / 60).toFixed(0)
         break
-      case ORDER_STATUS_OCCUPIED:
+      case appConfig.ORDER_STATUS_OCCUPIED:
         duration = ((Date.now() - order.createTime) * 0.001 / 60).toFixed(0)
         break
       default:
@@ -101,13 +101,13 @@ class OrderDetail extends Component {
 
   getButtonTitle(order) {
     switch (order.status) {
-      case ORDER_STATUS_PAID:
+      case appConfig.ORDER_STATUS_PAID:
         return "返回"
         break
-      case ORDER_STATUS_UNPAID:
+      case appConfig.ORDER_STATUS_UNPAID:
         return "支付"
         break
-      case ORDER_STATUS_OCCUPIED:
+      case appConfig.ORDER_STATUS_OCCUPIED:
         return "取出衣物"
         break
       default:
@@ -117,13 +117,13 @@ class OrderDetail extends Component {
 
   getOrderStatus(order) {
     switch (order.status) {
-      case ORDER_STATUS_PAID:
+      case appConfig.ORDER_STATUS_PAID:
         return "已完成"
         break
-      case ORDER_STATUS_UNPAID:
+      case appConfig.ORDER_STATUS_UNPAID:
         return "未支付"
         break
-      case ORDER_STATUS_OCCUPIED:
+      case appConfig.ORDER_STATUS_OCCUPIED:
         return "正在烘干"
         break
       default:
@@ -150,12 +150,12 @@ class OrderDetail extends Component {
   }
 
   paymentServiceSuccessCallback = (orderRecord) => {
-    if(orderRecord.status === ORDER_STATUS_PAID) {
+    if(orderRecord.status === appConfig.ORDER_STATUS_PAID) {
       this.setState({
         showTripDialog: true,
         TripDialogTitle: '支付成功'
       })
-    } else if(orderRecord.status === ORDER_STATUS_UNPAID) {
+    } else if(orderRecord.status === appConfig.ORDER_STATUS_UNPAID) {
       this.setState({
         showBalanceDialog: true,
         BalanceDialog: {
@@ -198,11 +198,11 @@ class OrderDetail extends Component {
 
   onButtonPress = () => {
     switch (this.props.orderInfo.status) {
-      case ORDER_STATUS_PAID:
+      case appConfig.ORDER_STATUS_PAID:
         browserHistory.goBack()
         break
-      case ORDER_STATUS_UNPAID:
-      case ORDER_STATUS_OCCUPIED:
+      case appConfig.ORDER_STATUS_UNPAID:
+      case appConfig.ORDER_STATUS_OCCUPIED:
         this.triggerPayment(this.props.orderInfo)
         break
       default:

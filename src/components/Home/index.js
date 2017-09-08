@@ -5,30 +5,35 @@ import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { Button } from 'antd'
+import {browserHistory} from 'react-router'
 import {requestPosition} from '../../actions/configActions'
 import {selectLocation} from '../../selector/configSelector'
+import {fetchWechatJssdkConfig} from '../../actions/authActions'
 import * as appConfig from '../../constants/appConfig'
 import wx from 'tencent-wx-jssdk'
-
-
 
 class Home extends Component {
   constructor(props) {
     super(props)
   }
-
   componentWillMount() {
-    wx.config({
-      "debug": true,
-      "appId": "wx792bf5a51051d512",
-      "timestamp": "1504580023",
-      "nonceStr": "e0a767m4825kncv",
-      "signature": "fb08c8e269d874206a19ef59104705ee4082ea38",
-      "jsApiList": [
-        "scanQRCode"
-      ]
-    });
-    console.log("微信js-sdk wx:", wx)
+    this.props.fetchWechatJssdkConfig({
+      debug: true,
+      jsApiList: ['scanQRCode', 'getLocation'],
+      url: browserHistory.getCurrentLocation().pathname,
+      success: (configInfo) => {
+        console.log("js config", configInfo)
+        wx.config(configInfo)
+      },
+      error: (error) => {console.log(error)}
+    })
+    // wx.config({
+    //   appId: "wx2c7e7f1a67c78900",
+    //   jsApiList: ["scanQRCode", "getLocation"],
+    //   nonceStr: "4ncsith15lk0et2",
+    //   signature: '8f44326d1bda99be974aa5e6aa904e4c8c6a2b49',
+    //   timestamp: "1504913913"
+    // })
   }
 
   btnOnPress() {
@@ -69,6 +74,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
   requestPosition,
+  fetchWechatJssdkConfig,
 }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home)
