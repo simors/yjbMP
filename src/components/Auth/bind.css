@@ -20,11 +20,13 @@
 }
 
 .bind-footer {
+  display: flex;
+  justify-content: center;
   position: absolute;
   bottom: 1.6rem;
   width: 100%;
 }
-.bind-footer .logo {
+.bind-logo {
   width: 6.25rem;
   height: 5.63rem;
 }
