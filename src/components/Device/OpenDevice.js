@@ -51,7 +51,7 @@ class OpenDevice extends Component {
       deviceNo: deviceNo,
     })
     this.props.fetchWechatJssdkConfig({
-      debug: __DEV__,
+      debug: true,
       jsApiList: ['scanQRCode', 'getLocation'],
       url: browserHistory.getCurrentLocation().pathname,
       success: (configInfo) => {
