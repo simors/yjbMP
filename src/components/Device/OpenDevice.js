@@ -72,6 +72,16 @@ class OpenDevice extends Component {
           />
         </PanelBody>
       )
+    } else if(!this.props.deviceInfo) {
+      return(
+        <PanelBody style={{borderBottomWidth: `0`}}>
+          <Msg
+            type="warn"
+            title="无效的设备"
+            description="请尝试扫描其他设备，或联系客服"
+          />
+        </PanelBody>
+      )
     } else if(this.props.deviceInfo.status === 0) { //空闲
       return(
         <PanelBody style={{borderBottomWidth: `0`}}>
@@ -197,7 +207,7 @@ class OpenDevice extends Component {
 
   onPress = () => {
     if(this.props.currentUser.debt > 0) { //欠费
-
+      browserHistory.push('/mine/orders')
     } else if(this.props.deviceInfo.status === 0) { //空闲
       this.turnOnDevice()
     } else{
