@@ -72,7 +72,7 @@ class OpenDevice extends Component {
           />
         </PanelBody>
       )
-    } else if(!this.props.deviceInfo) {
+    } else if(!this.props.deviceInfo.status) {
       return(
         <PanelBody style={{borderBottomWidth: `0`}}>
           <Msg
