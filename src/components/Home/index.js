@@ -20,7 +20,7 @@ class Home extends Component {
     this.props.fetchWechatJssdkConfig({
       debug: true,
       jsApiList: ['scanQRCode', 'getLocation'],
-      url: browserHistory.getCurrentLocation().pathname,
+      url: window.location.href,
       success: (configInfo) => {
         console.log("js config", configInfo)
         wx.config(configInfo)

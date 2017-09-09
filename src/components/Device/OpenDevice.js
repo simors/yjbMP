@@ -49,7 +49,7 @@ class OpenDevice extends Component {
     this.props.fetchWechatJssdkConfig({
       debug: true,
       jsApiList: ['scanQRCode', 'getLocation'],
-      url: browserHistory.getCurrentLocation().pathname,
+      url: window.location.href,
       success: (configInfo) => {
         wx.config(configInfo)
       },
