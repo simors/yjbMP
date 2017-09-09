@@ -44,12 +44,8 @@ class OpenDevice extends Component {
 
   componentWillMount() {
     var deviceNo = this.props.location.query.deviceNo
-    this.props.requestDeviceInfo({
-      deviceNo: deviceNo,
-    })
-    this.setState({
-      deviceNo: deviceNo,
-    })
+    this.props.requestDeviceInfo({deviceNo: deviceNo})
+    this.setState({deviceNo: deviceNo})
     this.props.fetchWechatJssdkConfig({
       debug: true,
       jsApiList: ['scanQRCode', 'getLocation'],
