@@ -16,29 +16,29 @@ class Home extends Component {
   constructor(props) {
     super(props)
   }
-  componentWillMount() {
-    this.props.fetchWechatJssdkConfig({
-      debug: true,
-      jsApiList: ['scanQRCode', 'getLocation'],
-      url: browserHistory.getCurrentLocation().pathname,
-      success: (configInfo) => {
-        console.log("js config", configInfo)
-        wx.config(configInfo)
-      },
-      error: (error) => {console.log(error)}
-    })
-  }
+  // componentWillMount() {
+  //   this.props.fetchWechatJssdkConfig({
+  //     debug: true,
+  //     jsApiList: ['scanQRCode', 'getLocation'],
+  //     url: browserHistory.getCurrentLocation().pathname,
+  //     success: (configInfo) => {
+  //       console.log("js config", configInfo)
+  //       wx.config(configInfo)
+  //     },
+  //     error: (error) => {console.log(error)}
+  //   })
+  // }
 
   btnOnPress() {
     this.props.requestPosition({})
   }
 
   onScanQRCode = () => {
-    wx.scanQRCode({
-      needResult: 0,
-      scanType: ["qrCode","barCode"],
-      success: () => {}
-    })
+    // wx.scanQRCode({
+    //   needResult: 0,
+    //   scanType: ["qrCode","barCode"],
+    //   success: () => {}
+    // })
   }
 
   render() {
