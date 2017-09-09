@@ -25,47 +25,20 @@ class OrderDetail extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      showPayDialog: false,
-      PayDialog: {
+      showDialog: false,
+      Dialog: {
         title: '确认支付',
+        trip: '',
         buttons: [
           {
             type: 'default',
             label: '取消',
-            onClick: () => {this.setState({showPayDialog: false})}
+            onClick: () => {}
           },
           {
             type: 'primary',
             label: '确认',
-            onClick: this.onPaymentService
-          }
-        ]
-      },
-      showTripDialog: false,
-      TripDialog: {
-        title: '支付成功',
-        buttons: [
-          {
-            label: '确定',
-            onClick: () => {
-              this.setState({showTripDialog: false})
-            }
-          },
-        ]
-      },
-      showBalanceDialog: false,
-      BalanceDialog: {
-        title: '余额不足',
-        buttons: [
-          {
-            type: 'default',
-            label: '取消',
-            onClick: () => {this.setState({showBalanceDialog: false})}
-          },
-          {
-            type: 'primary',
-            label: '结束服务',
-            onClick: this.onPaymentService
+            onClick: () => {}
           }
         ]
       },
@@ -91,6 +64,7 @@ class OrderDetail extends Component {
       default:
         break
     }
+    duration = duration < 1? 1: duration
     return (duration * order.unitPrice).toFixed(2)
   }
 
@@ -131,20 +105,75 @@ class OrderDetail extends Component {
     }
   }
 
-  //触发支付动作
+  //触发支付动作s
   triggerPayment(order) {
     var amount = this.getAmount(order)
     if(this.props.currentUser.balance < amount) {  //余额不足
-      this.setState({
-        payAmount: Number(amount),
-        payOrderId: order.id,
-        showBalanceDialog: true,
-      })
+      if(order.status === appConfig.ORDER_STATUS_OCCUPIED) {
+        this.setState({
+          showDialog: true,
+          Dialog: {
+            title: '余额不足',
+            trip: '请结束服务后充值',
+            buttons: [
+              {
+                type: 'default',
+                label: '取消',
+                onClick: () => {this.setState({showDialog: false})}
+              },
+              {
+                type: 'primary',
+                label: '结束服务',
+                onClick: this.onPaymentService
+              }
+            ]
+          },
+        })
+      } else if(order.status === appConfig.ORDER_STATUS_UNPAID) {
+        this.setState({
+          showDialog: true,
+          Dialog: {
+            title: '余额不足',
+            trip: '请充值后再试',
+            buttons: [
+              {
+                type: 'default',
+                label: '取消',
+                onClick: () => {this.setState({showDialog: false})}
+              },
+              {
+                type: 'primary',
+                label: '充值',
+                onClick: () => {
+                  browserHistory.push('/mine/wallet/recharge')
+                  this.setState({showDialog: false})
+                }
+              }
+            ]
+          },
+        })
+      }
     } else {
       this.setState({
-        showPayDialog: true,
+        showDialog: true,
         payAmount: Number(amount),
         payOrderId: order.id,
+        Dialog: {
+          title: '确认支付',
+          trip: "即将使用余额支付，本次扣费" + this.state.payAmount + "元",
+          buttons: [
+            {
+              type: 'default',
+              label: '取消',
+              onClick: () => {this.setState({showDialog: false})}
+            },
+            {
+              type: 'primary',
+              label: '确认',
+              onClick: this.onPaymentService
+            }
+          ]
+        },
       })
     }
   }
@@ -152,26 +181,38 @@ class OrderDetail extends Component {
   paymentServiceSuccessCallback = (orderRecord) => {
     if(orderRecord.status === appConfig.ORDER_STATUS_PAID) {
       this.setState({
-        showTripDialog: true,
-        TripDialogTitle: '支付成功'
+        showDialog: true,
+        Dialog: {
+          title: '支付成功',
+          trip: '',
+          buttons: [
+            {
+              label: '确定',
+              onClick: () => {
+                this.setState({showDialog: false})
+              }
+            },
+          ]
+        },
       })
     } else if(orderRecord.status === appConfig.ORDER_STATUS_UNPAID) {
       this.setState({
-        showBalanceDialog: true,
-        BalanceDialog: {
+        showDialog: true,
+        Dialog: {
           title: '干衣服务结束',
+          trip: '',
           buttons: [
             {
               type: 'default',
               label: '返回',
-              onClick: () => {this.setState({showBalanceDialog: false})}
+              onClick: () => {this.setState({showDialog: false})}
             },
             {
               type: 'primary',
               label: '充值',
               onClick: () => {
                 browserHistory.push('/mine/wallet/recharge')
-                this.setState({showBalanceDialog: false})
+                this.setState({showDialog: false})
               }
             }
           ]
@@ -236,14 +277,7 @@ class OrderDetail extends Component {
         <div className="order-detail-buttom-area">
           <Button onClick={this.onButtonPress}>{this.getButtonTitle(this.props.orderInfo)}</Button>
         </div>
-        <Dialog type="ios" title={this.state.PayDialog.title} buttons={this.state.PayDialog.buttons} show={this.state.showPayDialog}>
-          {"即将使用余额支付，本次扣费" + this.getAmount(this.props.orderInfo) + "元"}
-        </Dialog>
-        <Dialog type="ios" title={this.state.TripDialog.title} buttons={this.state.TripDialog.buttons} show={this.state.showTripDialog}>
-          请充值
-        </Dialog>
-        <Dialog type="ios" title={this.state.BalanceDialog.title} buttons={this.state.BalanceDialog.buttons} show={this.state.showBalanceDialog}>
-        </Dialog>
+        <Dialog type="ios" title={this.state.Dialog.title} buttons={this.state.Dialog.buttons} show={this.state.showDialog}>{this.state.Dialog.trip}</Dialog>
       </Page>
     )
   }

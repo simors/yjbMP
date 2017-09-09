@@ -95,7 +95,7 @@ class Certification extends Component {
 
   render() {
     return(
-      <Page>
+      <Page ptr={false} infiniteLoader={false}>
         <CellsTitle>请输入您本人的真实信息。</CellsTitle>
         <Form>
           <FormCell>
