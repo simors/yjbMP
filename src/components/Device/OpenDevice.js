@@ -7,10 +7,11 @@ import { bindActionCreators } from 'redux'
 import {browserHistory} from 'react-router'
 import {requestDeviceInfo} from '../../actions/deviceActions'
 import {selectDeviceInfo} from '../../selector/deviceSelector'
-import {fetchOrderInfo} from '../../actions/authActions'
+import {fetchOrderInfo, fetchWechatJssdkConfig} from '../../actions/authActions'
 import {selectUserInfo} from '../../selector/authSelector'
 import * as appConfig from '../../constants/appConfig'
 import WeUI from 'react-weui'
+import wx from 'tencent-wx-jssdk'
 import 'weui'
 import 'react-weui/build/dist/react-weui.css'
 import './device.css'
@@ -48,6 +49,15 @@ class OpenDevice extends Component {
     })
     this.setState({
       deviceNo: deviceNo,
+    })
+    this.props.fetchWechatJssdkConfig({
+      debug: __DEV__,
+      jsApiList: ['scanQRCode', 'getLocation'],
+      url: browserHistory.getCurrentLocation().pathname,
+      success: (configInfo) => {
+        wx.config(configInfo)
+      },
+      error: (error) => {console.log(error)}
     })
   }
 
@@ -125,11 +135,7 @@ class OpenDevice extends Component {
       return "去支付"
     } else if(this.props.deviceInfo.status === 0) { //空闲
       return "开门"
-    } else if(this.props.deviceInfo.status === 1) {  //使用中
-      return "扫一扫"
-    } else if(this.props.deviceInfo.status === 2) {  //下线
-      return "扫一扫"
-    } else {
+    }  else {
       return "扫一扫"
     }
   }
@@ -181,14 +187,21 @@ class OpenDevice extends Component {
     })
   }
 
+  onScanQRCode() {
+    wx.scanQRCode({
+      needResult: 0,
+      scanType: ["qrCode","barCode"],
+      success: () => {}
+    })
+  }
+
   onPress = () => {
     if(this.props.currentUser.debt > 0) { //欠费
 
     } else if(this.props.deviceInfo.status === 0) { //空闲
       this.turnOnDevice()
-    } else if(this.props.deviceInfo.status === 1) {  //使用中
-    } else if(this.props.deviceInfo.status === 2) {  //下线
-    } else {
+    } else{
+      this.onScanQRCode()
     }
   }
 
@@ -204,8 +217,8 @@ class OpenDevice extends Component {
           </PanelHeader>
           {this.renderDeviceStatus()}
         </Panel>
-        <div className="device-button-area" onClick={this.onPress}>
-          <Button className='device-button'>{this.getButtonTitle()}</Button>
+        <div className="device-button-area" >
+          <Button className='device-button' onClick={this.onPress}>{this.getButtonTitle()}</Button>
         </div>
       </Page>
     )
@@ -223,7 +236,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
   requestDeviceInfo,
-  fetchOrderInfo
+  fetchOrderInfo,
+  fetchWechatJssdkConfig,
 }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(OpenDevice)

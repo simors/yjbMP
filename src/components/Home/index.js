@@ -27,13 +27,6 @@ class Home extends Component {
       },
       error: (error) => {console.log(error)}
     })
-    // wx.config({
-    //   appId: "wx2c7e7f1a67c78900",
-    //   jsApiList: ["scanQRCode", "getLocation"],
-    //   nonceStr: "4ncsith15lk0et2",
-    //   signature: '8f44326d1bda99be974aa5e6aa904e4c8c6a2b49',
-    //   timestamp: "1504913913"
-    // })
   }
 
   btnOnPress() {
