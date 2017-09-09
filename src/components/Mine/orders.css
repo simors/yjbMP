@@ -75,17 +75,9 @@
 }
 
 .status {
-  width: 3.2rem;
-  height: 1.1rem;
-  border-radius: 8px;
-  background-color: #1AAD19;
-  font-size: 0.6rem;
-  text-align: center;
-  color: #ffffff;
-  margin-right: 3.3rem;
-}
-
-.unpaid-status {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 3.2rem;
   height: 1.1rem;
   border-radius: 8px;

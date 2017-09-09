@@ -244,7 +244,7 @@ class Orders extends Component {
           <div className="order-content-primary">
             <text style={{fontSize: `1.1rem`, color: `#000000`}}>使用时长</text>
             <text>{this.getDuration(item) + '分钟'}</text>
-            <div className="unpaid-status">已烘干</div>
+            <div className="status">已烘干</div>
             <text style={{fontSize: `1.5rem`}}>{this.getAmount(item) + '元'}</text>
           </div>
           <div className="order-content-secondary">
@@ -270,7 +270,7 @@ class Orders extends Component {
           <div className="order-content-primary">
             <text style={{fontSize: `1.1rem`, color: `#000000`}}>使用时长</text>
             <text>{this.getDuration(item) + '分钟'}</text>
-            <div className="status">正在烘干</div>
+            <div className="status" style={{backgroundColor: `#FFA22A`}}>正在烘干</div>
             <text style={{fontSize: `1.5rem`}}>{this.getAmount(item) + '元'}</text>
           </div>
           <div className="order-content-secondary">
