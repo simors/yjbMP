@@ -73,6 +73,9 @@ class WalletDetail extends Component {
       case appConfig.WITHDRAW:
         return "提现成功-余额"
         break
+      case appConfig.SYS_PRESENT:
+        return "付款成功-充值"
+        break
       default:
         break
     }
@@ -94,6 +97,9 @@ class WalletDetail extends Component {
         break
       case appConfig.WITHDRAW:
         return "余额提现"
+        break
+      case appConfig.SYS_PRESENT:
+        return "系统赠送"
         break
       default:
         break

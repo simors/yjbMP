@@ -113,8 +113,7 @@ class Recharge extends Component {
 
   onRecharge = () => {
     this.props.createPayment({
-      // amount: this.state.selectAmount,
-      amount: 0.1, //TODO 测试
+      amount: this.state.selectAmount * 0.01, //TODO 支付测试金额缩小100倍，部署正式环境需废除
       channel: 'wx_pub',
       metadata: {
         'fromUser': this.props.currentUser.id,

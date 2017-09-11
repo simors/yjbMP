@@ -27,6 +27,8 @@ const RECHARGE = 2               // 充值
 const SERVICE = 3                // 服务消费
 const REFUND = 4                 // 押金退款
 const WITHDRAW = 5               // 提现
+const SYS_PRESENT = 6            // 系统赠送
+
 
 //订单状态
 const ORDER_STATUS_UNPAID = 0    //未支付
@@ -74,6 +76,7 @@ var appConfig = {
   SERVICE: SERVICE,
   REFUND: REFUND,
   WITHDRAW: WITHDRAW,
+  SYS_PRESENT: SYS_PRESENT,
 
   ORDER_STATUS_UNPAID: ORDER_STATUS_UNPAID,
   ORDER_STATUS_OCCUPIED: ORDER_STATUS_OCCUPIED,
