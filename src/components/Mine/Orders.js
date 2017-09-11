@@ -106,6 +106,8 @@ class Orders extends Component {
     if(this.props.currentUser.balance < amount) {  //余额不足
       if(order.status === appConfig.ORDER_STATUS_OCCUPIED) {
         this.setState({
+          payAmount: Number(amount),
+          payOrderId: order.id,
           showDialog: true,
           Dialog: {
             title: '余额不足',
