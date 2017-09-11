@@ -31,6 +31,7 @@ class Recharge extends Component {
     super(props)
     this.state = {
       selectAmount: 20,
+      disableButton: false,
     }
   }
 
@@ -96,6 +97,7 @@ class Recharge extends Component {
 
   createPaymentSuccessCallback = (charge) => {
     pingpp.createPayment(charge, function (result, err) {
+      this.setState({disableButton: false})
       if (result == "success") {
         // 只有微信公众账号 wx_pub 支付成功的结果会在这里返回，其他的支付结果都会跳转到 extra 中对应的 URL。
         browserHistory.push('/mine/wallet')
@@ -108,10 +110,12 @@ class Recharge extends Component {
   }
 
   createPaymentFailedCallback = (error) => {
+    this.setState({disableButton: false})
     console.log('onRecharge', error)
   }
 
   onRecharge = () => {
+    this.setState({disableButton: true})
     this.props.createPayment({
       amount: this.state.selectAmount * 0.01, //TODO 支付测试金额缩小100倍，部署正式环境需废除
       channel: 'wx_pub',
@@ -151,12 +155,11 @@ class Recharge extends Component {
           <text className="tripDesc">{this.getTripDesc()}</text>
         </div>
         <div className="rechargeButton">
-          <Button onClick={this.onRecharge}>{"充值" + this.state.selectAmount + '元'}</Button>
+          <Button disabled={this.state.disableButton} onClick={this.onRecharge}>{"充值" + this.state.selectAmount + '元'}</Button>
         </div>
       </Page>
     )
   }
-
 }
 
 const mapStateToProps = (state, ownProps) => {

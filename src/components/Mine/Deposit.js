@@ -30,10 +30,14 @@ const {
 class Deposit extends Component {
   constructor(props) {
     super(props)
+    this.state = {
+      disableButton: false,
+    }
   }
 
   createPaymentSuccessCallback = (charge) => {
     pingpp.createPayment(charge, function (result, err) {
+      this.setState({disableButton: false})
       if (result == "success") {
         // 只有微信公众账号 wx_pub 支付成功的结果会在这里返回，其他的支付结果都会跳转到 extra 中对应的 URL。
       } else if (result == "fail") {
@@ -45,6 +49,7 @@ class Deposit extends Component {
   }
 
   createPaymentFailedCallback = (error) => {
+    this.setState({disableButton: false})
     console.log('onDeposit', error)
   }
 
@@ -76,7 +81,7 @@ class Deposit extends Component {
         </div>
         <div className="deposit-button-area" >
           <div className="deposit-button-trip">押金可在“个人中心－钱包”中申请退还</div>
-          <Button className='deposit-button' onClick={this.payDeposit}>微信钱包支付</Button>
+          <Button className='deposit-button' disabled={this.state.disableButton} onClick={this.payDeposit}>微信钱包支付</Button>
         </div>
       </Page>
     )
