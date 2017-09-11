@@ -139,16 +139,34 @@ class Recharge extends Component {
         </div>
         <div className="button-area">
           <ButtonArea direction='horizontal'>
-            <Button plain={this.state.selectAmount != 10} className='amountButton' onClick={() => this.changeAmount(10)}>充10元得20元</Button>
-            <Button plain={this.state.selectAmount != 20} className='amountButton' onClick={() => this.changeAmount(20)}>充20元得50元</Button>
+            <Button plain={this.state.selectAmount != 10}
+                    style={this.state.selectAmount == 10? {color: `#fff`}: {}}
+                    className='amountButton'
+                    onClick={() => this.changeAmount(10)}>充10元得20元</Button>
+            <Button plain={this.state.selectAmount != 20}
+                    style={this.state.selectAmount == 20? {color: `#fff`}: {}}
+                    className='amountButton'
+                    onClick={() => this.changeAmount(20)}>充20元得50元</Button>
           </ButtonArea>
           <ButtonArea direction='horizontal'>
-            <Button plain={this.state.selectAmount != 30} className='amountButton' onClick={() => this.changeAmount(30)}>充30元得80元</Button>
-            <Button plain={this.state.selectAmount != 50} className='amountButton' onClick={() => this.changeAmount(50)}>充50元得120元</Button>
+            <Button plain={this.state.selectAmount != 30}
+                    style={this.state.selectAmount == 30? {color: `#fff`}: {}}
+                    className='amountButton'
+                    onClick={() => this.changeAmount(30)}>充30元得80元</Button>
+            <Button plain={this.state.selectAmount != 50}
+                    style={this.state.selectAmount == 50? {color: `#fff`}: {}}
+                    className='amountButton'
+                    onClick={() => this.changeAmount(50)}>充50元得120元</Button>
           </ButtonArea>
           <ButtonArea direction='horizontal'>
-            <Button plain={this.state.selectAmount != 100} className='amountButton' onClick={() => this.changeAmount(100)}>充100元得260元</Button>
-            <Button plain={this.state.selectAmount != 200} className='amountButton' onClick={() => this.changeAmount(200)}>充200元得500元</Button>
+            <Button plain={this.state.selectAmount != 100}
+                    style={this.state.selectAmount == 100? {color: `#fff`}: {}}
+                    className='amountButton'
+                    onClick={() => this.changeAmount(100)}>充100元得260元</Button>
+            <Button plain={this.state.selectAmount != 200}
+                    style={this.state.selectAmount == 200? {color: `#fff`}: {}}
+                    className='amountButton'
+                    onClick={() => this.changeAmount(200)}>充200元得500元</Button>
           </ButtonArea>
         </div>
         <div className="trip">
