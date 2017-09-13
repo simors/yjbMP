@@ -157,7 +157,7 @@ class Orders extends Component {
         payOrderId: order.id,
         Dialog: {
           title: '确认支付',
-          trip: "即将使用余额支付，本次扣费" + this.state.payAmount + "元",
+          trip: "即将使用余额支付，本次扣费" + amount + "元",
           buttons: [
             {
               type: 'default',
