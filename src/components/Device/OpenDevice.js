@@ -57,6 +57,10 @@ class OpenDevice extends Component {
     })
   }
 
+  componentDidMount() {
+    document.title = "开机"
+  }
+
   renderDeviceStatus() {
     if(this.props.currentUser.debt > 0) { //欠费
       return(
@@ -156,7 +160,6 @@ class OpenDevice extends Component {
       deviceNo: this.props.deviceInfo.deviceNo,
       userId: this.props.currentUser.id,
     }, function (data) {
-      console.log("socket.emit", data)
       var errorCode = data.errorCode
       if(errorCode != 0) {
         that.setState({

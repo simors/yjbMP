@@ -43,6 +43,9 @@ const LC_SERVER_DOMAIN_PRO = ""
 const TURN_ON_DEVICE = 'turn_on_device'         //设备开机请求&应答
 const TURN_ON_DEVICE_SUCCESS = 'turn_on_device_success'
 const TURN_ON_DEVICE_FAILED = 'turn_on_device_failed'
+const TURN_OFF_DEVICE = 'turn_off_device'       //设备关机请求&应答
+const TURN_OFF_DEVICE_SUCCESS = 'turn_off_device_success'
+const TURN_OFF_DEVICE_FAILED = 'turn_off_device_failed'
 
 if(__DEV__) {          //开发环境
   LC_APP_ID = LC_DEV_APP_ID
@@ -86,6 +89,9 @@ var appConfig = {
   TURN_ON_DEVICE: TURN_ON_DEVICE,
   TURN_ON_DEVICE_SUCCESS: TURN_ON_DEVICE_SUCCESS,
   TURN_ON_DEVICE_FAILED: TURN_ON_DEVICE_FAILED,
+  TURN_OFF_DEVICE: TURN_OFF_DEVICE,
+  TURN_OFF_DEVICE_SUCCESS: TURN_OFF_DEVICE_SUCCESS,
+  TURN_OFF_DEVICE_FAILED: TURN_OFF_DEVICE_FAILED,
 }
 
 module.exports = appConfig
