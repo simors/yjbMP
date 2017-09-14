@@ -37,7 +37,7 @@ const rootRouter = (
     <Route path='bind/success' component={BindSuccess}/>
     <Route path='mine' component={Mine} onEnter={oauth}/>
     {/*<Route path='mine' component={Mine}/>*/}
-    <Route path='mine/wallet' component={Wallet}/>
+    <Route path='mine/wallet' component={Wallet} onEnter={oauth}/>
     <Route path='mine/wallet/recharge' component={Recharge}/>
     <Route path='mine/wallet/walletDetail' component={WalletDetail}/>
     <Route path='mine/orders' component={Orders}/>
