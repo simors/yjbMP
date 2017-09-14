@@ -9,8 +9,8 @@ var LC_APP_ID = ""
 var LC_APP_KEY = ""
 const LC_DEV_APP_ID = 'QApBtOkMNfNo0lGaHxKBSWXX-gzGzoHsz'      //开发环境
 const LC_DEV_APP_KEY = 'znR6wk5JzFU0XIkgKxrM3fnH'
-const LC_STAGE_APP_ID = 'O0Ej6uEsWydjHvsM9RTklWb5-gzGzoHsz'    //预上线环境
-const LC_STAGE_APP_KEY = 'I3A5zWogoDXc4a8J7Cglg2dB'
+const LC_STAGE_APP_ID = 'HFRm8OUW9tNj2qxz6LuBExBa-gzGzoHsz'    //预上线环境
+const LC_STAGE_APP_KEY = 'E9kbn52mW5NL8u15c7Xywf2B'
 const LC_PRO_APP_ID = ''                                       //生产环境
 const LC_PRO_APP_KEY = ''
 
