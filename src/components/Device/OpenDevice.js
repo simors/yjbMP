@@ -218,9 +218,9 @@ class OpenDevice extends Component {
 
   onPress = () => {
     if(this.props.currentUser.deposit === 0) {
-      browserHistory.push('/mine/orders')
-    } else if(this.props.currentUser.debt > 0) { //欠费
       browserHistory.push('/mine/wallet')
+    } else if(this.props.currentUser.debt > 0) { //欠费
+      browserHistory.push('/mine/orders')
     } else if(this.props.deviceInfo.status === 0) { //空闲
       this.turnOnDevice()
     } else{
