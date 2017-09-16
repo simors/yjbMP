@@ -79,3 +79,8 @@ export function selectDealRecord(state) {
   })
   return dealRecordList
 }
+
+export function selectWalletInfo(state) {
+  let AUTH = state.AUTH
+  return AUTH.wallet.toJS()
+}

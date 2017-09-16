@@ -12,7 +12,6 @@ export const registerSuccess = createAction(authActionTypes.REGISTER_SUCCESS)
 export const loginSuccess = createAction(authActionTypes.LOGIN_SUCCESS)
 export const loginOut = createAction(authActionTypes.LOGIN_OUT)
 export const autoLogin = createAction(authActionTypes.AUTO_LOGIN)
-export const loginAction = createAction(authActionTypes.LOGIN)
 export const requestVerifyIdName = createAction(authActionTypes.REQUEST_VERIFY_IDNAME)
 export const saveIdNameInfo = createAction(authActionTypes.SAVE_IDNAME_INFO)
 

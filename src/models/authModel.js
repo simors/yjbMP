@@ -16,9 +16,6 @@ export const UserInfoRecord = Record({
   city: undefined,
   createdAt: undefined,
   updatedAt: undefined,
-  balance: 0,
-  deposit: 0,
-  debt: 0,
   idName: undefined,    //真实姓名
   idNumber: undefined,    //身份证号码
   idNameVerified: false,//实名认证
@@ -112,6 +109,17 @@ export class DealInfo extends DealInfoRecord {
   }
 }
 
+export const WalletInfoRecord = Record({
+  userId: undefined,                  //用户id
+  balance: undefined,                 //余额
+  deposit: undefined,                 //押金
+  openid: undefined,                  //用户微信openid
+  debt: undefined,                    //欠费
+  user_name: undefined,               //身份证姓名
+  score: undefined,                   //积分
+}, 'WalletInfoRecord')
+
+
 export const AuthRecord = Record({
   activeUser: undefined,              //当前用户id
   token: undefined,                   //自动登录token
@@ -119,4 +127,5 @@ export const AuthRecord = Record({
   profile: UserInfoRecord(),          //用户信息
   orders: Map(),                      //用户订单：键为订单id，值为OrderInfoRecord
   dealRecords: Map(),                 //交易记录：键为order_no,值为DealInfoRecord
+  wallet: WalletInfoRecord(),         //钱包信息
 }, "AuthRecord")

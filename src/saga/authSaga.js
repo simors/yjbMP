@@ -295,7 +295,6 @@ export const authSaga = [
   takeEvery(authActionTypes.REQUEST_SMSCODE, requestSmsCode),
   takeEvery(authActionTypes.SUBMIT_REGISTER, submitRegister),
   takeEvery(authActionTypes.AUTO_LOGIN, autoLogin),
-  takeEvery(authActionTypes.LOGIN, wechatLogin),
   takeEvery(authActionTypes.CREATE_PAYMENT, createPayment),
   takeEvery(authActionTypes.FETCH_ORDER_INFO, fetchOrderInfo),
   takeEvery(authActionTypes.FETCH_ORDERS, fetchOrders),

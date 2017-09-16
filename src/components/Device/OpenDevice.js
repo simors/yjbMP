@@ -7,8 +7,8 @@ import { bindActionCreators } from 'redux'
 import {browserHistory} from 'react-router'
 import {requestDeviceInfo} from '../../actions/deviceActions'
 import {selectDeviceInfo} from '../../selector/deviceSelector'
-import {fetchOrderInfo, fetchWechatJssdkConfig, fetchWalletInfo} from '../../actions/authActions'
-import {selectUserInfo} from '../../selector/authSelector'
+import {fetchOrderInfo, fetchWechatJssdkConfig} from '../../actions/authActions'
+import {selectUserInfo, selectWalletInfo} from '../../selector/authSelector'
 import * as appConfig from '../../constants/appConfig'
 import WeUI from 'react-weui'
 import wx from 'tencent-wx-jssdk'
@@ -45,7 +45,6 @@ class OpenDevice extends Component {
   componentWillMount() {
     var deviceNo = this.props.location.query.deviceNo
     this.props.requestDeviceInfo({deviceNo: deviceNo})
-    this.props.fetchWalletInfo({userId: this.props.currentUser.id})
     this.setState({deviceNo: deviceNo})
     this.props.fetchWechatJssdkConfig({
       debug: true,
@@ -63,7 +62,7 @@ class OpenDevice extends Component {
   }
 
   renderDeviceStatus() {
-    if(this.props.currentUser.deposit === 0) {  //未交押金
+    if(this.props.walletInfo.deposit === 0) {  //未交押金
       return(
         <PanelBody style={{borderBottomWidth: `0`}}>
           <Msg
@@ -73,7 +72,7 @@ class OpenDevice extends Component {
           />
         </PanelBody>
       )
-    } else if(this.props.currentUser.debt > 0) { //欠费
+    } else if(this.props.walletInfo.debt > 0) { //欠费
       return(
         <PanelBody style={{borderBottomWidth: `0`}}>
           <Msg
@@ -152,9 +151,9 @@ class OpenDevice extends Component {
       return(
         <LoadMore className="device-loadmore" loading/>
       )
-    } else if(this.props.currentUser.debt > 0) { //欠费
+    } else if(this.props.walletInfo.debt > 0) { //欠费
       return "去支付"
-    } else if(this.props.currentUser.deposit === 0) {
+    } else if(this.props.walletInfo.deposit === 0) {
       return "交押金"
     } else if(this.props.deviceInfo.status === 0) { //空闲
       return "开门"
@@ -218,9 +217,9 @@ class OpenDevice extends Component {
   }
 
   onPress = () => {
-    if(this.props.currentUser.deposit === 0) {
+    if(this.props.walletInfo.deposit === 0) {
       browserHistory.push('/mine/wallet')
-    } else if(this.props.currentUser.debt > 0) { //欠费
+    } else if(this.props.walletInfo.debt > 0) { //欠费
       browserHistory.push('/mine/orders')
     } else if(this.props.deviceInfo.status === 0) { //空闲
       this.turnOnDevice()
@@ -255,6 +254,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     deviceInfo: deviceInfo,
     currentUser: selectUserInfo(state),
+    walletInfo: selectWalletInfo(state),
   }
 };
 
@@ -262,7 +262,6 @@ const mapDispatchToProps = (dispatch) => bindActionCreators({
   requestDeviceInfo,
   fetchOrderInfo,
   fetchWechatJssdkConfig,
-  fetchWalletInfo,
 }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(OpenDevice)

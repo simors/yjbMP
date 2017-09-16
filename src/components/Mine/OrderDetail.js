@@ -5,7 +5,7 @@ import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import {browserHistory} from 'react-router'
-import {selectOrderById, selectUserInfo} from '../../selector/authSelector'
+import {selectOrderById, selectUserInfo, selectWalletInfo} from '../../selector/authSelector'
 import {paymentOrder} from '../../actions/authActions'
 import WeUI from 'react-weui'
 import 'weui'
@@ -108,7 +108,7 @@ class OrderDetail extends Component {
   //触发支付动作s
   triggerPayment(order) {
     var amount = this.getAmount(order)
-    if(this.props.currentUser.balance < amount) {  //余额不足
+    if(this.props.walletInfo.balance < amount) {  //余额不足
       if(order.status === appConfig.ORDER_STATUS_OCCUPIED) {
         this.setState({
           showDialog: true,
@@ -287,7 +287,8 @@ const mapStateToProps = (state, ownProps) => {
   var orderId = ownProps.params.id
   return {
     currentUser: selectUserInfo(state),
-    orderInfo: selectOrderById(state, orderId)
+    orderInfo: selectOrderById(state, orderId),
+    walletInfo: selectWalletInfo(state)
   }
 };
 

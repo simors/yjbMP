@@ -3,7 +3,7 @@
  */
 import {Map, List, Record} from 'immutable'
 import {REHYDRATE} from 'redux-persist/constants'
-import {AuthRecord, UserInfoRecord} from '../models/authModel'
+import {AuthRecord, UserInfoRecord, WalletInfoRecord} from '../models/authModel'
 import * as authActionTypes from '../constants/authActionTypes'
 
 const initialState = AuthRecord()
@@ -36,12 +36,6 @@ export default function authReducer(state = initialState, action) {
       return state
   }
 }
-//
-// function handleSaveWechatUserInfo(state, action) {
-//   let wechatUserInfo = action.payload.userInfo
-//   state = state.set('wechatUserInfo', wechatUserInfo)
-//   return state
-// }
 
 function handleSaveUserInfo(state, action) {
   let payload = action.payload
@@ -55,10 +49,8 @@ function handleSaveUserInfo(state, action) {
 function handleSaveWalletInfo(state, action) {
   let walletInfo = action.payload
 
-  state = state.setIn(['profile', 'balance'], walletInfo.balance)
-  state = state.setIn(['profile', 'deposit'], walletInfo.deposit)
-  state = state.setIn(['profile', 'debt'], walletInfo.debt)
-
+  let walletRecord = new WalletInfoRecord(walletInfo)
+  state = state.set('wallet', walletRecord)
   return state
 }
 
@@ -140,5 +132,12 @@ function onRehydrate(state, action) {
     var profileRecord = new UserInfoRecord(profile)
     state = state.set('profile', profileRecord)
   }
+
+  const wallet = incoming.wallet
+  if(wallet) {
+    var walletRecord = new WalletInfoRecord(wallet)
+    state = state.set('wallet', walletRecord)
+  }
+
   return state
 }
