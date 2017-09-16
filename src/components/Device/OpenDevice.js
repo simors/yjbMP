@@ -7,7 +7,7 @@ import { bindActionCreators } from 'redux'
 import {browserHistory} from 'react-router'
 import {requestDeviceInfo} from '../../actions/deviceActions'
 import {selectDeviceInfo} from '../../selector/deviceSelector'
-import {fetchOrderInfo, fetchWechatJssdkConfig} from '../../actions/authActions'
+import {fetchOrderInfo, fetchWechatJssdkConfig, fetchWalletInfo} from '../../actions/authActions'
 import {selectUserInfo} from '../../selector/authSelector'
 import * as appConfig from '../../constants/appConfig'
 import WeUI from 'react-weui'
@@ -45,6 +45,7 @@ class OpenDevice extends Component {
   componentWillMount() {
     var deviceNo = this.props.location.query.deviceNo
     this.props.requestDeviceInfo({deviceNo: deviceNo})
+    this.props.fetchWalletInfo({userId: this.props.currentUser.id})
     this.setState({deviceNo: deviceNo})
     this.props.fetchWechatJssdkConfig({
       debug: true,
@@ -261,6 +262,7 @@ const mapDispatchToProps = (dispatch) => bindActionCreators({
   requestDeviceInfo,
   fetchOrderInfo,
   fetchWechatJssdkConfig,
+  fetchWalletInfo,
 }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(OpenDevice)
