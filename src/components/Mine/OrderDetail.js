@@ -13,6 +13,9 @@ import 'react-weui/build/dist/react-weui.css'
 import './orderDetail.css'
 import {formatTime} from '../../util'
 import * as appConfig from '../../constants/appConfig'
+import io from 'socket.io-client'
+
+const socket = io(appConfig.LC_SERVER_DOMAIN)
 
 
 const {
@@ -42,6 +45,9 @@ class OrderDetail extends Component {
           }
         ]
       },
+      showLoading: false,
+      loadingMessage: '加载中...',
+      loadingIcon: 'loading',
     }
   }
 
@@ -105,54 +111,32 @@ class OrderDetail extends Component {
     }
   }
 
-  //触发支付动作s
+  //触发支付动作
   triggerPayment(order) {
     var amount = this.getAmount(order)
     if(this.props.walletInfo.balance < amount) {  //余额不足
-      if(order.status === appConfig.ORDER_STATUS_OCCUPIED) {
-        this.setState({
-          showDialog: true,
-          Dialog: {
-            title: '余额不足',
-            trip: '请结束服务后充值',
-            buttons: [
-              {
-                type: 'default',
-                label: '取消',
-                onClick: () => {this.setState({showDialog: false})}
-              },
-              {
-                type: 'primary',
-                label: '结束服务',
-                onClick: this.onPaymentService
+      this.setState({
+        showDialog: true,
+        Dialog: {
+          title: '余额不足',
+          trip: '请充值后再试',
+          buttons: [
+            {
+              type: 'default',
+              label: '取消',
+              onClick: () => {this.setState({showDialog: false})}
+            },
+            {
+              type: 'primary',
+              label: '充值',
+              onClick: () => {
+                browserHistory.push('/mine/wallet/recharge')
+                this.setState({showDialog: false})
               }
-            ]
-          },
-        })
-      } else if(order.status === appConfig.ORDER_STATUS_UNPAID) {
-        this.setState({
-          showDialog: true,
-          Dialog: {
-            title: '余额不足',
-            trip: '请充值后再试',
-            buttons: [
-              {
-                type: 'default',
-                label: '取消',
-                onClick: () => {this.setState({showDialog: false})}
-              },
-              {
-                type: 'primary',
-                label: '充值',
-                onClick: () => {
-                  browserHistory.push('/mine/wallet/recharge')
-                  this.setState({showDialog: false})
-                }
-              }
-            ]
-          },
-        })
-      }
+            }
+          ]
+        },
+      })
     } else {
       this.setState({
         showDialog: true,
@@ -235,14 +219,76 @@ class OrderDetail extends Component {
     })
   }
 
+  triggerTurnOff(order) {
+    var amount = this.getAmount(order)
+    this.setState({
+      showDialog: true,
+      Dialog: {
+        title: '关闭干衣柜',
+        trip: '关机后请尽快取出衣物，并支付订单',
+        buttons: [
+          {
+            type: 'default',
+            label: '取消',
+            onClick: () => {this.setState({showDialog: false})}
+          },
+          {
+            type: 'primary',
+            label: '关机',
+            onClick: () => {this.trunOffDevice(order)}
+          }
+        ]
+      },
+    })
+  }
+
+  //关机
+  trunOffDevice(order) {
+    var that = this
+    this.setState({showLoading: true, showDialog: false})
+    //发送关机请求
+    socket.emit(appConfig.TURN_OFF_DEVICE, {
+      userId: this.props.currentUser.id,
+      deviceNo: order.deviceNo,
+      orderId: order.id
+    }, function (data) {
+      var errorCode = data.errorCode
+      if(errorCode != 0) {
+        that.setState({loadingMessage: "关机请求失败", loadingIcon: 'info'})
+        console.log("关机请求失败", data.errorMessage)
+        setTimeout(function () {
+          that.setState({showLoading: false})
+        }, 2000)
+      }
+    })
+
+    socket.on(appConfig.TURN_OFF_DEVICE_SUCCESS, function (data) {
+      console.log("收到关机成功消息", data)
+      that.setState({loadingMessage: "关机成功", loadingIcon: 'success-circle'})
+      setTimeout(function () {
+        that.setState({showLoading: false})
+        that.onClickNavBar(appConfig.ORDER_STATUS_UNPAID)
+      }, 2000)
+    })
+    socket.on(appConfig.TURN_OFF_DEVICE_FAILED, function (data) {
+      console.log("收到关机失败消息", data)
+      that.setState({loadingMessage: "关机失败", loadingIcon: 'info'})
+      setTimeout(function () {
+        that.setState({showLoading: false})
+      }, 2000)
+    })
+  }
+
   onButtonPress = () => {
     switch (this.props.orderInfo.status) {
       case appConfig.ORDER_STATUS_PAID:
         browserHistory.goBack()
         break
       case appConfig.ORDER_STATUS_UNPAID:
-      case appConfig.ORDER_STATUS_OCCUPIED:
         this.triggerPayment(this.props.orderInfo)
+        break
+      case appConfig.ORDER_STATUS_OCCUPIED:
+        this.triggerTurnOff(this.props.orderInfo)
         break
       default:
         break
@@ -276,6 +322,7 @@ class OrderDetail extends Component {
           <Button onClick={this.onButtonPress}>{this.getButtonTitle(this.props.orderInfo)}</Button>
         </div>
         <Dialog type="ios" title={this.state.Dialog.title} buttons={this.state.Dialog.buttons} show={this.state.showDialog}>{this.state.Dialog.trip}</Dialog>
+        <Toast icon={this.state.loadingIcon} show={this.state.showLoading}>{this.state.loadingMessage}</Toast>
       </Page>
     )
   }
