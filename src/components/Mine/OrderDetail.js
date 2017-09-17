@@ -22,6 +22,7 @@ const {
   Button,
   Page,
   Dialog,
+  Toast
 } = WeUI
 
 class OrderDetail extends Component {
