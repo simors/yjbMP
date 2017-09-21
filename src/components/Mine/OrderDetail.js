@@ -269,6 +269,7 @@ class OrderDetail extends Component {
       setTimeout(function () {
         that.setState({showLoading: false})
         that.onClickNavBar(appConfig.ORDER_STATUS_UNPAID)
+        browserHistory.goBack()
       }, 2000)
     })
     socket.on(appConfig.TURN_OFF_DEVICE_FAILED, function (data) {

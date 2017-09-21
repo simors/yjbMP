@@ -5,7 +5,7 @@ import {persistStore} from 'redux-persist'
 import createFilter from 'redux-persist-transform-filter'
 import immutableTransform from 'redux-persist-transform-immutable'
 import createStore from './createStore'
-import {isUserLogined, selectToken} from '../selector/authSelector'
+import {selectToken} from '../selector/authSelector'
 import {autoLogin} from '../actions/authActions'
 
 const configFilter = createFilter('CONFIG', 'AUTH', [])
@@ -17,8 +17,8 @@ export default function persist(store) {
   }, () => {
     // TODO: add function after rehydration is finished
     let state = store.getState()
-    if(isUserLogined(state)) {
-      let token = selectToken(state)
+    let token = selectToken(state)
+    if(token) {
       store.dispatch(autoLogin({token: token}))
     }
   })
