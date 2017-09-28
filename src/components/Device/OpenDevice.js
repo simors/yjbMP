@@ -7,7 +7,7 @@ import { bindActionCreators } from 'redux'
 import {browserHistory} from 'react-router'
 import {requestDeviceInfo} from '../../actions/deviceActions'
 import {selectDeviceInfo} from '../../selector/deviceSelector'
-import {fetchOrderInfo, fetchWechatJssdkConfig} from '../../actions/authActions'
+import { fetchWechatJssdkConfig} from '../../actions/authActions'
 import {selectUserInfo, selectWalletInfo} from '../../selector/authSelector'
 import * as appConfig from '../../constants/appConfig'
 import WeUI from 'react-weui'
@@ -57,11 +57,8 @@ class OpenDevice extends Component {
     })
   }
 
-  componentDidMount() {
-    document.title = "开机"
-  }
-
   renderDeviceStatus() {
+    let status = this.props.deviceInfo.status
     if(this.props.walletInfo.deposit === 0) {  //未交押金
       return(
         <PanelBody style={{borderBottomWidth: `0`}}>
@@ -82,7 +79,7 @@ class OpenDevice extends Component {
           />
         </PanelBody>
       )
-    } else if(this.props.deviceInfo.status === undefined) {
+    } else if(status === undefined) {
       return(
         <PanelBody style={{borderBottomWidth: `0`}}>
           <Msg
@@ -92,7 +89,7 @@ class OpenDevice extends Component {
           />
         </PanelBody>
       )
-    } else if(this.props.deviceInfo.status === 0) { //空闲
+    } else if(status === appConfig.DEVICE_STATUS_IDLE) { //空闲
       return(
         <PanelBody style={{borderBottomWidth: `0`}}>
           <MediaBox type="text">
@@ -117,7 +114,7 @@ class OpenDevice extends Component {
 
         </PanelBody>
       )
-    } else if(this.props.deviceInfo.status === 1) {  //使用中
+    } else if(status === appConfig.DEVICE_STATUS_OCCUPIED ) {  //使用中
       return(
         <PanelBody style={{borderBottomWidth: `0`}}>
           <Msg
@@ -127,7 +124,10 @@ class OpenDevice extends Component {
           />
         </PanelBody>
       )
-    } else if(this.props.deviceInfo.status === 2) {  //下线
+    } else if(status === appConfig.DEVICE_STATUS_OFFLINE
+      || status === appConfig.DEVICE_STATUS_FAULT
+      || status === appConfig.DEVICE_STATUS_MAINTAIN
+      || status === appConfig.DEVICE_STATUS_UNREGISTER) {
       return(
         <PanelBody style={{borderBottomWidth: `0`}}>
           <Msg
@@ -156,7 +156,7 @@ class OpenDevice extends Component {
     } else if(this.props.walletInfo.deposit === 0) {
       return "交押金"
     } else if(this.props.deviceInfo.status === 0) { //空闲
-      return "开门"
+      return "已放好衣物，开始使用"
     }  else {
       return "扫一扫"
     }
@@ -191,11 +191,6 @@ class OpenDevice extends Component {
       })
 
       browserHistory.replace('/mine/orders')
-      // this.props.fetchOrderInfo({
-      //   orderInfo: orderInfo,
-      //   success: () => {browserHistory.replace('/mine/orders')},
-      //   error: (error) => {console.log(error)}
-      // })
     })
 
     //监听开机失败消息
@@ -260,7 +255,6 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
   requestDeviceInfo,
-  fetchOrderInfo,
   fetchWechatJssdkConfig,
 }, dispatch)
 

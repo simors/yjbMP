@@ -3,7 +3,7 @@
  */
 import {Map, List, Record} from 'immutable'
 import {REHYDRATE} from 'redux-persist/constants'
-import {DeviceRecord, DeviceInfoRecord} from '../models/deviceModel'
+import {DeviceRecord, DeviceInfo, DeviceInfoRecord} from '../models/deviceModel'
 import * as deviceActiontypes from '../constants/deviceActiontypes'
 
 const initialState = DeviceRecord()
@@ -11,7 +11,9 @@ const initialState = DeviceRecord()
 export default function deviceReducer(state = initialState, action) {
   switch (action.type) {
     case deviceActiontypes.FETCH_DEVICEINFO_SUCCESS:
-      return handleSaveDeviceInfo(state, action)
+      return handleFetchDeviceSuccess(state, action)
+    case deviceActiontypes.SAVE_DEVICE:
+      return handleSaveDevice
     case REHYDRATE:
       return onRehydrate(state, action)
     default:
@@ -19,10 +21,16 @@ export default function deviceReducer(state = initialState, action) {
   }
 }
 
-function handleSaveDeviceInfo(state, action) {
+function handleFetchDeviceSuccess(state, action) {
   var payload = action.payload
-
   state = state.set('device', payload.deviceRecord)
+  return state
+}
+
+function handleSaveDevice(state, action) {
+  let device = action.payload.device
+  let deviceRecord = DeviceInfo.fromLeancloudApi(device)
+  state = state.setIn(['devices', device.id], deviceRecord)
   return state
 }
 

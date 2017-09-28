@@ -2,10 +2,11 @@
  * Created by wanpeng on 2017/8/14.
  */
 import { call, put, takeEvery } from 'redux-saga/effects'
-import {fetchUserInfo, requestLeanSmsCode, register, become, login, getPaymentCharge, fetchOrderByStatus, getTransfer, payOrder, getWalletInfo, getDealRecords, verifyIdName, getJssdkConfig} from  '../api/auth'
-import {registerSuccess, loginSuccess, loginOut, saveOrderInfo, fetchOrdersSuccess, paymentOrderSuccess, fetchWalletInfoSuccess, fetchDealRecordsSuccess, saveIdNameInfo} from '../actions/authActions'
+import {fetchUserInfo, requestLeanSmsCode, register, become, login, getPaymentCharge, fetchOrdersApi, getTransfer, payOrder, getWalletInfo, getDealRecords, verifyIdName, getJssdkConfig} from  '../api/auth'
+import {registerSuccess, loginSuccess, loginOut, fetchOrdersSuccess, paymentOrderSuccess, fetchWalletInfoSuccess, fetchDealRecordsSuccess, saveIdNameInfo, updateOrderSuccess} from '../actions/authActions'
 import * as authActionTypes from '../constants/authActionTypes'
-import {OrderInfo} from '../models/authModel'
+import {saveDevice} from '../actions/deviceActions'
+import {saveStationAction} from '../actions/stationActions'
 
 //获取微信用户信息
 export function* fetchUserinfoAction(action) {
@@ -126,32 +127,21 @@ export function* createPayment(action) {
   }
 }
 
-export function* fetchOrderInfo(action) {
-  let payload = action.payload
-  let orderInfo = payload.orderInfo
-  let orderRecord = OrderInfo.fromLeancloudApi(orderInfo)
-
-  try {
-    yield put(saveOrderInfo({orderRecord}))
-    if(payload.success) {
-      payload.success()
-    }
-  } catch(error) {
-    if(payload.error) {
-      payload.error(error)
-    }
-  }
-}
-
 export function* fetchOrders(action) {
   let payload = action.payload
 
+  let orderPayload = {
+    limit: payload.limit,
+    lastTurnOnTime: payload.lastTurnOnTime,
+    isRefresh: payload.isRefresh,
+  }
+
   try {
-    let orderRecordList = yield call(fetchOrderByStatus, payload)
-    yield put(fetchOrdersSuccess({orderRecordList}))
+    let orderList = yield call(fetchOrdersApi, orderPayload)
     if(payload.success) {
-      payload.success(orderRecordList)
+      payload.success(orderList)
     }
+    yield put(fetchOrdersSuccess({ orderList }))
   } catch(error) {
     if(payload.error) {
       payload.error(error)
@@ -185,7 +175,6 @@ export function* createTransfer(action) {
 
 export function* paymentOrder(action) {
   let payload = action.payload
-  console.log("paymentOrder: payload", payload)
   let paymentPayload = {
     userId: payload.userId,
     amount: payload.amount,
@@ -194,15 +183,29 @@ export function* paymentOrder(action) {
   }
 
   try {
-    let orderRecord = yield call(payOrder, paymentPayload)
-    yield put(paymentOrderSuccess({order: orderRecord}))
+    let order = yield call(payOrder, paymentPayload)
+    yield put(paymentOrderSuccess({order: order}))
     if(payload.success) {
-      payload.success(orderRecord)
+      payload.success(order)
     }
   } catch(error) {
     if(payload.error) {
       payload.error(error)
     }
+  }
+}
+
+export function* updateOrder(action) {
+  let payload = action.payload
+  let order = payload.order
+  let device = order.device
+  let station = device? device.station : undefined
+  yield put(updateOrderSuccess({order: order}))
+  if(device) {
+    yield put(saveDevice({device: device}))
+  }
+  if(station) {
+    yield put(saveStationAction({station: station}))
   }
 }
 
@@ -296,12 +299,12 @@ export const authSaga = [
   takeEvery(authActionTypes.SUBMIT_REGISTER, submitRegister),
   takeEvery(authActionTypes.AUTO_LOGIN, autoLogin),
   takeEvery(authActionTypes.CREATE_PAYMENT, createPayment),
-  takeEvery(authActionTypes.FETCH_ORDER_INFO, fetchOrderInfo),
   takeEvery(authActionTypes.FETCH_ORDERS, fetchOrders),
   takeEvery(authActionTypes.CREATE_TRANSFER, createTransfer),
   takeEvery(authActionTypes.PAYMENT_ORDER, paymentOrder),
   takeEvery(authActionTypes.FETCH_WALLET_INFO, fetchWalletInfo),
   takeEvery(authActionTypes.FETCH_DEAL_RECORDS, fetchDealRecords),
   takeEvery(authActionTypes.REQUEST_VERIFY_IDNAME, requestVerifyIdName),
-  takeEvery(authActionTypes.FETCH_WECHAT_JSSDK_CONFIG, fetchJssdkConfig)
+  takeEvery(authActionTypes.FETCH_WECHAT_JSSDK_CONFIG, fetchJssdkConfig),
+  takeEvery(authActionTypes.UPDATE_ORDER, updateOrder),
 ]

@@ -4,6 +4,7 @@
 import AV from 'leancloud-storage'
 import * as appConfig from '../constants/appConfig'
 import {UserInfo, OrderInfo, DealInfo} from '../models/authModel'
+import {Map, List, Record} from 'immutable'
 
 export function become(payload) {
   return AV.User.become(payload.token).then((leanUser) => {
@@ -113,22 +114,20 @@ export function getPaymentCharge(payload) {
   })
 }
 
-export function fetchOrderByStatus(payload) {
+export function fetchOrdersApi(payload) {
   let orderPayload = {
-    userId: payload.userId,
-    orderStatus: payload.orderStatus,
     limit: payload.limit,
     lastTurnOnTime: payload.lastTurnOnTime,
     isRefresh: payload.isRefresh,
   }
 
-  return AV.Cloud.run('orderFetchOrdersByStatus', orderPayload).then((result) => {
-    let orders = result.orders
-    let orderRecordList = []
-    orders.forEach((orderInfo) => {
-      orderRecordList.push(OrderInfo.fromLeancloudApi(orderInfo))
+  return AV.Cloud.run('orderFetchOwnsOrders', orderPayload).then((ownsOrders) => {
+    let orderList = List()
+    console.log("ownsOrders", ownsOrders)
+    ownsOrders.forEach((order) => {
+      orderList = orderList.push(OrderInfo.fromLeancloudApi(order))
     })
-    return orderRecordList
+    return orderList
   }).catch((error) => {
     console.log("获取订单失败：", error)
     throw error
@@ -145,9 +144,8 @@ export function getTransfer(payload) {
 }
 
 export function payOrder(payload) {
-  console.log("payOrder payload", payload)
-  return AV.Cloud.run('orderOrderPayment', payload).then((orderInfo) => {
-    return OrderInfo.fromLeancloudApi(orderInfo)
+  return AV.Cloud.run('orderOrderPayment', payload).then((order) => {
+    return order
   }).catch((error) => {
     console.log("服务订单支付失败：", error)
     throw error

@@ -67,7 +67,7 @@ class ModifyProfile extends  Component {
 
   render() {
     return(
-      <Page>
+      <Page ptr={false}>
         <Cells>
           <Cell access>
             <CellBody>

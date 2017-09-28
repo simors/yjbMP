@@ -24,49 +24,19 @@ export function selectToken(state) {
   return AUTH.token
 }
 
-export function selectUnpaidOrders(state) {
+export function selectOrders(state) {
   let AUTH = state.AUTH
-  let ordersMap = AUTH.orders
-  let unpaidOrderList = []
-  let unpaidOrderMap = ordersMap.filter((order) => {
-    return order.status === appConfig.ORDER_STATUS_UNPAID
-  })
-  unpaidOrderMap.toArray().forEach((orderRecord) => {
-    unpaidOrderList.push(orderRecord.toJS())
-  })
-  return unpaidOrderList
-}
-
-export function selectPaidOrders(state) {
-  let AUTH = state.AUTH
-  let ordersMap = AUTH.orders
-  let paidOrderList = []
-  let paidOrderMap = ordersMap.filter((order) => {
-    return order.status === appConfig.ORDER_STATUS_PAID
-  })
-  paidOrderMap.toArray().forEach((orderRecord) => {
-    paidOrderList.push(orderRecord.toJS())
-  })
-  return paidOrderList
-}
-
-export function selectOccupiedOrders(state) {
-  let AUTH = state.AUTH
-  let ordersMap = AUTH.orders
-  let occupiedOrderList = []
-  let occupiedOrdersMap = ordersMap.filter((order) => {
-    return order.status === appConfig.ORDER_STATUS_OCCUPIED
-  })
-  occupiedOrdersMap.toArray().forEach((orderRecord) => {
-    occupiedOrderList.push(orderRecord.toJS())
-  })
-  return occupiedOrderList
+  let orderList = AUTH.get('orderList')
+  return orderList.toArray()
 }
 
 export function selectOrderById(state, orderId) {
   let AUTH = state.AUTH
-  let orderRecord = AUTH.getIn(['orders', orderId])
-
+  let orderList = AUTH.get('orderList')
+  let orderRecord = orderList.find((value) => {
+    return value.id === orderId
+  })
+  console.log("orderRecord:", orderRecord)
   return orderRecord? orderRecord.toJS() : undefined
 }
 

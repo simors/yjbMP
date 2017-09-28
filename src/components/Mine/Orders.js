@@ -5,8 +5,8 @@ import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import {browserHistory} from 'react-router'
-import {fetchOrders, paymentOrder} from '../../actions/authActions'
-import {selectUserInfo, selectUnpaidOrders, selectOccupiedOrders, selectPaidOrders, selectWalletInfo} from '../../selector/authSelector'
+import {fetchOrders, paymentOrder, updateOrder} from '../../actions/authActions'
+import {selectUserInfo, selectOrders, selectWalletInfo} from '../../selector/authSelector'
 import * as appConfig from '../../constants/appConfig'
 import {formatTime} from '../../util'
 import WeUI from 'react-weui'
@@ -36,7 +36,6 @@ class Orders extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      orderStatus: appConfig.ORDER_STATUS_OCCUPIED,
       payAmount: 0,
       payOrderId: '',
       showDialog: false,
@@ -63,13 +62,11 @@ class Orders extends Component {
   }
 
   componentDidMount() {
-    document.title = "历史订单"
+    document.title = "我的订单"
   }
 
   componentWillMount() {
     this.props.fetchOrders({
-      userId: this.props.currentUser.id,
-      orderStatus: appConfig.ORDER_STATUS_OCCUPIED,
       limit: 10,
       isRefresh: true,
     })
@@ -79,10 +76,10 @@ class Orders extends Component {
     switch (order.status) {
       case appConfig.ORDER_STATUS_PAID:
       case appConfig.ORDER_STATUS_UNPAID:
-        return ((order.endTime - order.createTime) * 0.001 / 60).toFixed(0)
+        return ((new Date(order.endTime) - new Date(order.createTime)) * 0.001 / 60).toFixed(0)
         break
       case appConfig.ORDER_STATUS_OCCUPIED:
-        return ((Date.now() - order.createTime) * 0.001 / 60).toFixed(0)
+        return ((Date.now() - new Date(order.createTime)) * 0.001 / 60).toFixed(0)
         break
       default:
         return 0
@@ -94,13 +91,11 @@ class Orders extends Component {
     let duration = 0
     switch (order.status) {
       case appConfig.ORDER_STATUS_PAID:
+      case appConfig.ORDER_STATUS_UNPAID:
         return order.amount
         break
-      case appConfig.ORDER_STATUS_UNPAID:
-        duration = ((order.endTime - order.createTime) * 0.001 / 60).toFixed(0)
-        break
       case appConfig.ORDER_STATUS_OCCUPIED:
-        duration = ((Date.now() - order.createTime) * 0.001 / 60).toFixed(0)
+        duration = ((Date.now() - new Date(order.createTime)) * 0.001 / 60).toFixed(0)
         break
       default:
         break
@@ -256,6 +251,16 @@ class Orders extends Component {
       orderId: order.id
     }, function (data) {
       var errorCode = data.errorCode
+      let order = data.order
+      if(order) { //订单已结束，设备已自动关机
+        console.log('trunOffDevice socket.emit ack: order', order)
+        this.props.updateOrder({order: order})
+        that.setState({loadingMessage: "衣物已烘干，干衣柜自动关闭", loadingIcon: 'info'})
+        setTimeout(function () {
+          that.setState({showLoading: false})
+        }, 2000)
+        return
+      }
       if(errorCode != 0) {
         that.setState({loadingMessage: "关机请求失败", loadingIcon: 'info'})
         console.log("关机请求失败", data.errorMessage)
@@ -270,9 +275,9 @@ class Orders extends Component {
       that.setState({loadingMessage: "关机成功", loadingIcon: 'success-circle'})
       setTimeout(function () {
         that.setState({showLoading: false})
-        that.onClickNavBar(appConfig.ORDER_STATUS_UNPAID)
       }, 2000)
     })
+
     socket.on(appConfig.TURN_OFF_DEVICE_FAILED, function (data) {
       console.log("收到关机失败消息", data)
       that.setState({loadingMessage: "关机失败", loadingIcon: 'info'})
@@ -282,7 +287,7 @@ class Orders extends Component {
     })
   }
 
-  renderUnpaidOrder = (item, i) => {
+  renderUnpaidOrder(item, i) {
     return (
       <Panel key={i}>
         <div className="order-header">
@@ -308,7 +313,7 @@ class Orders extends Component {
     )
   }
 
-  renderOccupiedOrder = (item, i) => {
+  renderOccupiedOrder(item, i) {
     return (
       <Panel key={i}>
         <div className="order-header">
@@ -334,7 +339,7 @@ class Orders extends Component {
     )
   }
 
-  renderPaidOrder = (item, i) => {
+  renderPaidOrder(item, i) {
     return (
       <Panel key={i} onClick={() => {browserHistory.push('/mine/orders/' + item.id )}}>
         <div className="order-header">
@@ -362,10 +367,8 @@ class Orders extends Component {
 
   onLoadMoreOrders = (resolve, finish) => {
     this.props.fetchOrders({
-      userId: this.props.currentUser.id,
-      orderStatus: this.state.orderStatus,
       isRefresh: false,
-      lastTurnOnTime: '',
+      lastTurnOnTime: this.props.lastTurnOnTime,
       success: (orders) => {
         orders.length === 0? finish() : resolve()
       },
@@ -373,48 +376,25 @@ class Orders extends Component {
     })
   }
 
-  onClickNavBar(status) {
-    this.setState({orderStatus: status})
-    this.props.fetchOrders({
-      userId: this.props.currentUser.id,
-      orderStatus: status,
-      limit: 10,
-      isRefresh: true,
-    })
-  }
-
   render() {
     return(
     <InfiniteLoader onLoadMore={this.onLoadMoreOrders}>
       <Tab className="order-tab">
-        <NavBar>
-          <NavBarItem active={this.state.orderStatus == appConfig.ORDER_STATUS_UNPAID}
-                      onClick={e=>{this.onClickNavBar(appConfig.ORDER_STATUS_UNPAID)}}>
-            未支付
-          </NavBarItem>
-          <NavBarItem active={this.state.orderStatus == appConfig.ORDER_STATUS_OCCUPIED}
-                      onClick={e=>{this.onClickNavBar(appConfig.ORDER_STATUS_OCCUPIED)}}>
-            使用中
-          </NavBarItem>
-          <NavBarItem active={this.state.orderStatus == appConfig.ORDER_STATUS_PAID}
-                      onClick={e=>{this.onClickNavBar(appConfig.ORDER_STATUS_PAID)}}>
-            已完成
-          </NavBarItem>
-        </NavBar>
         <TabBody style={{backgroundColor: `#EFEFF4`}}>
-          <Cells style={{display: this.state.orderStatus == appConfig.ORDER_STATUS_UNPAID ? null : 'none', backgroundColor: `#EFEFF4`, marginTop: `0.6rem`}}>
+          <Cells style={{backgroundColor: `#EFEFF4`, marginTop: `0.6rem`}}>
             {
-              this.props.unpaidOrders.map(this.renderUnpaidOrder)
-            }
-          </Cells>
-          <Cells style={{display: this.state.orderStatus == appConfig.ORDER_STATUS_OCCUPIED ? null : 'none', backgroundColor: `#EFEFF4`, marginTop: `0.6rem`}}>
-            {
-              this.props.occupiedOrders.map(this.renderOccupiedOrder)
-            }
-          </Cells>
-          <Cells style={{display: this.state.orderStatus == appConfig.ORDER_STATUS_PAID ? null : 'none', backgroundColor: `#EFEFF4`, marginTop: `0.6rem`}}>
-            {
-              this.props.paidOrders.map(this.renderPaidOrder)
+              this.props.orderList.map((item, i) => {
+                switch (item.status) {
+                  case appConfig.ORDER_STATUS_UNPAID:
+                    return this.renderUnpaidOrder(item, i)
+                  case appConfig.ORDER_STATUS_OCCUPIED:
+                    return this.renderOccupiedOrder(item, i)
+                  case appConfig.ORDER_STATUS_PAID:
+                    return this.renderPaidOrder(item, i)
+                  default:
+                    return null
+                }
+              })
             }
           </Cells>
         </TabBody>
@@ -427,18 +407,23 @@ class Orders extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
+  let orderList = selectOrders(state)
+  let lastTurnOnTime = undefined
+  if(orderList.length > 0) {
+    lastTurnOnTime = orderList[orderList.length - 1].createTime
+  }
   return {
     currentUser: selectUserInfo(state),
-    unpaidOrders: selectUnpaidOrders(state),
-    paidOrders: selectPaidOrders(state),
-    occupiedOrders: selectOccupiedOrders(state),
+    orderList: orderList,
+    lastTurnOnTime: lastTurnOnTime,
     walletInfo: selectWalletInfo(state)
   }
 };
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
   fetchOrders,
-  paymentOrder
+  paymentOrder,
+  updateOrder
 }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(Orders)

@@ -3,7 +3,7 @@
  */
 import {Map, List, Record} from 'immutable'
 import {REHYDRATE} from 'redux-persist/constants'
-import {AuthRecord, UserInfoRecord, WalletInfoRecord} from '../models/authModel'
+import {AuthRecord, UserInfoRecord, WalletInfoRecord, OrderInfo} from '../models/authModel'
 import * as authActionTypes from '../constants/authActionTypes'
 
 const initialState = AuthRecord()
@@ -18,11 +18,10 @@ export default function authReducer(state = initialState, action) {
       return handleSaveUserInfo(state, action)
     case authActionTypes.LOGIN_OUT:
       return handleLoginOut(state, action)
-    case authActionTypes.SAVE_ORDER_INFO:
-      return handleSaveOrderInfo(state, action)
     case authActionTypes.FETCH_ORDERS_SUCCESS:
       return handleFetchOrders(state, action)
     case authActionTypes.PAYMENT_ORDER_SUCCESS:
+    case authActionTypes.UPDATE_ORDER_SUCCESS:
       return handleUpdateOrderInfo(state, action)
     case authActionTypes.FETCH_WALLET_INFO_SUCCESS:
       return handleSaveWalletInfo(state, action)
@@ -71,21 +70,9 @@ function handleLoginOut(state, action) {
   return state
 }
 
-function handleSaveOrderInfo(state, action) {
-  let payload = action.payload
-  let orderInfo = payload.order
-  let orderId = orderInfo.id
-
-  state = state.setIn(['orders', orderId], orderInfo)
-  return state
-}
-
 function handleFetchOrders(state, action) {
-  let payload = action.payload
-  let orderRecordList = payload.orderRecordList
-  orderRecordList.forEach((orderRecord) => {
-    state = state.setIn(['orders', orderRecord.id], orderRecord)
-  })
+  let orderList = action.payload.orderList
+  state = state.set('orderList', orderList)
   return state
 }
 
@@ -99,10 +86,16 @@ function handleFetchDealRecords(state, action) {
 }
 
 function handleUpdateOrderInfo(state, action) {
-  let payload = action.payload
-  var orderRecord = payload.order
-
-  state = state.setIn(['orders', orderRecord.id], orderRecord)
+  let order = action.payload.order
+  let orderRecord = OrderInfo.fromLeancloudApi(order)
+  let orderList = state.get('orderList')
+  let index = orderList.findIndex((value) => {
+    return value.id === orderRecord.id
+  })
+  if(index != -1) {
+    orderList = orderList.set(index, orderRecord)
+    state = state.set('orderList', orderList)
+  }
   return state
 }
 
@@ -131,6 +124,11 @@ function onRehydrate(state, action) {
   if(profile) {
     var profileRecord = new UserInfoRecord(profile)
     state = state.set('profile', profileRecord)
+  }
+
+  const orderList = incoming.orderList
+  if(orderList) {
+    state = state.set('orderList', List(orderList))
   }
 
   const wallet = incoming.wallet

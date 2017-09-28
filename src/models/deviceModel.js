@@ -9,8 +9,8 @@ export const DeviceInfoRecord = Record({
   status: undefined,
   onlineTime: undefined,
   updateTime: undefined,
-  unitPrice: undefined,
   deviceAddr: undefined,
+  stationId: undefined,
 }, 'DeviceInfoRecord')
 
 export class DeviceInfo extends DeviceInfoRecord {
@@ -20,31 +20,31 @@ export class DeviceInfo extends DeviceInfoRecord {
 
     return info.withMutations((record) => {
       record.set('id', lcObj.id)
-
       record.set('deviceNo', attrs['deviceNo'])
       record.set('status', attrs['status'])
       record.set('onlineTime', attrs['onlineTime'])
       record.set('updateTime', attrs['updateTime'])
-      record.set('unitPrice', attrs['unitPrice'])
       record.set('deviceAddr', attrs['deviceAddr'])
+      record.set('stationId', attrs['stationId'])
     })
   }
 
-  static fromLeancloudApi(apiObj) {
+  static fromLeancloudApi(obj) {
     let info = new DeviceInfoRecord()
 
     return info.withMutations((record) => {
-      record.set('id', apiObj.id)
-      record.set('deviceNo', apiObj.deviceNo)
-      record.set('status', apiObj.status)
-      record.set('onlineTime', apiObj.onlineTime)
-      record.set('updateTime', apiObj.updateTime)
-      record.set('unitPrice', apiObj.unitPrice)
-      record.set('deviceAddr', apiObj.deviceAddr)
+      record.set('id', obj.id)
+      record.set('deviceNo', obj.deviceNo)
+      record.set('status', obj.status)
+      record.set('onlineTime', obj.onlineTime)
+      record.set('updateTime', obj.updateTime)
+      record.set('deviceAddr', obj.deviceAddr)
+      record.set('stationId', obj.stationId)
     })
   }
 }
 
 export const DeviceRecord = Record({
   device: DeviceInfoRecord(),
+  devices: Map(),                 //设备 键为id, 值为DeviceInfoRecord
 }, 'DeviceRecord')

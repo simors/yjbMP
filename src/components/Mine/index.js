@@ -86,7 +86,7 @@ class Mine extends Component {
               <img src="/order.png" alt="" style={{display: `block`, width: `1.3rem`, marginRight: `1.1rem`}}/>
             </CellHeader>
             <CellBody>
-              历史订单
+              我的订单
             </CellBody>
             <CellFooter/>
           </Cell>

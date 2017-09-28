@@ -60,13 +60,11 @@ class OrderDetail extends Component {
     let duration = 0
     switch (order.status) {
       case appConfig.ORDER_STATUS_PAID:
+      case appConfig.ORDER_STATUS_UNPAID:
         return order.amount
         break
-      case appConfig.ORDER_STATUS_UNPAID:
-        duration = ((order.endTime - order.createTime) * 0.001 / 60).toFixed(0)
-        break
       case appConfig.ORDER_STATUS_OCCUPIED:
-        duration = ((Date.now() - order.createTime) * 0.001 / 60).toFixed(0)
+        return ((new Date(order.endTime) - new Date(order.createTime)) * 0.001 / 60).toFixed(0)
         break
       default:
         break
@@ -76,7 +74,7 @@ class OrderDetail extends Component {
   }
 
   getDuration(createTime) {
-    let duration = ((Date.now() - createTime) * 0.001 / 60).toFixed(0) //分钟
+    let duration = ((Date.now() - new Date(createTime)) * 0.001 / 60).toFixed(0) //分钟
     return duration
   }
 
@@ -162,46 +160,21 @@ class OrderDetail extends Component {
   }
 
   paymentServiceSuccessCallback = (orderRecord) => {
-    if(orderRecord.status === appConfig.ORDER_STATUS_PAID) {
-      this.setState({
-        showDialog: true,
-        Dialog: {
-          title: '支付成功',
-          trip: '',
-          buttons: [
-            {
-              label: '确定',
-              onClick: () => {
-                this.setState({showDialog: false})
-              }
-            },
-          ]
-        },
-      })
-    } else if(orderRecord.status === appConfig.ORDER_STATUS_UNPAID) {
-      this.setState({
-        showDialog: true,
-        Dialog: {
-          title: '干衣服务结束',
-          trip: '',
-          buttons: [
-            {
-              type: 'default',
-              label: '返回',
-              onClick: () => {this.setState({showDialog: false})}
-            },
-            {
-              type: 'primary',
-              label: '充值',
-              onClick: () => {
-                browserHistory.push('/mine/wallet/recharge')
-                this.setState({showDialog: false})
-              }
+    this.setState({
+      showDialog: true,
+      Dialog: {
+        title: '支付成功',
+        trip: '',
+        buttons: [
+          {
+            label: '确定',
+            onClick: () => {
+              this.setState({showDialog: false})
             }
-          ]
-        },
-      })
-    }
+          },
+        ]
+      },
+    })
   }
 
   paymentServiceFailedCallback = (error) => {
@@ -221,7 +194,6 @@ class OrderDetail extends Component {
   }
 
   triggerTurnOff(order) {
-    var amount = this.getAmount(order)
     this.setState({
       showDialog: true,
       Dialog: {
@@ -268,7 +240,6 @@ class OrderDetail extends Component {
       that.setState({loadingMessage: "关机成功", loadingIcon: 'success-circle'})
       setTimeout(function () {
         that.setState({showLoading: false})
-        that.onClickNavBar(appConfig.ORDER_STATUS_UNPAID)
         browserHistory.goBack()
       }, 2000)
     })

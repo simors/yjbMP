@@ -211,7 +211,7 @@ if (!__TEST__) {
 
 // Production Optimizations
 // ------------------------------------
-if (__PROD__) {
+if (__PROD__ || __STAGE__) {
   config.plugins.push(
     new webpack.LoaderOptionsPlugin({
       minimize: true,

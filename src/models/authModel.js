@@ -59,6 +59,7 @@ export const OrderInfoRecord = Record({
   status: undefined,        //订单状态
   createTime: undefined,    //下单时间
   endTime: undefined,       //结单时间
+  deviceId: undefined,      //设备id
   deviceNo: undefined,      //设备编号
   deviceAddr: undefined,    //设备地址
   amount: undefined,        //服务费用
@@ -67,20 +68,22 @@ export const OrderInfoRecord = Record({
 }, 'OrderInfoRecord')
 
 export class OrderInfo extends OrderInfoRecord {
-  static fromLeancloudApi(orderInfo) {
+  static fromLeancloudApi(obj) {
+    console.log("fromLeancloudApi", obj)
     let info = new OrderInfoRecord()
 
     return info.withMutations((record) => {
-      record.set('id', orderInfo.id)
-      record.set('orderNo', orderInfo.orderNo)
-      record.set('status', orderInfo.status)
-      record.set('createTime', orderInfo.createTime)
-      record.set('endTime', orderInfo.endTime)
-      record.set('deviceNo', orderInfo.deviceNo)
-      record.set('deviceAddr', orderInfo.deviceAddr)
-      record.set('amount', orderInfo.amount || 0)
-      record.set('userId', orderInfo.userId)
-      record.set('unitPrice', orderInfo.unitPrice)
+      record.set('id', obj.id)
+      record.set('orderNo', obj.orderNo)
+      record.set('status', obj.status)
+      record.set('createTime', obj.createTime)
+      record.set('endTime', obj.endTime)
+      record.set('deviceId', obj.deviceId)
+      record.set('deviceNo', obj.device.deviceNo)
+      record.set('deviceAddr', obj.device.deviceAddr)
+      record.set('amount', obj.amount || 0)
+      record.set('userId', obj.userId)
+      record.set('unitPrice', obj.device.station.unitPrice)
     })
   }
 }
@@ -125,7 +128,7 @@ export const AuthRecord = Record({
   token: undefined,                   //自动登录token
   wechatUserInfo: undefined,          //用户微信信息
   profile: UserInfoRecord(),          //用户信息
-  orders: Map(),                      //用户订单：键为订单id，值为OrderInfoRecord
+  orderList: List(),                     //用户订单：OrderInfoRecord
   dealRecords: Map(),                 //交易记录：键为order_no,值为DealInfoRecord
   wallet: WalletInfoRecord(),         //钱包信息
 }, "AuthRecord")
