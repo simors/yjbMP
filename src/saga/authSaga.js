@@ -127,28 +127,6 @@ export function* createPayment(action) {
   }
 }
 
-export function* fetchOrders(action) {
-  let payload = action.payload
-
-  let orderPayload = {
-    limit: payload.limit,
-    lastTurnOnTime: payload.lastTurnOnTime,
-    isRefresh: payload.isRefresh,
-  }
-
-  try {
-    let orderList = yield call(fetchOrdersApi, orderPayload)
-    if(payload.success) {
-      payload.success(orderList)
-    }
-    yield put(fetchOrdersSuccess({ orderList }))
-  } catch(error) {
-    if(payload.error) {
-      payload.error(error)
-    }
-  }
-}
-
 export function* createTransfer(action) {
   let payload = action.payload
 
@@ -170,42 +148,6 @@ export function* createTransfer(action) {
     if(payload.error) {
       payload.error(error)
     }
-  }
-}
-
-export function* paymentOrder(action) {
-  let payload = action.payload
-  let paymentPayload = {
-    userId: payload.userId,
-    amount: payload.amount,
-    orderId: payload.orderId,
-    endTime: Date.now(),
-  }
-
-  try {
-    let order = yield call(payOrder, paymentPayload)
-    yield put(paymentOrderSuccess({order: order}))
-    if(payload.success) {
-      payload.success(order)
-    }
-  } catch(error) {
-    if(payload.error) {
-      payload.error(error)
-    }
-  }
-}
-
-export function* updateOrder(action) {
-  let payload = action.payload
-  let order = payload.order
-  let device = order.device
-  let station = device? device.station : undefined
-  yield put(updateOrderSuccess({order: order}))
-  if(device) {
-    yield put(saveDevice({device: device}))
-  }
-  if(station) {
-    yield put(saveStationAction({station: station}))
   }
 }
 
@@ -238,7 +180,6 @@ export function* fetchDealRecords(action) {
   }
   try {
     let dealRecordList = yield call(getDealRecords, dealPayload)
-    console.log("fetchDealRecords records:", dealRecordList)
     if(dealRecordList.length > 0) {
       yield put(fetchDealRecordsSuccess({dealRecordList}))
     }
@@ -299,12 +240,9 @@ export const authSaga = [
   takeEvery(authActionTypes.SUBMIT_REGISTER, submitRegister),
   takeEvery(authActionTypes.AUTO_LOGIN, autoLogin),
   takeEvery(authActionTypes.CREATE_PAYMENT, createPayment),
-  takeEvery(authActionTypes.FETCH_ORDERS, fetchOrders),
   takeEvery(authActionTypes.CREATE_TRANSFER, createTransfer),
-  takeEvery(authActionTypes.PAYMENT_ORDER, paymentOrder),
   takeEvery(authActionTypes.FETCH_WALLET_INFO, fetchWalletInfo),
   takeEvery(authActionTypes.FETCH_DEAL_RECORDS, fetchDealRecords),
   takeEvery(authActionTypes.REQUEST_VERIFY_IDNAME, requestVerifyIdName),
   takeEvery(authActionTypes.FETCH_WECHAT_JSSDK_CONFIG, fetchJssdkConfig),
-  takeEvery(authActionTypes.UPDATE_ORDER, updateOrder),
 ]

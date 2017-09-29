@@ -5,7 +5,6 @@ import {createAction} from 'redux-actions'
 import * as authActionTypes from '../constants/authActionTypes'
 
 export const requestUserinfo = createAction(authActionTypes.FETCH_USERINFO)
-export const requestUserinfoSuccess = createAction(authActionTypes.FETCH_USERINFO_SCCESS)
 export const requestSmsCode = createAction(authActionTypes.REQUEST_SMSCODE)
 export const submitRegister = createAction(authActionTypes.SUBMIT_REGISTER)
 export const registerSuccess = createAction(authActionTypes.REGISTER_SUCCESS)
@@ -18,12 +17,6 @@ export const saveIdNameInfo = createAction(authActionTypes.SAVE_IDNAME_INFO)
 export const createPayment = createAction(authActionTypes.CREATE_PAYMENT)
 export const createTransfer = createAction(authActionTypes.CREATE_TRANSFER)
 
-export const fetchOrders = createAction(authActionTypes.FETCH_ORDERS)
-export const fetchOrdersSuccess = createAction(authActionTypes.FETCH_ORDERS_SUCCESS)
-export const paymentOrder = createAction(authActionTypes.PAYMENT_ORDER)
-export const paymentOrderSuccess = createAction(authActionTypes.PAYMENT_ORDER_SUCCESS)
-export const updateOrder = createAction(authActionTypes.UPDATE_ORDER)
-export const updateOrderSuccess = createAction(authActionTypes.UPDATE_ORDER_SUCCESS)
 
 export const fetchWalletInfo = createAction(authActionTypes.FETCH_WALLET_INFO)
 export const fetchWalletInfoSuccess = createAction(authActionTypes.FETCH_WALLET_INFO_SUCCESS)

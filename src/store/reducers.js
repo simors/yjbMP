@@ -4,6 +4,7 @@ import configReducer from '../reducer/configReducer'
 import authReducer from '../reducer/authReducer'
 import deviceReducer from '../reducer/deviceReducer'
 import stationReducer from '../reducer/stationReducer'
+import orderReducer from '../reducer/orderReducer'
 
 export const makeRootReducer = (asyncReducers) => {
   return combineReducers({
@@ -12,6 +13,7 @@ export const makeRootReducer = (asyncReducers) => {
     AUTH: authReducer,
     DEVICE: deviceReducer,
     STATION: stationReducer,
+    ORDER: orderReducer,
     ...asyncReducers
   })
 }

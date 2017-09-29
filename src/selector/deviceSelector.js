@@ -13,3 +13,11 @@ export function selectDeviceByDeviceNo(state, deviceNo) {
   })
   return deviceRecord? deviceRecord.toJS() : undefined
 }
+
+export function selectDeviceById(state, deviceId) {
+  if(!deviceId) {
+    return undefined
+  }
+  let deviceRecord = state.DEVICE.getIn(['devices', deviceId])
+  return deviceRecord? deviceRecord.toJS() : undefined
+}

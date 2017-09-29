@@ -12,6 +12,8 @@ export default function deviceReducer(state = initialState, action) {
   switch (action.type) {
     case deviceActiontypes.SAVE_DEVICE:
       return handleSaveDevice(state, action)
+    case deviceActiontypes.SAVE_DEVICES:
+      return handleSaveDevices(state, action)
     case REHYDRATE:
       return onRehydrate(state, action)
     default:
@@ -23,6 +25,15 @@ function handleSaveDevice(state, action) {
   let device = action.payload.device
   let deviceRecord = DeviceInfo.fromLeancloudApi(device)
   state = state.setIn(['devices', device.id], deviceRecord)
+  return state
+}
+
+function handleSaveDevices(state,  action) {
+  let devices = action.payload.devices
+  devices.forEach((device) => {
+    let deviceRecord = DeviceInfo.fromLeancloudApi(device)
+    state = state.setIn(['devices', device.id], deviceRecord)
+  })
   return state
 }
 

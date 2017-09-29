@@ -12,7 +12,7 @@ const configFilter = createFilter('CONFIG', 'AUTH', [])
 
 export default function persist(store) {
   return persistStore(store, {
-    whitelist: ['CONFIG', 'AUTH', 'DEVICE', 'STATION'],
+    whitelist: ['CONFIG', 'AUTH', 'DEVICE', 'STATION', 'ORDER'],
     // transforms: [configFilter]
   }, () => {
     // TODO: add function after rehydration is finished

@@ -5,8 +5,11 @@ import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import {browserHistory} from 'react-router'
-import {selectOrderById, selectUserInfo, selectWalletInfo} from '../../selector/authSelector'
-import {paymentOrder} from '../../actions/authActions'
+import {selectUserInfo, selectWalletInfo} from '../../selector/authSelector'
+import {selectOrderById} from '../../selector/orderSelector'
+import {selectDeviceById} from '../../selector/deviceSelector'
+import {selectStationById} from '../../selector/stationSelector'
+import {paymentOrder} from '../../actions/orderActions'
 import WeUI from 'react-weui'
 import 'weui'
 import 'react-weui/build/dist/react-weui.css'
@@ -70,7 +73,8 @@ class OrderDetail extends Component {
         break
     }
     duration = duration < 1? 1: duration
-    return (duration * order.unitPrice).toFixed(2)
+    console.log("unitPrice:", this.props.stationInfo.unitPrice)
+    return (duration * this.props.stationInfo.unitPrice).toFixed(2)
   }
 
   getDuration(createTime) {
@@ -222,7 +226,7 @@ class OrderDetail extends Component {
     //发送关机请求
     socket.emit(appConfig.TURN_OFF_DEVICE, {
       userId: this.props.currentUser.id,
-      deviceNo: order.deviceNo,
+      deviceNo: this.props.deviceInfo.deviceNo,
       orderId: order.id
     }, function (data) {
       var errorCode = data.errorCode
@@ -284,8 +288,8 @@ class OrderDetail extends Component {
             <div>所在柜门：13号</div>
           </div>
           <div className="order-detail-item">
-            <div>{'衣柜编号：' + this.props.orderInfo.deviceNo}</div>
-            <div>{'衣柜位置：' + this.props.orderInfo.deviceAddr}</div>
+            <div>{'衣柜编号：' + this.props.deviceInfo.deviceNo}</div>
+            <div>{'衣柜位置：' + this.props.deviceInfo.deviceAddr}</div>
           </div>
           <div className="order-detail-item">
             {'实时计费：' + this.getAmount(this.props.orderInfo) + '元'}
@@ -305,9 +309,14 @@ class OrderDetail extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   var orderId = ownProps.params.id
+  let orderInfo = selectOrderById(state, orderId)
+  let deviceInfo = orderInfo? selectDeviceById(state, orderInfo.deviceId) : undefined
+  let stationInfo = deviceInfo? selectStationById(state, deviceInfo.stationId) : undefined
   return {
     currentUser: selectUserInfo(state),
-    orderInfo: selectOrderById(state, orderId),
+    deviceInfo: deviceInfo,
+    stationInfo: stationInfo,
+    orderInfo: orderInfo,
     walletInfo: selectWalletInfo(state)
   }
 };

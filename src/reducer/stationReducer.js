@@ -12,6 +12,8 @@ export default function stationReducer(state = initialState, action) {
   switch (action.type) {
     case stationActionTypes.SAVE_STATION:
       return handleSaveStation(state, action)
+    case stationActionTypes.SAVE_STATIONS:
+      return handleSaveStations(state, action)
     case REHYDRATE:
       return onRehydrate(state, action)
     default:
@@ -23,6 +25,15 @@ function handleSaveStation(state, action) {
   let station = action.payload.station
   let stationRecord = Station.fromApi(station)
   state = state.setIn(['stations', station.id], stationRecord)
+  return state
+}
+
+function handleSaveStations(state, action) {
+  let stations = action.payload.stations
+  stations.forEach((station) => {
+    let stationRecord = Station.fromApi(station)
+    state = state.setIn(['stations', station.id], stationRecord)
+  })
   return state
 }
 

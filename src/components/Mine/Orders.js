@@ -5,8 +5,9 @@ import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import {browserHistory} from 'react-router'
-import {fetchOrders, paymentOrder, updateOrder} from '../../actions/authActions'
-import {selectUserInfo, selectOrders, selectWalletInfo} from '../../selector/authSelector'
+import {fetchOrders, paymentOrder, updateOrder} from '../../actions/orderActions'
+import {selectUserInfo, selectWalletInfo} from '../../selector/authSelector'
+import {selectMyOrders} from '../../selector/orderSelector'
 import * as appConfig from '../../constants/appConfig'
 import {formatTime} from '../../util'
 import WeUI from 'react-weui'
@@ -407,7 +408,7 @@ class Orders extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  let orderList = selectOrders(state)
+  let orderList = selectMyOrders(state)
   let lastTurnOnTime = undefined
   if(orderList.length > 0) {
     lastTurnOnTime = orderList[orderList.length - 1].createTime

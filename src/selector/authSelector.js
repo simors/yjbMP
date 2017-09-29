@@ -24,22 +24,6 @@ export function selectToken(state) {
   return AUTH.token
 }
 
-export function selectOrders(state) {
-  let AUTH = state.AUTH
-  let orderList = AUTH.get('orderList')
-  return orderList.toArray()
-}
-
-export function selectOrderById(state, orderId) {
-  let AUTH = state.AUTH
-  let orderList = AUTH.get('orderList')
-  let orderRecord = orderList.find((value) => {
-    return value.id === orderId
-  })
-  console.log("orderRecord:", orderRecord)
-  return orderRecord? orderRecord.toJS() : undefined
-}
-
 export function selectDealRecord(state) {
   let AUTH = state.AUTH
   let dealRecordsMap = AUTH.dealRecords

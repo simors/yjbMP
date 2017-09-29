@@ -114,26 +114,6 @@ export function getPaymentCharge(payload) {
   })
 }
 
-export function fetchOrdersApi(payload) {
-  let orderPayload = {
-    limit: payload.limit,
-    lastTurnOnTime: payload.lastTurnOnTime,
-    isRefresh: payload.isRefresh,
-  }
-
-  return AV.Cloud.run('orderFetchOwnsOrders', orderPayload).then((ownsOrders) => {
-    let orderList = List()
-    console.log("ownsOrders", ownsOrders)
-    ownsOrders.forEach((order) => {
-      orderList = orderList.push(OrderInfo.fromLeancloudApi(order))
-    })
-    return orderList
-  }).catch((error) => {
-    console.log("获取订单失败：", error)
-    throw error
-  })
-}
-
 export function getTransfer(payload) {
   return AV.Cloud.run('pingppCreateTransfer', payload).then((transfer) => {
     return transfer
@@ -143,14 +123,6 @@ export function getTransfer(payload) {
   })
 }
 
-export function payOrder(payload) {
-  return AV.Cloud.run('orderOrderPayment', payload).then((order) => {
-    return order
-  }).catch((error) => {
-    console.log("服务订单支付失败：", error)
-    throw error
-  })
-}
 
 export function getWalletInfo(payload) {
   return AV.Cloud.run('authFetchWalletInfo', payload).then((walletInfo) => {
