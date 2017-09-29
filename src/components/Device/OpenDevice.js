@@ -6,9 +6,10 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import {browserHistory} from 'react-router'
 import {requestDeviceInfo} from '../../actions/deviceActions'
-import {selectDeviceInfo} from '../../selector/deviceSelector'
+import {selectDeviceByDeviceNo} from '../../selector/deviceSelector'
 import { fetchWechatJssdkConfig} from '../../actions/authActions'
 import {selectUserInfo, selectWalletInfo} from '../../selector/authSelector'
+import {selectStationById} from '../../selector/stationSelector'
 import * as appConfig from '../../constants/appConfig'
 import WeUI from 'react-weui'
 import wx from 'tencent-wx-jssdk'
@@ -39,6 +40,7 @@ class OpenDevice extends Component {
       deviceNo: undefined,
       buttonTitle: undefined,
       loading: false,
+      deviceLoading: true,
     }
   }
 
@@ -58,8 +60,14 @@ class OpenDevice extends Component {
   }
 
   renderDeviceStatus() {
-    let status = this.props.deviceInfo.status
-    if(this.props.walletInfo.deposit === 0) {  //未交押金
+    let status = this.props.deviceInfo && this.props.deviceInfo.status
+    if(!this.props.deviceInfo || !this.props.stationInfo) {
+      return(
+        <PanelBody style={{borderWidth: `0`}}>
+          <LoadMore loading>加载中</LoadMore>
+        </PanelBody>
+      )
+    } else if(this.props.walletInfo.deposit === 0) {  //未交押金
       return(
         <PanelBody style={{borderBottomWidth: `0`}}>
           <Msg
@@ -99,7 +107,7 @@ class OpenDevice extends Component {
             </MediaBoxDescription>
           </MediaBox>
           <MediaBox type="text">
-            <MediaBoxTitle>{this.props.deviceInfo.unitPrice + '元／分钟'}</MediaBoxTitle>
+            <MediaBoxTitle>{this.props.stationInfo.unitPrice + '元／分钟'}</MediaBoxTitle>
             <MediaBoxDescription>
               计费标准
             </MediaBoxDescription>
@@ -137,17 +145,11 @@ class OpenDevice extends Component {
           />
         </PanelBody>
       )
-    } else {
-      return(
-        <PanelBody style={{borderWidth: `0`}}>
-          <LoadMore loading>加载中</LoadMore>
-        </PanelBody>
-      )
     }
   }
 
   getButtonTitle() {
-    if(this.state.loading) {
+    if(this.state.loading || !this.props.deviceInfo || !this.props.stationInfo) {
       return(
         <LoadMore className="device-loadmore" loading/>
       )
@@ -245,9 +247,13 @@ class OpenDevice extends Component {
 
 
 const mapStateToProps = (state, ownProps) => {
-  var deviceInfo = selectDeviceInfo(state)
+  let deviceNo = ownProps.location.query.deviceNo
+  let deviceInfo = selectDeviceByDeviceNo(state, deviceNo)
+  let stationInfo = deviceInfo? selectStationById(state, deviceInfo.stationId) : undefined
+
   return {
     deviceInfo: deviceInfo,
+    stationInfo: stationInfo,
     currentUser: selectUserInfo(state),
     walletInfo: selectWalletInfo(state),
   }

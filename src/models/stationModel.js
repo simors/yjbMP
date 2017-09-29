@@ -25,7 +25,7 @@ export class Station extends StationRecord {
       record.set('province', obj.province)
       record.set('city', obj.city)
       record.set('area', obj.area)
-      record.set('admin', obj.admin.id)
+      record.set('admin', obj.adminId)
       record.set('status', obj.status)
       record.set('deviceSum', obj.deviceSum)
       record.set('addr', obj.addr)
@@ -35,5 +35,5 @@ export class Station extends StationRecord {
 }
 
 export const StationState = Record({
-  stations: Map,             //服务网点 键为id，值为StationRecord
+  stations: Map(),             //服务网点 键为id，值为StationRecord
 }, 'StationState')

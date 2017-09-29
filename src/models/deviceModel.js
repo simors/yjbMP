@@ -45,6 +45,5 @@ export class DeviceInfo extends DeviceInfoRecord {
 }
 
 export const DeviceRecord = Record({
-  device: DeviceInfoRecord(),
   devices: Map(),                 //设备 键为id, 值为DeviceInfoRecord
 }, 'DeviceRecord')

@@ -10,21 +10,13 @@ const initialState = DeviceRecord()
 
 export default function deviceReducer(state = initialState, action) {
   switch (action.type) {
-    case deviceActiontypes.FETCH_DEVICEINFO_SUCCESS:
-      return handleFetchDeviceSuccess(state, action)
     case deviceActiontypes.SAVE_DEVICE:
-      return handleSaveDevice
+      return handleSaveDevice(state, action)
     case REHYDRATE:
       return onRehydrate(state, action)
     default:
       return state
   }
-}
-
-function handleFetchDeviceSuccess(state, action) {
-  var payload = action.payload
-  state = state.set('device', payload.deviceRecord)
-  return state
 }
 
 function handleSaveDevice(state, action) {
@@ -35,9 +27,23 @@ function handleSaveDevice(state, action) {
 }
 
 function onRehydrate(state, action) {
-  var incoming = action.payload.AUTH
+  var incoming = action.payload.DEVICE
   if (!incoming) return state
 
+  const devices = incoming.devices
+  if(devices) {
+    let devicesMap = new Map(devices)
+    try {
+      for (let [deviceId, device] of devicesMap) {
+        if(deviceId && device) {
+          let deviceRecord = new DeviceInfoRecord({...device})
+          state = state.setIn(['devices', deviceId], deviceRecord)
+        }
+      }
+    } catch (error) {
+      devicesMap.clear()
+    }
+  }
 
   return state
 }
