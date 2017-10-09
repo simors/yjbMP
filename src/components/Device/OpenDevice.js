@@ -186,8 +186,6 @@ class OpenDevice extends Component {
 
     //监听开机成功消息
     socket.on(appConfig.TURN_ON_DEVICE_SUCCESS, function (data) {
-      console.log("收到开机成功消息", data)
-      var orderInfo = data
       that.setState({
         loading: false
       })

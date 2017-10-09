@@ -3,7 +3,7 @@
  */
 import { call, put, takeEvery } from 'redux-saga/effects'
 import {fetchUserInfo, requestLeanSmsCode, register, become, login, getPaymentCharge, fetchOrdersApi, getTransfer, payOrder, getWalletInfo, getDealRecords, verifyIdName, getJssdkConfig} from  '../api/auth'
-import {registerSuccess, loginSuccess, loginOut, fetchOrdersSuccess, paymentOrderSuccess, fetchWalletInfoSuccess, fetchDealRecordsSuccess, saveIdNameInfo, updateOrderSuccess} from '../actions/authActions'
+import {registerSuccess, loginSuccess, autoLoginSuccess, loginOut, fetchOrdersSuccess, paymentOrderSuccess, fetchWalletInfoSuccess, fetchDealRecordsSuccess, saveIdNameInfo, updateOrderSuccess} from '../actions/authActions'
 import * as authActionTypes from '../constants/authActionTypes'
 import {saveDevice} from '../actions/deviceActions'
 import {saveStationAction} from '../actions/stationActions'
@@ -76,9 +76,10 @@ export function* autoLogin(action) {
   try {
     let result = yield call(become, payload)
     let token = result.token
-    let userInfo = result.userInfo
-    yield put(loginSuccess({token: token, userInfo: userInfo}))
-    console.log("自动登录成功：", userInfo)
+    let user = result.user
+    let subscribe = result.subscribe
+    yield put(autoLoginSuccess({token: token, user: user, subscribe: subscribe}))
+    console.log("自动登录成功：", user)
   } catch(error) {
     console.log("自动登录失败：", error)
     yield put(loginOut({}))

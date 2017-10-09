@@ -3,7 +3,7 @@
  */
 import {Map, List, Record} from 'immutable'
 import {REHYDRATE} from 'redux-persist/constants'
-import {AuthRecord, UserInfoRecord, WalletInfoRecord} from '../models/authModel'
+import {AuthRecord, UserInfoRecord, UserInfo, WalletInfoRecord} from '../models/authModel'
 import * as authActionTypes from '../constants/authActionTypes'
 
 const initialState = AuthRecord()
@@ -14,6 +14,8 @@ export default function authReducer(state = initialState, action) {
       return handleSaveUserInfo(state, action)
     case authActionTypes.LOGIN_SUCCESS:
       return handleSaveUserInfo(state, action)
+    case authActionTypes.AUTO_LOGIN_SUCCESS:
+      return handleAutoLogin(state, action)
     case authActionTypes.LOGIN_OUT:
       return handleLoginOut(state, action)
     case authActionTypes.FETCH_WALLET_INFO_SUCCESS:
@@ -35,6 +37,21 @@ function handleSaveUserInfo(state, action) {
   state = state.set('profile', payload.userInfo)
   state = state.set('token', payload.token)
   state = state.set('activeUser', userId)
+  return state
+}
+
+function handleAutoLogin(state, action) {
+  let payload = action.payload
+  let token = payload.token
+  let user = payload.user
+  let subscribe = payload.subscribe
+
+  let userRecord = UserInfo.fromLeancloudObject(user)
+  userRecord = userRecord.set('subscribe', subscribe)
+  state = state.set('token', token)
+  state = state.set('activeUser', user.id)
+  state = state.set('profile', userRecord)
+
   return state
 }
 

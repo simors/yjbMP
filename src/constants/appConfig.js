@@ -17,7 +17,8 @@ var WECHAT_MP_APPID = ""
 const WECHAT_MP_APPID_DEV = "wx2c7e7f1a67c78900"
 const WECHAT_MP_APPID_PRE = "wx792bf5a51051d512"
 const WECHAT_MP_APPID_PRO = "wx792bf5a51051d512"
-
+//微信公众号关注链接
+const FOCUS_MP_URL = "https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzI0NDk1OTkyMA==&scene=110#wechat_redirect"
 
 // 支付类型定义
 const DEPOSIT = 1                // 押金
@@ -53,6 +54,7 @@ const TURN_OFF_DEVICE = 'turn_off_device'       //设备关机请求&应答
 const TURN_OFF_DEVICE_SUCCESS = 'turn_off_device_success'
 const TURN_OFF_DEVICE_FAILED = 'turn_off_device_failed'
 
+
 if(__DEV__) {          //开发环境
   LC_APP_ID = LC_DEV_APP_ID
   LC_APP_KEY = LC_DEV_APP_KEY
@@ -79,6 +81,7 @@ var appConfig = {
   LC_APP_KEY: LC_APP_KEY,
 
   WECHAT_MP_APPID: WECHAT_MP_APPID,
+  FOCUS_MP_URL: FOCUS_MP_URL,
 
   DEPOSIT: DEPOSIT,
   RECHARGE: RECHARGE,

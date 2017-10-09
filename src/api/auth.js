@@ -7,16 +7,22 @@ import {UserInfo, OrderInfo, DealInfo} from '../models/authModel'
 import {Map, List, Record} from 'immutable'
 
 export function become(payload) {
+  let token = undefined
+  let user = undefined
   return AV.User.become(payload.token).then((leanUser) => {
-    let userInfo = UserInfo.fromLeancloudObject(leanUser)
-    let token = leanUser.getSessionToken()
-
-    return ({
+    user = leanUser
+    token = leanUser.getSessionToken()
+    let openid = leanUser.attributes.authData.weixin.openid
+    return AV.Cloud.run('wechatIsSubscribe', {openid: openid})
+  }).then((subscribe) => {
+    console.log("subscribe:", subscribe)
+    return {
       token: token,
-      userInfo: userInfo,
-    })
-  }, (err) => {
-    throw err
+      user: user,
+      subscribe: subscribe,
+    }
+  }).catch((error) => {
+    throw error
   })
 }
 

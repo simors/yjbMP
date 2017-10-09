@@ -16,9 +16,10 @@ export const UserInfoRecord = Record({
   city: undefined,
   createdAt: undefined,
   updatedAt: undefined,
-  idName: undefined,    //真实姓名
-  idNumber: undefined,    //身份证号码
-  idNameVerified: false,//实名认证
+  idName: undefined,        //真实姓名
+  idNumber: undefined,      //身份证号码
+  idNameVerified: false,    //实名认证
+  subscribe: undefined,     //关注微信公众号
 }, 'UserInfoRecord')
 
 export class UserInfo extends UserInfoRecord {
