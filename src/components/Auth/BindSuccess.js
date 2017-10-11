@@ -8,6 +8,7 @@ import {browserHistory} from 'react-router'
 import WeUI from 'react-weui'
 import 'weui'
 import 'react-weui/build/dist/react-weui.css'
+import appConfig from '../../constants/appConfig'
 
 import './bindsuccess.css'
 
@@ -43,10 +44,11 @@ class BindSuccess extends Component {
           <Msg
             type="success"
             title="绑定成功"
+            description="请关注衣家宝公众号，进行后续操作！"
             buttons={[{
               type: 'primary',
-              label: '返回',
-              onClick: () => {browserHistory.replace('/mine')}
+              label: '关注衣家宝公众号',
+              onClick: () => {document.location = appConfig.FOCUS_MP_URL}
             }]}
           />
         </div>
