@@ -24,7 +24,7 @@ const config = {
   devtool: project.sourcemaps ? 'source-map' : false,
   output: {
     path: inProject(project.outDir),
-    filename: __DEV__ || __STAGE__ ? '[name].js' : '[name].[chunkhash].js',
+    filename: __DEV__ ? '[name].js' : '[name].[chunkhash].js',
     publicPath: project.publicPath,
   },
   resolve: {
@@ -98,7 +98,7 @@ config.module.rules.push({
 const extractStyles = new ExtractTextPlugin({
   filename: 'styles/[name].[contenthash].css',
   allChunks: true,
-  disable: __DEV__ || __STAGE__,
+  disable: __DEV__,
 })
 
 config.module.rules.push({
@@ -187,7 +187,7 @@ config.plugins.push(new HtmlWebpackPlugin({
 
 // Development Tools
 // ------------------------------------
-if (__DEV__ || __STAGE__) {
+if (__DEV__) {
   config.entry.main.push(
     `webpack-hot-middleware/client.js?path=${config.output.publicPath}__webpack_hmr`
   )

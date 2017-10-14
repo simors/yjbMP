@@ -24,7 +24,7 @@ let render = () => {
 
 // Development Tools
 // ------------------------------------
-if (__DEV__ || __STAGE__) {
+if (__DEV__) {
   if (module.hot) {
     const renderApp = render
     const renderError = (error) => {
