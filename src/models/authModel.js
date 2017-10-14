@@ -6,6 +6,7 @@ import {Map, List, Record} from 'immutable'
 export const UserInfoRecord = Record({
   id: undefined,
   mobilePhoneNumber: undefined,
+  mobilePhoneVerified: undefined,
   avatar: undefined,
   nickname: undefined,
   sex: undefined,
@@ -33,10 +34,11 @@ export class UserInfo extends UserInfoRecord {
       if(lcObj.createdAt) {
         let createdAt = lcObj.createdAt
         let updatedAt = lcObj.updatedAt
-        record.set('createdAt', createdAt.valueOf())
-        record.set('updatedAt', updatedAt.valueOf())
+        record.set('createdAt', createdAt)
+        record.set('updatedAt', updatedAt)
       }
       record.set('mobilePhoneNumber', attrs['mobilePhoneNumber'])
+      record.set('mobilePhoneVerified', attrs['mobilePhoneVerified'])
       record.set('avatar', attrs['avatar'])
       record.set('nickname', attrs['nickname'])
       record.set('sex', attrs['sex'])
@@ -51,6 +53,30 @@ export class UserInfo extends UserInfoRecord {
         record.set('idNumber', attrs['idNumber'])
       if(attrs.idNameVerified)
         record.set('idNameVerified', attrs['idNameVerified'])
+    })
+  }
+
+  static fromApi(obj) {
+    let info = new UserInfoRecord()
+
+    return info.withMutations((record) => {
+      record.set('id', obj.id)
+      record.set('mobilePhoneNumber', obj.mobilePhoneNumber)
+      record.set('mobilePhoneVerified', obj.mobilePhoneVerified)
+      record.set('avatar', obj.avatar)
+      record.set('nickname', obj.nickname)
+      record.set('sex', obj.sex)
+      record.set('authData', obj.authData)
+      record.set('language', obj.language)
+      record.set('country', obj.country)
+      record.set('province', obj.province)
+      record.set('city', obj.city)
+      record.set('idName', obj.idName)
+      record.set('idNumber', obj.idNumber)
+      record.set('createdAt', obj.createdAt)
+      record.set('updatedAt', obj.updatedAt)
+      record.set('subscribe', obj.subscribe)
+      record.set('idNameVerified', obj.idNameVerified)
     })
   }
 }
@@ -90,11 +116,10 @@ export const WalletInfoRecord = Record({
 }, 'WalletInfoRecord')
 
 
-export const AuthRecord = Record({
+export const AuthState = Record({
   activeUser: undefined,              //当前用户id
   token: undefined,                   //自动登录token
-  wechatUserInfo: undefined,          //用户微信信息
-  profile: UserInfoRecord(),          //用户信息
+  profiles: Map(),                    //用户信息: 键为userId, 值为UserInfoRecord
   dealRecords: Map(),                 //交易记录：键为order_no,值为DealInfoRecord
   wallet: WalletInfoRecord(),         //钱包信息
-}, "AuthRecord")
+}, "AuthState")

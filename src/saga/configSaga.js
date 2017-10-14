@@ -1,10 +1,10 @@
 /**
  * Created by yangyang on 2017/6/28.
  */
-import { call, put, takeEvery } from 'redux-saga/effects'
+import { call, put, takeEvery, takeLatest} from 'redux-saga/effects'
 import {fetchDomain, fetchPosition} from '../api/config'
 import * as configActionTypes from '../constants/configActionTypes'
-import {requestDomainSuccess, requestPositionSuccess} from '../actions/configActions'
+import {requestDomainSuccess, requestPositionSuccess, updateRehydrateSuccess} from '../actions/configActions'
 import {Location} from '../models/configModel'
 
 export function* fetchDomainAction(action) {
@@ -19,7 +19,17 @@ export function* fetchPositionAction(action) {
   yield put(requestPositionSuccess({location: Location.fromApi(position)}))
 }
 
+function* updateAppRehydrate(action) {
+  let payload = action.payload
+  try {
+    yield put(updateRehydrateSuccess(payload))
+  } catch (error) {
+    console.log('update App State error:', error)
+  }
+}
+
 export const configSaga = [
-  takeEvery(configActionTypes.FETCH_DOMAIN, fetchDomainAction),
-  takeEvery(configActionTypes.FETCH_POSITION, fetchPositionAction)
+  takeLatest(configActionTypes.FETCH_DOMAIN, fetchDomainAction),
+  takeLatest(configActionTypes.FETCH_POSITION, fetchPositionAction),
+  takeLatest(configActionTypes.UPDATE_REHYDRATE, updateAppRehydrate),
 ]

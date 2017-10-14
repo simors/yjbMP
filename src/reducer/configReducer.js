@@ -3,10 +3,10 @@
  */
 import {Map, List} from 'immutable'
 import {REHYDRATE} from 'redux-persist/constants'
-import {ConfigRecord} from '../models/configModel'
+import {ConfigState} from '../models/configModel'
 import * as configActionTypes from '../constants/configActionTypes'
 
-const initialState = ConfigRecord()
+const initialState = ConfigState()
 
 export default function configReducer(state = initialState, action) {
   switch (action.type) {
@@ -14,11 +14,18 @@ export default function configReducer(state = initialState, action) {
       return handleSaveDomain(state, action)
     case configActionTypes.FETCH_POSITION_SUCCESS:
       return handleSaveLocation(state, action)
+    case configActionTypes.UPDATE_REHYDRATE_SUCCESS:
+      return handleUpdateAppRehydrate(state, action)
     case REHYDRATE:
       return onRehydrate(state, action)
     default:
       return state
   }
+}
+
+function handleUpdateAppRehydrate(state, action) {
+  state = state.set('isRehydrated', action.payload.rehydrated)
+  return state
 }
 
 function handleSaveDomain(state, action) {

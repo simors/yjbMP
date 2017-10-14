@@ -5,7 +5,7 @@ import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import WeUI from 'react-weui'
-import {selectUserInfo} from '../../selector/authSelector'
+import {selectActiveUserInfo} from '../../selector/authSelector'
 
 import 'weui'
 import 'react-weui/build/dist/react-weui.css'
@@ -85,7 +85,7 @@ class Score extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    currentUser: selectUserInfo(state),
+    currentUser: selectActiveUserInfo(state),
     scoreRecords: [{title: '付款成功－干衣', time: '2017-03-30', trip: '消费5.00元', score: 50}],
   }
 };

@@ -7,7 +7,7 @@ import { bindActionCreators } from 'redux'
 import {browserHistory} from 'react-router'
 var pingpp = require('pingpp-js')
 import {createPayment} from '../../actions/authActions'
-import {selectUserInfo} from '../../selector/authSelector'
+import {selectActiveUserInfo} from '../../selector/authSelector'
 import * as appConfig from '../../constants/appConfig'
 import WeUI from 'react-weui'
 import 'weui'
@@ -92,7 +92,7 @@ class Deposit extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    currentUser: selectUserInfo(state)
+    currentUser: selectActiveUserInfo(state)
   }
 };
 

@@ -5,7 +5,7 @@ import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import {browserHistory} from 'react-router'
-import {selectUserInfo, selectWalletInfo} from '../../selector/authSelector'
+import {selectActiveUserInfo, selectWalletInfo} from '../../selector/authSelector'
 import {createTransfer} from '../../actions/authActions'
 import * as appConfig from '../../constants/appConfig'
 import WeUI from 'react-weui'
@@ -61,7 +61,7 @@ class Refund extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    currentUser: selectUserInfo(state),
+    currentUser: selectActiveUserInfo(state),
     walletInfo: selectWalletInfo(state),
   }
 };

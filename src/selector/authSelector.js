@@ -1,22 +1,18 @@
 /**
  * Created by wanpeng on 2017/8/14.
  */
-import * as appConfig from '../constants/appConfig'
-
-export function selectWechatUserInfo(state) {
-  let AUTH = state.AUTH
-  return AUTH.wechatUserInfo
+export function selectActiveUserInfo(state) {
+  let activeUserId = state.AUTH.get('activeUser')
+  if(!activeUserId) {
+    return undefined
+  }
+  let userRecord = state.AUTH.getIn(['profiles', activeUserId])
+  return userRecord? userRecord.toJS() : undefined
 }
 
-export function selectUserInfo(state) {
-  let AUTH = state.AUTH
-  return AUTH.profile.toJS()
-}
-
-export function isUserLogined(state) {
-  let AUTH = state.AUTH
-  let activeUser = AUTH.activeUser
-  return activeUser ? true : false
+export function selectActiveUserId(state) {
+  let activeUserId = state.AUTH.get('activeUser')
+  return activeUserId
 }
 
 export function selectToken(state) {

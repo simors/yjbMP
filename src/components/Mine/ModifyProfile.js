@@ -5,7 +5,7 @@ import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import {browserHistory} from 'react-router'
-import {selectUserInfo} from '../../selector/authSelector'
+import {selectActiveUserInfo} from '../../selector/authSelector'
 
 import WeUI from 'react-weui'
 import 'weui'
@@ -129,7 +129,7 @@ class ModifyProfile extends  Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    currentUser: selectUserInfo(state)
+    currentUser: selectActiveUserInfo(state)
   }
 };
 

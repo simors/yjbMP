@@ -15,11 +15,12 @@ export const LocationRecord = Record({
   streetNumber: undefined,
 }, 'LocationRecord')
 
-export const ConfigRecord = Record({
+export const ConfigState = Record({
   domain: undefined,
   appname: undefined,
   location: undefined,
-}, "ConfigRecord")
+  isRehydrated: undefined,      //持久化数据恢复结束
+}, "ConfigState")
 
 export class Location extends LocationRecord {
   static fromApi(obj) {

@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import {browserHistory} from 'react-router'
 import {fetchOrders, paymentOrder, updateOrder} from '../../actions/orderActions'
-import {selectUserInfo, selectWalletInfo} from '../../selector/authSelector'
+import {selectActiveUserInfo, selectWalletInfo} from '../../selector/authSelector'
 import {selectMyOrders} from '../../selector/orderSelector'
 import * as appConfig from '../../constants/appConfig'
 import {formatTime} from '../../util'
@@ -414,7 +414,7 @@ const mapStateToProps = (state, ownProps) => {
     lastTurnOnTime = orderList[orderList.length - 1].createTime
   }
   return {
-    currentUser: selectUserInfo(state),
+    currentUser: selectActiveUserInfo(state),
     orderList: orderList,
     lastTurnOnTime: lastTurnOnTime,
     walletInfo: selectWalletInfo(state)

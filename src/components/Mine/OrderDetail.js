@@ -5,7 +5,7 @@ import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import {browserHistory} from 'react-router'
-import {selectUserInfo, selectWalletInfo} from '../../selector/authSelector'
+import {selectActiveUserInfo, selectWalletInfo} from '../../selector/authSelector'
 import {selectOrderById} from '../../selector/orderSelector'
 import {selectDeviceById} from '../../selector/deviceSelector'
 import {selectStationById} from '../../selector/stationSelector'
@@ -313,7 +313,7 @@ const mapStateToProps = (state, ownProps) => {
   let deviceInfo = orderInfo? selectDeviceById(state, orderInfo.deviceId) : undefined
   let stationInfo = deviceInfo? selectStationById(state, deviceInfo.stationId) : undefined
   return {
-    currentUser: selectUserInfo(state),
+    currentUser: selectActiveUserInfo(state),
     deviceInfo: deviceInfo,
     stationInfo: stationInfo,
     orderInfo: orderInfo,

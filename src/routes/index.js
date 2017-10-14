@@ -1,7 +1,7 @@
 // We only need to import the modules necessary for initial render
 import React from 'react'
 import { Router, Route, IndexRoute, browserHistory} from 'react-router'
-import {oauth, wechatOauth} from  '../util'
+import { wechatOauth } from  '../util'
 
 import AppIndex from '../components/AppIndex'
 import Home from '../components/Home'
@@ -21,6 +21,7 @@ import OrderDetail from '../components/Mine/OrderDetail'
 import Bind from '../components/Auth/Bind'
 import Deposit from '../components/Mine/Deposit'
 import Refund from '../components/Mine/Refund'
+import LoadingPage from '../components/Loading/'
 
 
 const routes = (
@@ -32,12 +33,10 @@ const routes = (
 const rootRouter = (
   <Router history={browserHistory}>
     {routes}
-    <Route path='bind' component={Bind} onEnter={wechatOauth}/>
-    {/*<Route path='bind' component={Bind}/>*/}
+    <Route path='bind' component={Bind}/>
     <Route path='bind/success' component={BindSuccess}/>
-    <Route path='mine' component={Mine} onEnter={oauth}/>
-    {/*<Route path='mine' component={Mine}/>*/}
-    <Route path='mine/wallet' component={Wallet} onEnter={oauth}/>
+    <Route path='mine' component={Mine} onEnter={wechatOauth}/>
+    <Route path='mine/wallet' component={Wallet} onEnter={wechatOauth}/>
     <Route path='mine/wallet/recharge' component={Recharge}/>
     <Route path='mine/wallet/walletDetail' component={WalletDetail}/>
     <Route path='mine/orders' component={Orders}/>
@@ -45,12 +44,12 @@ const rootRouter = (
     <Route path='mine/score' component={Score} />
     <Route path='mine/deposit' component={Deposit} />
     <Route path='mine/refund' component={Refund} />
-    <Route path='openDevice' component={OpenDevice} onEnter={oauth}/>
-    {/*<Route path='openDevice' component={OpenDevice}/>*/}
+    <Route path='openDevice' component={OpenDevice} onEnter={wechatOauth}/>
     <Route path='modifyProfile' component={ModifyProfile}/>
     <Route path='modifyProfile/nickname' component={ModifyNickname}/>
     <Route path='modifyProfile/certification' component={Certification}/>
     <Route path='about' component={About}/>
+    <Route path='loading' component={LoadingPage}/>
   </Router>
 )
 

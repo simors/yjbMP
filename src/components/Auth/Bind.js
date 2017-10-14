@@ -5,12 +5,12 @@ import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import {browserHistory} from 'react-router'
-import {requestUserinfo, requestSmsCode, submitRegister} from '../../actions/authActions'
-import {selectWechatUserInfo} from '../../selector/authSelector'
+import {requestSmsCode, setMobilePhone} from '../../actions/authActions'
 import WeUI from 'react-weui'
 import 'weui'
 import 'react-weui/build/dist/react-weui.css'
 import './bind.css'
+import {selectActiveUserInfo} from '../../selector/authSelector'
 
 const {
   Page,
@@ -31,7 +31,6 @@ class Bind extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      wechatUserInfo: undefined,
       areaCode: "+86",
       phone: undefined,
       smsCode: undefined,
@@ -46,32 +45,6 @@ class Bind extends Component {
 
   componentDidMount() {
     document.title = "绑定手机"
-  }
-
-  requestUserinfoSuccessCallback = (userInfo) => {
-    let nextPathname = this.props.location.query.state || '/mine'
-
-    var isBind = userInfo.isBind
-    if(isBind) {
-      browserHistory.replace(nextPathname)
-    } else {
-      this.setState({
-        wechatUserInfo: userInfo
-      })
-    }
-  }
-
-  componentWillMount() {
-    var code = this.props.location.query.code
-    if(code) {
-      this.props.requestUserinfo({
-        code: code,
-        success: this.requestUserinfoSuccessCallback,
-        error: (error) => {
-          console.log("Bind error", error)
-        }
-      })
-    }
   }
 
   getSmsCode = () => {
@@ -193,10 +166,9 @@ class Bind extends Component {
     if(!result) {
       return
     }
-    this.props.submitRegister({
+    this.props.setMobilePhone({
       phone: this.state.phone,
       smsCode: this.state.smsCode,
-      wechatUserInfo: this.state.wechatUserInfo,
       success: () => {
         let deviceNo = this.props.location.query.deviceNo
         if(deviceNo) {
@@ -208,7 +180,7 @@ class Bind extends Component {
       error: (error) => {
         this.setState({
           showWarn: true,
-          warnTips: error
+          warnTips: error.message
         })
         setTimeout(function () {
           that.setState({
@@ -224,7 +196,7 @@ class Bind extends Component {
     return (
       <Page className="page" ptr={false} infiniteLoader={false}>
         <div className="header">
-          <img className="avatar" src={this.state.wechatUserInfo? this.state.wechatUserInfo.headimgurl: '/defaultAvatar.svg'} alt=""/>
+          <img className="avatar" src={this.props.currentUser? this.props.currentUser.avatar: '/defaultAvatar.svg'} alt=""/>
         </div>
         <div>
           <Form className="form">
@@ -275,13 +247,13 @@ class Bind extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
+    currentUser: selectActiveUserInfo(state),
   }
 };
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
-  requestUserinfo,
   requestSmsCode,
-  submitRegister,
+  setMobilePhone
 }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(Bind)

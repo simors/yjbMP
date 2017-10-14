@@ -2,9 +2,8 @@
  * Created by wanpeng on 2017/8/14.
  */
 import AV from 'leancloud-storage'
-import * as appConfig from '../constants/appConfig'
 import {UserInfo, OrderInfo, DealInfo} from '../models/authModel'
-import {Map, List, Record} from 'immutable'
+import appConfig from '../constants/appConfig'
 
 export function become(payload) {
   let token = undefined
@@ -15,7 +14,6 @@ export function become(payload) {
     let openid = leanUser.attributes.authData.weixin.openid
     return AV.Cloud.run('wechatIsSubscribe', {openid: openid})
   }).then((subscribe) => {
-    console.log("subscribe:", subscribe)
     return {
       token: token,
       user: user,
@@ -26,64 +24,21 @@ export function become(payload) {
   })
 }
 
-export function fetchUserInfo(payload) {
-  var params = {
-    code: payload.code
-  }
-  return AV.Cloud.run('authFetchUserInfo', params).then((userInfo) => {
-    return userInfo
-  }).catch((error) => {
-    console.log("获取微信用户信息失败：", error)
-    throw error
-  })
-}
-
 export function requestLeanSmsCode(payload) {
   let phone = payload.phone
+
   return AV.Cloud.requestSmsCode({
     mobilePhoneNumber:phone,
     name: appConfig.APP_NAME,
     op: '绑定手机',
-    ttl: 10}).then(function () {
-    // do nothing
-  }, function (err) {
-    // err.message = ERROR[err.code] ? ERROR[err.code] : ERROR[9999]
-    console.log("requestSmsCode error:", err)
-    throw err
-  })
+    ttl: 10})
 }
 
-export function register(payload) {
-  console.log("register", payload)
-  let authData = {
-    "openid": payload.wechatUserInfo.openid,
-    "access_token": payload.wechatUserInfo.accessToken,
-    "expires_at": Date.parse(payload.wechatUserInfo.expires_in),
-  }
-  let platform = 'weixin'
-
-  return AV.User.signUpOrlogInWithMobilePhone(payload.phone, payload.smsCode).then((user) => {
-    return AV.User.associateWithAuthData(user, platform, authData)
-  }).then((authUser) => {
-    authUser.set('nickname', payload.wechatUserInfo.nickname)
-    authUser.set('avatar', payload.wechatUserInfo.headimgurl)
-    authUser.set('sex', payload.wechatUserInfo.sex)
-    authUser.set('language', payload.wechatUserInfo.language)
-    authUser.set('country', payload.wechatUserInfo.country)
-    authUser.set('province', payload.wechatUserInfo.province)
-    authUser.set('city', payload.wechatUserInfo.city)
-
-    return authUser.save()
-  }).then((leanUser) => {
-    let userInfo = UserInfo.fromLeancloudObject(leanUser)
-    let token = leanUser.getSessionToken()
-    return({
-      userInfo: userInfo,
-      token: token,
-    })
+export function setMobilePhoneAPi(payload) {
+  return AV.Cloud.run("authSetUserMobilePhone", payload).then((user) => {
+    return user
   }).catch((error) => {
-    console.log("register error", error)
-
+    console.error(error)
     throw error
   })
 }
@@ -106,6 +61,35 @@ export function login(payload) {
   }).catch((error) => {
     console.log("login error", error)
 
+    throw error
+  })
+}
+
+/**
+ * 使用authData完成登录，目前只支持微信登录
+ * authData的格式如下：
+ *
+ * authData = {
+ *  "openid": openid,
+ *  "access_token": accessToken,
+ *  "expires_at": Date.parse(expires_in),
+ *}
+ *
+ * @param payload
+ * @returns {Promise.<TResult>}
+ */
+export function loginAuthData(payload) {
+  let authData = payload
+  let platform = 'weixin'
+
+  return AV.User.signUpOrlogInWithAuthData(authData, platform).then((leanUser) => {
+    let token = leanUser.getSessionToken()
+    return({
+      userInfo: leanUser,
+      token: token,
+    })
+  }).catch((error) => {
+    console.log("login error", error)
     throw error
   })
 }

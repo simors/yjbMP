@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import {browserHistory} from 'react-router'
 import {requestVerifyIdName} from '../../actions/authActions'
-import {selectUserInfo} from '../../selector/authSelector'
+import {selectActiveUserInfo} from '../../selector/authSelector'
 
 import WeUI from 'react-weui'
 import 'weui'
@@ -126,7 +126,7 @@ class Certification extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    currentUser: selectUserInfo(state)
+    currentUser: selectActiveUserInfo(state)
   }
 };
 

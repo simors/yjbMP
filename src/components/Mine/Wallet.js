@@ -10,7 +10,7 @@ import WeUI from 'react-weui'
 import 'weui'
 import 'react-weui/build/dist/react-weui.css'
 import './wallet.css'
-import {selectUserInfo, selectWalletInfo} from '../../selector/authSelector'
+import {selectActiveUserInfo, selectWalletInfo} from '../../selector/authSelector'
 import { createPayment, createTransfer, fetchWalletInfo} from '../../actions/authActions'
 import * as appConfig from '../../constants/appConfig'
 
@@ -109,7 +109,7 @@ class Wallet extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    currentUser: selectUserInfo(state),
+    currentUser: selectActiveUserInfo(state),
     walletInfo: selectWalletInfo(state)
   }
 };

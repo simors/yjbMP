@@ -8,7 +8,7 @@ import {browserHistory} from 'react-router'
 import {requestDeviceInfo} from '../../actions/deviceActions'
 import {selectDeviceByDeviceNo} from '../../selector/deviceSelector'
 import { fetchWechatJssdkConfig} from '../../actions/authActions'
-import {selectUserInfo, selectWalletInfo} from '../../selector/authSelector'
+import {selectActiveUserInfo, selectWalletInfo} from '../../selector/authSelector'
 import {selectStationById} from '../../selector/stationSelector'
 import * as appConfig from '../../constants/appConfig'
 import WeUI from 'react-weui'
@@ -37,7 +37,6 @@ class OpenDevice extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      deviceNo: undefined,
       buttonTitle: undefined,
       loading: false,
       deviceLoading: true,
@@ -47,7 +46,6 @@ class OpenDevice extends Component {
   componentWillMount() {
     var deviceNo = this.props.location.query.deviceNo
     this.props.requestDeviceInfo({deviceNo: deviceNo})
-    this.setState({deviceNo: deviceNo})
     this.props.fetchWechatJssdkConfig({
       debug: __DEV__? true: false,
       jsApiList: ['scanQRCode', 'getLocation'],
@@ -231,7 +229,7 @@ class OpenDevice extends Component {
         </div>
         <Panel style={{marginTop: `0`}}>
           <PanelHeader>
-            {'设备编号：' + this.state.deviceNo}
+            {'设备编号：' + this.props.location.query.deviceNo}
           </PanelHeader>
           {this.renderDeviceStatus()}
         </Panel>
@@ -252,7 +250,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     deviceInfo: deviceInfo,
     stationInfo: stationInfo,
-    currentUser: selectUserInfo(state),
+    currentUser: selectActiveUserInfo(state),
     walletInfo: selectWalletInfo(state),
   }
 };

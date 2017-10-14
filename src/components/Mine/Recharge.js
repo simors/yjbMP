@@ -8,7 +8,7 @@ import {browserHistory} from 'react-router'
 var pingpp = require('pingpp-js')
 import {createPayment} from '../../actions/authActions'
 import * as appConfig from '../../constants/appConfig'
-import {selectUserInfo} from '../../selector/authSelector'
+import {selectActiveUserInfo} from '../../selector/authSelector'
 import WeUI from 'react-weui'
 import 'weui'
 import 'react-weui/build/dist/react-weui.css'
@@ -183,7 +183,7 @@ class Recharge extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    currentUser: selectUserInfo(state)
+    currentUser: selectActiveUserInfo(state)
   }
 };
 

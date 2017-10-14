@@ -3,10 +3,11 @@
  */
 import {persistStore} from 'redux-persist'
 import createFilter from 'redux-persist-transform-filter'
-import immutableTransform from 'redux-persist-transform-immutable'
 import createStore from './createStore'
 import {selectToken} from '../selector/authSelector'
 import {autoLogin} from '../actions/authActions'
+import {updateRehydrate} from '../actions/configActions'
+import {browserHistory} from 'react-router'
 
 const configFilter = createFilter('CONFIG', 'AUTH', [])
 
@@ -19,8 +20,15 @@ export default function persist(store) {
     let state = store.getState()
     let token = selectToken(state)
     if(token) {
-      store.dispatch(autoLogin({token: token}))
+      store.dispatch(autoLogin({token: token, success: (mobilePhoneVerified) => {
+        if(!mobilePhoneVerified) {
+          browserHistory.replace('/bind')
+        }
+      }}))
     }
+    setTimeout(function () {
+      store.dispatch(updateRehydrate({rehydrated: true}))
+    }, 2000)
   })
 }
 

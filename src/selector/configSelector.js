@@ -1,12 +1,6 @@
 /**
  * Created by yangyang on 2017/6/28.
  */
-
-export function selectDomain(state) {
-  let config = state.CONFIG
-  return config.domain
-}
-
 export function selectLocation(state) {
   let config = state.CONFIG
   let location = config.location
@@ -14,4 +8,9 @@ export function selectLocation(state) {
     return location.toJS()
   }
   return undefined
+}
+
+export function selectIsRehydrated(state) {
+  let isRehydrated = state.CONFIG.get('isRehydrated')
+  return isRehydrated
 }

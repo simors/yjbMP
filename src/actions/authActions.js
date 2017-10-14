@@ -4,16 +4,16 @@
 import {createAction} from 'redux-actions'
 import * as authActionTypes from '../constants/authActionTypes'
 
-export const requestUserinfo = createAction(authActionTypes.FETCH_USERINFO)
 export const requestSmsCode = createAction(authActionTypes.REQUEST_SMSCODE)
-export const submitRegister = createAction(authActionTypes.SUBMIT_REGISTER)
-export const registerSuccess = createAction(authActionTypes.REGISTER_SUCCESS)
 export const loginSuccess = createAction(authActionTypes.LOGIN_SUCCESS)
-export const loginOut = createAction(authActionTypes.LOGIN_OUT)
+export const logout = createAction(authActionTypes.LOGOUT)
 export const autoLogin = createAction(authActionTypes.AUTO_LOGIN)
 export const requestVerifyIdName = createAction(authActionTypes.REQUEST_VERIFY_IDNAME)
 export const saveIdNameInfo = createAction(authActionTypes.SAVE_IDNAME_INFO)
 export const autoLoginSuccess = createAction(authActionTypes.AUTO_LOGIN_SUCCESS)
+export const loginWithWechatAuthData = createAction(authActionTypes.LOGIN_WITH_WECHAT_AUTHDATA)
+export const saveUser = createAction(authActionTypes.SAVE_USER)
+export const setMobilePhone = createAction(authActionTypes.SET_MOBILE_PHONE)
 
 export const createPayment = createAction(authActionTypes.CREATE_PAYMENT)
 export const createTransfer = createAction(authActionTypes.CREATE_TRANSFER)

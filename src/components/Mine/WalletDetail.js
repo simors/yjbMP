@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import WeUI from 'react-weui'
 import {fetchDealRecords} from '../../actions/authActions'
-import {selectUserInfo, selectDealRecord} from '../../selector/authSelector'
+import {selectActiveUserInfo, selectDealRecord} from '../../selector/authSelector'
 import * as appConfig from '../../constants/appConfig'
 import {formatTime} from  '../../util'
 import 'weui'
@@ -141,7 +141,7 @@ class WalletDetail extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    currentUser: selectUserInfo(state),
+    currentUser: selectActiveUserInfo(state),
     dealRecords: selectDealRecord(state)
   }
 };

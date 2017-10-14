@@ -3,20 +3,18 @@
  */
 import {Map, List, Record} from 'immutable'
 import {REHYDRATE} from 'redux-persist/constants'
-import {AuthRecord, UserInfoRecord, UserInfo, WalletInfoRecord} from '../models/authModel'
+import {AuthState, UserInfoRecord, UserInfo, WalletInfoRecord} from '../models/authModel'
 import * as authActionTypes from '../constants/authActionTypes'
 
-const initialState = AuthRecord()
+const initialState = AuthState()
 
 export default function authReducer(state = initialState, action) {
   switch (action.type) {
-    case authActionTypes.REGISTER_SUCCESS:
-      return handleSaveUserInfo(state, action)
     case authActionTypes.LOGIN_SUCCESS:
-      return handleSaveUserInfo(state, action)
+      return handleLoginSuccess(state, action)
     case authActionTypes.AUTO_LOGIN_SUCCESS:
       return handleAutoLogin(state, action)
-    case authActionTypes.LOGIN_OUT:
+    case authActionTypes.LOGOUT:
       return handleLoginOut(state, action)
     case authActionTypes.FETCH_WALLET_INFO_SUCCESS:
       return handleSaveWalletInfo(state, action)
@@ -24,6 +22,8 @@ export default function authReducer(state = initialState, action) {
       return handleFetchDealRecords(state, action)
     case authActionTypes.SAVE_IDNAME_INFO:
       return handleSaveIdNameInfo(state, action)
+    case authActionTypes.SAVE_USER:
+      return handleSaveUser(state, action)
     case REHYDRATE:
       return onRehydrate(state, action)
     default:
@@ -31,12 +31,20 @@ export default function authReducer(state = initialState, action) {
   }
 }
 
-function handleSaveUserInfo(state, action) {
-  let payload = action.payload
-  let userId = payload.userInfo.get('id')
-  state = state.set('profile', payload.userInfo)
-  state = state.set('token', payload.token)
-  state = state.set('activeUser', userId)
+function handleSaveUser(state, action) {
+  let user = action.payload.user
+  let userRecord = UserInfo.fromApi(user)
+  state = state.setIn(['profiles', user.id], userRecord)
+  return state
+}
+
+function handleLoginSuccess(state, action) {
+  let userInfo = action.payload.userInfo
+  let token = action.payload.token
+  let userInfoRecord = UserInfo.fromLeancloudObject(userInfo)
+  state = state.set('activeUser', userInfo.id)
+  state = state.set('token', token)
+  state = state.setIn(['profiles', userInfo.id], userInfoRecord)
   return state
 }
 
@@ -50,7 +58,7 @@ function handleAutoLogin(state, action) {
   userRecord = userRecord.set('subscribe', subscribe)
   state = state.set('token', token)
   state = state.set('activeUser', user.id)
-  state = state.set('profile', userRecord)
+  state = state.setIn(['profiles', user.id], userRecord)
 
   return state
 }
@@ -65,10 +73,16 @@ function handleSaveWalletInfo(state, action) {
 
 function handleSaveIdNameInfo(state, action) {
   let idInfo = action.payload
+  let activeUser = state.get('activeUser')
+  let profileMap = state.get('profiles')
+  if(!activeUser || !profileMap) {
+    return state
+  }
+  profileMap = profileMap.setIn([activeUser, 'idName'], idInfo.idName)
+  profileMap = profileMap.setIn([activeUser, 'idNumber'], idInfo.idNumber)
+  profileMap = profileMap.setIn([activeUser, 'idNameVerified'], idInfo.idNameVerified)
 
-  state = state.setIn(['profile', 'idName'], idInfo.idName)
-  state = state.setIn(['profile', 'idNumber'], idInfo.idNumber)
-  state = state.setIn(['profile', 'idNameVerified'], idInfo.idNameVerified)
+  state = state.set('profiles', profileMap)
   return state
 }
 
@@ -76,7 +90,7 @@ function handleLoginOut(state, action) {
 
   state = state.set('activeUser', undefined)
   state = state.set('token', undefined)
-  state = state.set('profile', undefined)
+  state = state.set('profiles', undefined)
   return state
 }
 
@@ -105,17 +119,17 @@ function onRehydrate(state, action) {
     state = state.set('activeUser', activeUser)
   }
 
-  const wechatUserInfo = incoming.wechatUserInfo
-  if(wechatUserInfo) {
-    state = state.set('wechatUserInfo', wechatUserInfo)
+  let profileMap = new Map(incoming.profiles)
+  try {
+    for (let [userId, user] of profileMap) {
+      if(userId && user) {
+        let userRecord = new UserInfoRecord({...user})
+        state = state.setIn(['profiles', userId], userRecord)
+      }
+    }
+  } catch (error) {
+    profileMap.clear()
   }
-
-  const profile = incoming.profile
-  if(profile) {
-    var profileRecord = new UserInfoRecord(profile)
-    state = state.set('profile', profileRecord)
-  }
-
 
   const wallet = incoming.wallet
   if(wallet) {

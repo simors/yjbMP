@@ -1,71 +1,47 @@
 /**
  * Created by wanpeng on 2017/8/14.
  */
-import { call, put, takeEvery } from 'redux-saga/effects'
-import {fetchUserInfo, requestLeanSmsCode, register, become, login, getPaymentCharge, fetchOrdersApi, getTransfer, payOrder, getWalletInfo, getDealRecords, verifyIdName, getJssdkConfig} from  '../api/auth'
-import {registerSuccess, loginSuccess, autoLoginSuccess, loginOut, fetchOrdersSuccess, paymentOrderSuccess, fetchWalletInfoSuccess, fetchDealRecordsSuccess, saveIdNameInfo, updateOrderSuccess} from '../actions/authActions'
+import { call, put, takeEvery, takeLatest } from 'redux-saga/effects'
+import {setMobilePhoneAPi, requestLeanSmsCode, become, getPaymentCharge, getTransfer, getWalletInfo, getDealRecords, verifyIdName, getJssdkConfig, loginAuthData} from  '../api/auth'
+import {saveUser, loginSuccess, autoLoginSuccess, logout, fetchOrdersSuccess, paymentOrderSuccess, fetchWalletInfoSuccess, fetchDealRecordsSuccess, saveIdNameInfo, updateOrderSuccess} from '../actions/authActions'
 import * as authActionTypes from '../constants/authActionTypes'
-import {saveDevice} from '../actions/deviceActions'
-import {saveStationAction} from '../actions/stationActions'
 
-//获取微信用户信息
-export function* fetchUserinfoAction(action) {
-  let payload = action.payload
-
-  try {
-    let userInfo = yield call(fetchUserInfo, {code: payload.code})
-    let isBind = userInfo.isBind
-    if(isBind) {
-      let loginPayload = {
-        openid: userInfo.openid,
-        accessToken: userInfo.accessToken,
-        expires_in: userInfo.expires_in
-      }
-      yield call(wechatLogin, {payload: loginPayload})
-    }
-    if(payload.success) {
-      payload.success(userInfo)
-    }
-  } catch(error) {
-    if(payload.error) {
-      payload.error(error)
-    }
-  }
-}
 
 //获取短信验证码
 export function* requestSmsCode(action) {
   let payload = action.payload
   console.log("短信验证码请求：", payload)
   try {
-    yield call(requestLeanSmsCode, payload)
+    let result = yield call(requestLeanSmsCode, payload)
+    console.log("requestLeanSmsCode result:", result)
     if(payload.success) {
       payload.success()
     }
   } catch(error) {
+    console.log("error: ", error)
     if(payload.error) {
       payload.error()
     }
   }
 }
 
-//用户注册
-export function* submitRegister(action) {
+export function* setMobilePhone(action) {
   let payload = action.payload
-  console.log("提交注册请求：", payload)
-  let verifyPayload = {
+  let userPayload = {
     phone: payload.phone,
     smsCode: payload.smsCode
   }
+
   try {
-    let result = yield call(register, payload)
-    yield  put(registerSuccess({userInfo: result.userInfo, token: result.token}))
+    let user = yield call(setMobilePhoneAPi, userPayload)
+    yield put(saveUser({user: user}))
     if(payload.success) {
       payload.success()
     }
-  } catch(error) {
+  } catch (error) {
+    console.error(error)
     if(payload.error) {
-      payload.error()
+      payload.error(error)
     }
   }
 }
@@ -78,28 +54,41 @@ export function* autoLogin(action) {
     let token = result.token
     let user = result.user
     let subscribe = result.subscribe
+    let mobilePhoneVerified = user.attributes.mobilePhoneVerified
     yield put(autoLoginSuccess({token: token, user: user, subscribe: subscribe}))
     console.log("自动登录成功：", user)
+    if (payload.success) {
+      payload.success(mobilePhoneVerified)
+    }
   } catch(error) {
     console.log("自动登录失败：", error)
-    yield put(loginOut({}))
+    yield put(logout({}))
   }
 
 }
 
-//微信登录
-export function* wechatLogin(action) {
+//通过微信authData登录
+export function* wechatAuthDataLogin(action) {
   let payload = action.payload
 
+  let authPayload = {
+    openid: payload.openid,
+    access_token: payload.access_token,
+    expires_at: payload.expires_at
+  }
+
   try {
-    let result = yield call(login, payload)
-    let token = result.token
+    let result = yield call(loginAuthData, authPayload)
     let userInfo = result.userInfo
-    yield put(loginSuccess({token: token, userInfo: userInfo}))
-    console.log("微信登录成功：", userInfo)
-  } catch(error) {
-    console.log("微信登录失败：", error)
-    yield put(loginOut({}))
+    let token = result.token
+    let mobilePhoneVerified = userInfo.attributes.mobilePhoneVerified
+    yield put(loginSuccess({userInfo: userInfo, token: token}))
+    if (payload.success) {
+      payload.success(mobilePhoneVerified)
+    }
+  } catch (error) {
+    console.error("微信authData登录失败：", error)
+    yield put(logout({}))
   }
 }
 
@@ -236,14 +225,14 @@ export function* fetchJssdkConfig(action) {
 }
 
 export const authSaga = [
-  takeEvery(authActionTypes.FETCH_USERINFO, fetchUserinfoAction),
-  takeEvery(authActionTypes.REQUEST_SMSCODE, requestSmsCode),
-  takeEvery(authActionTypes.SUBMIT_REGISTER, submitRegister),
-  takeEvery(authActionTypes.AUTO_LOGIN, autoLogin),
-  takeEvery(authActionTypes.CREATE_PAYMENT, createPayment),
-  takeEvery(authActionTypes.CREATE_TRANSFER, createTransfer),
-  takeEvery(authActionTypes.FETCH_WALLET_INFO, fetchWalletInfo),
-  takeEvery(authActionTypes.FETCH_DEAL_RECORDS, fetchDealRecords),
-  takeEvery(authActionTypes.REQUEST_VERIFY_IDNAME, requestVerifyIdName),
-  takeEvery(authActionTypes.FETCH_WECHAT_JSSDK_CONFIG, fetchJssdkConfig),
+  takeLatest(authActionTypes.REQUEST_SMSCODE, requestSmsCode),
+  takeLatest(authActionTypes.AUTO_LOGIN, autoLogin),
+  takeLatest(authActionTypes.CREATE_PAYMENT, createPayment),
+  takeLatest(authActionTypes.CREATE_TRANSFER, createTransfer),
+  takeLatest(authActionTypes.FETCH_WALLET_INFO, fetchWalletInfo),
+  takeLatest(authActionTypes.FETCH_DEAL_RECORDS, fetchDealRecords),
+  takeLatest(authActionTypes.REQUEST_VERIFY_IDNAME, requestVerifyIdName),
+  takeLatest(authActionTypes.FETCH_WECHAT_JSSDK_CONFIG, fetchJssdkConfig),
+  takeLatest(authActionTypes.LOGIN_WITH_WECHAT_AUTHDATA, wechatAuthDataLogin),
+  takeLatest(authActionTypes.SET_MOBILE_PHONE, setMobilePhone),
 ]

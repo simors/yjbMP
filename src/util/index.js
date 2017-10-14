@@ -1,11 +1,14 @@
 /**
  * Created by wanpeng on 2017/8/14.
  */
+import {browserHistory} from 'react-router'
 import querystring from 'querystring'
 import URL from  'url'
 import {store} from '../store/persistStore'
-import {isUserLogined} from '../selector/authSelector'
+import {selectActiveUserId} from '../selector/authSelector'
 import * as appConfig from '../constants/appConfig'
+import {loginWithWechatAuthData} from '../actions/authActions'
+import {selectIsRehydrated} from '../selector/configSelector'
 
 
 function getAuthorizeURL(redirect, state, scope) {
@@ -18,30 +21,6 @@ function getAuthorizeURL(redirect, state, scope) {
     state: state || ''
   };
   return url + '?' + querystring.stringify(info) + '#wechat_redirect';
-}
-
-
-export function wechatOauth(nextState, replace) {
-  var urlObj = URL.parse(document.location.href)
-  const {code} = querystring.parse(urlObj.query)
-  if(!code) {
-    var state = nextState.location.state
-    var nextPathname = state? state.nextPathname : ''
-    var redirectUrl = getAuthorizeURL(document.location.href, nextPathname, 'snsapi_userinfo')
-    document.location = redirectUrl
-  }
-}
-
-export function oauth(nextState, replace) {
-  var state = store.getState()
-  let authInfo = localStorage.getItem('reduxPersist:AUTH')
-  let activeUser = authInfo? JSON.parse(authInfo).activeUser : undefined
-  if(!activeUser && !isUserLogined(state)) {
-    replace({
-      pathname: '/bind',
-      state: { nextPathname: nextState.location.pathname }
-    })
-  }
 }
 
 export function formatTime(milliseconds, format) {
@@ -69,4 +48,42 @@ export function formatTime(milliseconds, format) {
   const result = format.replace('YYYY', fullYear).replace('MM', month).replace('DD', date)
     .replace('HH', hours).replace('mm', minutes).replace('SS', seconds)
   return result
+}
+
+export function wechatOauth(nextState, replace) {
+  let state = store.getState()
+  let isRehydrated = selectIsRehydrated(state)
+  if(!isRehydrated) {
+    replace({
+      pathname: '/loading',
+      state: { from: nextState.location }
+    })
+    return
+  }
+
+  let activeUser = selectActiveUserId(state)
+  if(!activeUser) {
+    let urlObj = URL.parse(document.location.href)
+    const {openid, access_token, expires_at} = querystring.parse(urlObj.query)
+    let authData = undefined
+    if (openid && access_token && expires_at) {
+      authData = {
+        openid,
+        access_token,
+        expires_at,
+      }
+    }
+    if(authData) {
+      store.dispatch(loginWithWechatAuthData({...authData, success: (mobilePhoneVerified) => {
+        if(!mobilePhoneVerified) {
+          setTimeout(() => {browserHistory.replace('/bind')}, 2000)
+        }
+      }}))
+    } else {
+      let wechatOauthUrl = appConfig.LC_SERVER_DOMAIN + '/wechatOauth'
+      let nextPathname = nextState.location.pathname
+      let redirectUrl = getAuthorizeURL(wechatOauthUrl, nextPathname, 'snsapi_userinfo')
+      document.location = redirectUrl
+    }
+  }
 }
