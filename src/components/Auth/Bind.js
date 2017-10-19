@@ -172,7 +172,7 @@ class Bind extends Component {
       success: () => {
         let deviceNo = this.props.location.query.deviceNo
         if(deviceNo) {
-          browserHistory.replace('/openDevice?deviceNo=' + deviceNo)
+          browserHistory.replace('/openDevice/' + deviceNo)
         } else {
           browserHistory.replace('/bind/success')
         }

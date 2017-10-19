@@ -44,7 +44,7 @@ const rootRouter = (
     <Route path='mine/score' component={Score} />
     <Route path='mine/deposit' component={Deposit} />
     <Route path='mine/refund' component={Refund} />
-    <Route path='openDevice' component={OpenDevice} onEnter={wechatOauth}/>
+    <Route path='openDevice/:deviceNo' component={OpenDevice} onEnter={wechatOauth}/>
     <Route path='modifyProfile' component={ModifyProfile}/>
     <Route path='modifyProfile/nickname' component={ModifyNickname}/>
     <Route path='modifyProfile/certification' component={Certification}/>

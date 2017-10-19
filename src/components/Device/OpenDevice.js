@@ -44,7 +44,8 @@ class OpenDevice extends Component {
   }
 
   componentWillMount() {
-    var deviceNo = this.props.location.query.deviceNo
+    const {params} = this.props
+    var deviceNo = params.deviceNo
     this.props.requestDeviceInfo({deviceNo: deviceNo})
     this.props.fetchWechatJssdkConfig({
       debug: __DEV__? true: false,
@@ -222,6 +223,7 @@ class OpenDevice extends Component {
   }
 
   render() {
+    const {params} = this.props
     return(
       <Page ptr={false} infiniteLoader={false}>
         <div className="device-banner">
@@ -229,7 +231,7 @@ class OpenDevice extends Component {
         </div>
         <Panel style={{marginTop: `0`}}>
           <PanelHeader>
-            {'设备编号：' + this.props.location.query.deviceNo}
+            {'设备编号：' + params.deviceNo}
           </PanelHeader>
           {this.renderDeviceStatus()}
         </Panel>
@@ -243,7 +245,10 @@ class OpenDevice extends Component {
 
 
 const mapStateToProps = (state, ownProps) => {
-  let deviceNo = ownProps.location.query.deviceNo
+  const {params} = ownProps
+
+  let deviceNo = params.deviceNo
+
   let deviceInfo = selectDeviceByDeviceNo(state, deviceNo)
   let stationInfo = deviceInfo? selectStationById(state, deviceInfo.stationId) : undefined
 
