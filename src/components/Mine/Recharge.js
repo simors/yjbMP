@@ -9,6 +9,8 @@ var pingpp = require('pingpp-js')
 import {createPayment} from '../../actions/authActions'
 import * as appConfig from '../../constants/appConfig'
 import {selectActiveUserInfo} from '../../selector/authSelector'
+import {fetchPromotionAction} from '../../actions/promotionActions'
+import {selectCategoryByTitle, selectPromotion} from '../../selector/promotionSelector'
 import WeUI from 'react-weui'
 import 'weui'
 import 'react-weui/build/dist/react-weui.css'
@@ -33,6 +35,13 @@ class Recharge extends Component {
       selectAmount: 20,
       disableButton: false,
     }
+  }
+
+  componentWillMount() {
+    const {fetchPromotionAction, rechargeCategory} = this.props
+    fetchPromotionAction({
+      categoryId: rechargeCategory.id
+    })
   }
 
   componentDidMount() {
@@ -174,7 +183,9 @@ class Recharge extends Component {
           <text className="tripDesc">{this.getTripDesc()}</text>
         </div>
         <div className="rechargeButton">
-          <Button disabled={this.state.disableButton} onClick={this.onRecharge}>{"充值" + this.state.selectAmount + '元'}</Button>
+          <Button disabled={this.state.disableButton} onClick={this.onRecharge}>
+            {"充值" + this.state.selectAmount + '元'}
+          </Button>
         </div>
       </Page>
     )
@@ -182,13 +193,16 @@ class Recharge extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
+  let rechargeCategory = selectCategoryByTitle(state, '充值奖励')
   return {
+    rechargeCategory: rechargeCategory,
     currentUser: selectActiveUserInfo(state)
   }
-};
+}
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
   createPayment,
+  fetchPromotionAction,
 }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(Recharge)

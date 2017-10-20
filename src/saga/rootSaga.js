@@ -6,6 +6,7 @@ import {configSaga} from './configSaga'
 import {authSaga} from  './authSaga'
 import {deviceSaga} from './deviceSaga'
 import {orderSaga} from './orderSaga'
+import {promotionSaga} from './promotionSaga'
 
 export default function* rootSaga() {
   yield all([
@@ -13,5 +14,6 @@ export default function* rootSaga() {
     ...authSaga,
     ...deviceSaga,
     ...orderSaga,
+    ...promotionSaga,
   ])
 }

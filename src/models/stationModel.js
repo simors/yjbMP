@@ -14,7 +14,7 @@ export const StationRecord = Record({
   deviceSum: undefined,       //设备总数
   addr: undefined,            //详细地址
   unitPrice: undefined,       //计费单价 单位：元／分钟
-})
+}, 'StationRecord')
 
 export class Station extends StationRecord {
   static fromApi(obj) {

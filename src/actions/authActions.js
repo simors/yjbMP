@@ -13,6 +13,7 @@ export const saveIdNameInfo = createAction(authActionTypes.SAVE_IDNAME_INFO)
 export const autoLoginSuccess = createAction(authActionTypes.AUTO_LOGIN_SUCCESS)
 export const loginWithWechatAuthData = createAction(authActionTypes.LOGIN_WITH_WECHAT_AUTHDATA)
 export const saveUser = createAction(authActionTypes.SAVE_USER)
+export const saveUsers = createAction(authActionTypes.SAVE_USERS)
 export const setMobilePhone = createAction(authActionTypes.SET_MOBILE_PHONE)
 
 export const createPayment = createAction(authActionTypes.CREATE_PAYMENT)

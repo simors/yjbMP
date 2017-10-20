@@ -24,6 +24,8 @@ export default function authReducer(state = initialState, action) {
       return handleSaveIdNameInfo(state, action)
     case authActionTypes.SAVE_USER:
       return handleSaveUser(state, action)
+    case authActionTypes.SAVE_USERS:
+      return handleSaveUsers(state, action)
     case REHYDRATE:
       return onRehydrate(state, action)
     default:
@@ -33,8 +35,23 @@ export default function authReducer(state = initialState, action) {
 
 function handleSaveUser(state, action) {
   let user = action.payload.user
+  if(!user) {
+    return state
+  }
   let userRecord = UserInfo.fromApi(user)
   state = state.setIn(['profiles', user.id], userRecord)
+  return state
+}
+
+function handleSaveUsers(state, action) {
+  let users = action.payload.users
+  if(!users) {
+    return state
+  }
+  users.forEach((user) => {
+    let userRecord = UserInfo.fromApi(user)
+    state = state.setIn(['profiles', user.id], userRecord)
+  })
   return state
 }
 

@@ -6,6 +6,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import {browserHistory} from 'react-router'
 import {selectActiveUserInfo} from '../../selector/authSelector'
+import {fetchPromCategoryAction} from '../../actions/promotionActions'
 import WeUI from 'react-weui'
 import 'weui'
 import 'react-weui/build/dist/react-weui.css'
@@ -30,6 +31,10 @@ const {
 class Mine extends Component {
   constructor(props) {
     super(props)
+  }
+
+  componentWillMount() {
+    this.props.fetchPromCategoryAction({})
   }
 
   componentDidMount() {
@@ -117,6 +122,7 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
+  fetchPromCategoryAction,
 }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(Mine)

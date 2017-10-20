@@ -12,6 +12,7 @@ import 'react-weui/build/dist/react-weui.css'
 import './wallet.css'
 import {selectActiveUserInfo, selectWalletInfo} from '../../selector/authSelector'
 import { createPayment, createTransfer, fetchWalletInfo} from '../../actions/authActions'
+import {fetchPromCategoryAction} from '../../actions/promotionActions'
 import * as appConfig from '../../constants/appConfig'
 
 const {
@@ -31,6 +32,7 @@ class Wallet extends Component {
   }
 
   componentWillMount() {
+    this.props.fetchPromCategoryAction({})
     this.props.fetchWalletInfo({
       userId: this.props.currentUser.id
     })
@@ -117,7 +119,8 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => bindActionCreators({
   createPayment,
   createTransfer,
-  fetchWalletInfo
+  fetchWalletInfo,
+  fetchPromCategoryAction
 }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(Wallet)

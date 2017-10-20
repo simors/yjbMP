@@ -10,6 +10,7 @@ import {selectDeviceByDeviceNo} from '../../selector/deviceSelector'
 import { fetchWechatJssdkConfig} from '../../actions/authActions'
 import {selectActiveUserInfo, selectWalletInfo} from '../../selector/authSelector'
 import {selectStationById} from '../../selector/stationSelector'
+import {fetchPromCategoryAction} from '../../actions/promotionActions'
 import * as appConfig from '../../constants/appConfig'
 import WeUI from 'react-weui'
 import wx from 'tencent-wx-jssdk'
@@ -47,6 +48,7 @@ class OpenDevice extends Component {
     const {params} = this.props
     var deviceNo = params.deviceNo
     this.props.requestDeviceInfo({deviceNo: deviceNo})
+    this.props.fetchPromCategoryAction({})
     this.props.fetchWechatJssdkConfig({
       debug: __DEV__? true: false,
       jsApiList: ['scanQRCode', 'getLocation'],
@@ -263,6 +265,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => bindActionCreators({
   requestDeviceInfo,
   fetchWechatJssdkConfig,
+  fetchPromCategoryAction,
 }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(OpenDevice)
