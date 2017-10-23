@@ -10,12 +10,8 @@ import {saveUsers} from '../actions/authActions'
 function* fetchPromotion(action) {
   let payload = action.payload
 
-  let apiPayload = {
-    categoryId: payload.categoryId
-  }
-
   try {
-    let promotions = yield call(fetchPromotionListApi, apiPayload)
+    let promotions = yield call(fetchPromotionListApi, {})
     yield put(updatePromotionList({ promotions }))
     let users = new Set()
     let categories = new Set()

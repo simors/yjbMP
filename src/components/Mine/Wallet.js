@@ -68,7 +68,7 @@ class Wallet extends Component {
 
   payDeposit() {
     this.props.createPayment({
-      amount: 0.1,  //TODO 可配置，从leancloud获取
+      amount: __DEV__ || __STAGE__? 100 * 0.01 : 100, //TODO 押金从服务点读取
       channel: 'wx_pub',
       metadata: {
         'fromUser': this.props.currentUser.id,

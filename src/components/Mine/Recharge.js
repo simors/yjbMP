@@ -10,7 +10,7 @@ import {createPayment} from '../../actions/authActions'
 import * as appConfig from '../../constants/appConfig'
 import {selectActiveUserInfo} from '../../selector/authSelector'
 import {fetchPromotionAction} from '../../actions/promotionActions'
-import {selectCategoryByTitle, selectPromotion} from '../../selector/promotionSelector'
+import {selectCategoryByTitle, selectPromByCategoryId} from '../../selector/promotionSelector'
 import WeUI from 'react-weui'
 import 'weui'
 import 'react-weui/build/dist/react-weui.css'
@@ -18,90 +18,87 @@ import './recharge.css'
 
 const {
   Button,
-  ButtonArea,
-  Panel,
   Page,
-  PanelHeader,
-  PanelBody,
-  MediaBox,
-  MediaBoxTitle,
-  MediaBoxDescription,
 } = WeUI
 
 class Recharge extends Component {
   constructor(props) {
     super(props)
+    this.defaultRechargeList = [
+      {recharge: 10, award: 0},
+      {recharge: 20, award: 0},
+      {recharge: 50, award: 0},
+      {recharge: 100, award: 0},
+    ]   //默认充值金额列表
     this.state = {
-      selectAmount: 20,
+      selectAmount: this.defaultRechargeList[0].recharge,
+      selectAward: this.defaultRechargeList[0].award,
       disableButton: false,
     }
   }
 
   componentWillMount() {
-    const {fetchPromotionAction, rechargeCategory} = this.props
-    fetchPromotionAction({
-      categoryId: rechargeCategory.id
-    })
+    const {fetchPromotionAction} = this.props
+    fetchPromotionAction({})
+  }
+
+  componentWillReceiveProps(newProps) {
+    const {promotion} = newProps
+    if(promotion) {
+      this.setState({
+        selectAmount: promotion.awards.rechargeList[0].recharge,
+        selectAward: promotion.awards.rechargeList[0].award,
+      })
+    }
   }
 
   componentDidMount() {
     document.title = "充值"
   }
 
-  changeAmount(amount) {
+  changeAmount(amount, award) {
     this.setState({
-      selectAmount: amount
+      selectAmount: amount,
+      selectAward: award,
     })
   }
 
   getTripText() {
-    switch (this.state.selectAmount) {
-      case 10:
-        return "您选择了“充10元得20元”"
-        break
-      case 20:
-        return "您选择了“充20元得50元”"
-        break
-      case 30:
-        return "您选择了“充30元得80元”"
-        break
-      case 50:
-        return "您选择了“充50元得120元”"
-        break
-      case 100:
-        return "您选择了“充100元得260元”"
-        break
-      case 200:
-        return "您选择了“充200元得500元”"
-        break
-      default:
-        break
+    const {promotion} = this.props
+    let tripText = ""
+    if(promotion) {
+      promotion.awards.rechargeList.forEach((value) => {
+        if(value.recharge === this.state.selectAmount) {
+          tripText = "您选择了“充"+ value.recharge +"元得"+ value.award +"元”"
+        }
+      })
+    } else {
+      this.defaultRechargeList.forEach((value) => {
+        if(value.recharge === this.state.selectAmount) {
+          tripText = "您选择了“充值"+ value.recharge +"元”"
+        }
+      })
     }
+    return tripText
   }
 
   getTripDesc() {
-    switch (this.state.selectAmount) {
-      case 10:
-        return "本次充值后，账户会增加20元，其中10元赠款不可退。"
-        break
-      case 20:
-        return "本次充值后，账户会增加50元，其中30元赠款不可退。"
-        break
-      case 30:
-        return "本次充值后，账户会增加80元，其中50元赠款不可退。"
-        break
-      case 50:
-        return "本次充值后，账户会增加120元，其中80元赠款不可退。"
-        break
-      case 100:
-        return "本次充值后，账户会增加260元，其中160元赠款不可退。"
-        break
-      case 200:
-        return "本次充值后，账户会增加500元，其中300元赠款不可退。"
-        break
-      default:
-        break
+    const {promotion} = this.props
+    let tripText = ""
+    if(promotion) {
+      promotion.awards.rechargeList.forEach((value) => {
+        if(value.recharge === this.state.selectAmount) {
+          tripText = "本次充值后，账户会增加" + (Number(value.recharge) + Number(value.award)) + "元，其中" + value.award + "元赠款不可退。"
+        }
+      })
+    } else {
+      this.defaultRechargeList.forEach((value) => {
+        if(value.recharge === this.state.selectAmount) {
+          tripText = "本次充值后，账户会增加" + (Number(value.recharge) + Number(value.award)) + "元。"
+        }
+      })
     }
+    return tripText
   }
 
   createPaymentSuccessCallback = (charge) => {
@@ -125,20 +122,42 @@ class Recharge extends Component {
   }
 
   onRecharge = () => {
+    const {currentUser, promotion, createPayment} = this.props
     this.setState({disableButton: true})
-    this.props.createPayment({
-      amount: this.state.selectAmount * 0.01, //TODO 支付测试金额缩小100倍，部署正式环境需废除
+    createPayment({
+      amount: __DEV__ || __STAGE__? this.state.selectAmount * 0.01 : this.state.selectAmount,
       channel: 'wx_pub',
       metadata: {
-        'fromUser': this.props.currentUser.id,
+        'fromUser': currentUser.id,
         'toUser': 'platform',
-        'dealType': appConfig.RECHARGE
+        'dealType': appConfig.RECHARGE,
+        'promotionId': promotion? promotion.id: undefined,
+        'award': this.state.selectAward,
       },
-      openid: this.props.currentUser.authData.weixin.openid,
-      subject: '衣家宝押金支付',
+      openid: currentUser.authData.weixin.openid,
+      subject: '衣家宝充值',
       success: this.createPaymentSuccessCallback,
       error: this.createPaymentFailedCallback,
     })
+  }
+
+  renderRechargeButton() {
+    const {promotion} = this.props
+    const rechargeList = promotion? promotion.awards.rechargeList : this.defaultRechargeList
+    return (
+      <div>
+        {
+          rechargeList.map((value, index) => (
+            <Button key={index} className='amountButton'
+                    plain={this.state.selectAmount != value.recharge}
+                    style={this.state.selectAmount == value.recharge? {color: `#fff`}: {}}
+                    onClick={() => this.changeAmount(value.recharge, value.award)} >
+              {'充' + value.recharge + '元' + (value.award? ('得' + value.award + '元') : '')}
+            </Button>
+          ))
+        }
+      </div>
+    )
   }
 
   render() {
@@ -147,36 +166,7 @@ class Recharge extends Component {
         <div className="banner">
         </div>
         <div className="button-area">
-          <ButtonArea direction='horizontal'>
-            <Button plain={this.state.selectAmount != 10}
-                    style={this.state.selectAmount == 10? {color: `#fff`}: {}}
-                    className='amountButton'
-                    onClick={() => this.changeAmount(10)}>充10元得20元</Button>
-            <Button plain={this.state.selectAmount != 20}
-                    style={this.state.selectAmount == 20? {color: `#fff`}: {}}
-                    className='amountButton'
-                    onClick={() => this.changeAmount(20)}>充20元得50元</Button>
-          </ButtonArea>
-          <ButtonArea direction='horizontal'>
-            <Button plain={this.state.selectAmount != 30}
-                    style={this.state.selectAmount == 30? {color: `#fff`}: {}}
-                    className='amountButton'
-                    onClick={() => this.changeAmount(30)}>充30元得80元</Button>
-            <Button plain={this.state.selectAmount != 50}
-                    style={this.state.selectAmount == 50? {color: `#fff`}: {}}
-                    className='amountButton'
-                    onClick={() => this.changeAmount(50)}>充50元得120元</Button>
-          </ButtonArea>
-          <ButtonArea direction='horizontal'>
-            <Button plain={this.state.selectAmount != 100}
-                    style={this.state.selectAmount == 100? {color: `#fff`}: {}}
-                    className='amountButton'
-                    onClick={() => this.changeAmount(100)}>充100元得260元</Button>
-            <Button plain={this.state.selectAmount != 200}
-                    style={this.state.selectAmount == 200? {color: `#fff`}: {}}
-                    className='amountButton'
-                    onClick={() => this.changeAmount(200)}>充200元得500元</Button>
-          </ButtonArea>
+          {this.renderRechargeButton()}
         </div>
         <div className="trip">
           <text className="tripTitle">{this.getTripText()}</text>
@@ -194,8 +184,12 @@ class Recharge extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   let rechargeCategory = selectCategoryByTitle(state, '充值奖励')
+  let promotion = undefined
+  if(rechargeCategory) {
+    promotion = selectPromByCategoryId(state, rechargeCategory.id)
+  }
   return {
-    rechargeCategory: rechargeCategory,
+    promotion: promotion,
     currentUser: selectActiveUserInfo(state)
   }
 }
