@@ -1,9 +1,6 @@
 /**
  * Created by wanpeng on 2017/10/12.
  */
-/**
- * Created by yangyang on 2017/10/10.
- */
 import React from 'react'
 import WeUI from 'react-weui'
 import 'weui'

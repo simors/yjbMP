@@ -42,6 +42,7 @@ export const PromotionCategoryRecord = Record({
   id: undefined,                //活动类型id
   title: undefined,             //活动类型名称
   description: undefined,       //活动类型描述
+  type: undefined,
 }, 'PromotionRecord')
 
 export class PromotionCategory extends PromotionCategoryRecord {
@@ -51,6 +52,7 @@ export class PromotionCategory extends PromotionCategoryRecord {
       record.set('id', obj.id)
       record.set('title', obj.title)
       record.set('description', obj.description)
+      record.set('type', obj.type)
     })
   }
 }

@@ -29,6 +29,36 @@ export function selectPromByCategoryId(state, categoryId) {
   return promotion
 }
 
+export function selectPromByCategoryType(state, type) {
+  if(!type) {
+    return undefined
+  }
+  let category = selectCategoryByType(state, type)
+  if(!category) {
+    return undefined
+  }
+  let promotion = undefined
+  let promotionList = state.PROMOTION.get('promotionList')
+  promotionList.toArray().forEach((promotionId) => {
+    let promotionInfo = selectPromotion(state, promotionId)
+    if(promotionInfo.categoryId === category.id) {
+      promotion = promotionInfo
+    }
+  })
+  return promotion
+}
+
+export function selectCategoryByType(state, type) {
+  if(!type) {
+    return undefined
+  }
+  let categoryMap = state.PROMOTION.get('categories')
+  let categoryRecord = categoryMap.find((value) => {
+    return value.type === type
+  })
+  return categoryRecord? categoryRecord.toJS() : undefined
+}
+
 export function selectCategory(state, categoryId) {
   if(!categoryId) {
     return undefined

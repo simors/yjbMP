@@ -7,6 +7,9 @@ import { bindActionCreators } from 'redux'
 import WeUI from 'react-weui'
 import 'weui'
 import 'react-weui/build/dist/react-weui.css'
+import { fetchWechatJssdkConfig} from '../../actions/authActions'
+import wx from 'tencent-wx-jssdk'
+import RedEnvelope from '../RedEnvelope'
 
 const {
   Button,
@@ -25,6 +28,28 @@ class About extends Component {
     super(props)
   }
 
+  componentWillMount() {
+    this.props.fetchWechatJssdkConfig({
+      debug: __DEV__? true: false,
+      jsApiList: ['scanQRCode', 'getLocation'],
+      url: window.location.href,
+      success: (configInfo) => {
+        wx.config(configInfo)
+      },
+      error: (error) => {console.log(error)}
+    })
+  }
+
+  onPress = () => {
+    wx.scanQRCode({
+      needResult: 0,
+      scanType: ["qrCode","barCode"],
+      success: (res) => {
+        alert(res)
+      }
+    })
+  }
+
   componentDidMount() {
     document.title = "衣家宝"
   }
@@ -33,7 +58,7 @@ class About extends Component {
     console.log("this.props", this.props)
     return (
       <Page>
-
+        <RedEnvelope />
       </Page>
     )
   }
@@ -45,6 +70,7 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
+  fetchWechatJssdkConfig
 }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(About)
