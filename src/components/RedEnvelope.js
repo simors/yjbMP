@@ -7,7 +7,7 @@ import { bindActionCreators } from 'redux'
 import WeUI from 'react-weui'
 import 'weui'
 import 'react-weui/build/dist/react-weui.css'
-const {Toast, Button, Dialog, LoadMore} = WeUI
+const {Button, Dialog, LoadMore} = WeUI
 import io from 'socket.io-client'
 import * as appConfig from '../constants/appConfig'
 import {selectActiveUserId} from '../selector/authSelector'
@@ -16,8 +16,6 @@ import {fetchPromotionAction} from '../actions/promotionActions'
 
 const socket = io(appConfig.LC_SERVER_DOMAIN)
 
-const PROMOTION_REQUEST = 'PROMOTION_REQUEST'               //营销活动请求
-const PROMOTION_RESPONSE = 'PROMOTION_RESPONSE'             //营销活动请求
 
 class RedEnvelope extends React.PureComponent {
   constructor(props) {
@@ -52,7 +50,7 @@ class RedEnvelope extends React.PureComponent {
       loading: true
     })
     //发送红包请求
-    socket.emit(PROMOTION_REQUEST, {
+    socket.emit(appConfig.PROMOTION_REQUEST, {
       promotionId: promotion.id,
       userId: currentUserId,
     }, function (data) {
@@ -60,8 +58,7 @@ class RedEnvelope extends React.PureComponent {
     })
 
     //监听红包响应
-    socket.on(PROMOTION_RESPONSE, function (data) {
-      console.log("PROMOTION_RESPONSE data", data)
+    socket.on(appConfig.PROMOTION_RESPONSE, function (data) {
       that.setState({
         loading: false
       })
