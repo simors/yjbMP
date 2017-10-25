@@ -22,6 +22,7 @@ import Bind from '../components/Auth/Bind'
 import Deposit from '../components/Mine/Deposit'
 import Refund from '../components/Mine/Refund'
 import LoadingPage from '../components/Loading/'
+import AuthSuccess from '../components/Auth/AuthSuccess'
 
 
 const routes = (
@@ -50,6 +51,7 @@ const rootRouter = (
     <Route path='modifyProfile/certification' component={Certification}/>
     <Route path='about' component={About}/>
     <Route path='loading' component={LoadingPage}/>
+    <Route path='authSuccess' component={AuthSuccess}/>
   </Router>
 )
 
