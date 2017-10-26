@@ -43,28 +43,6 @@ export function setMobilePhoneAPi(payload) {
   })
 }
 
-export function login(payload) {
-  let authData = {
-    "openid": payload.openid,
-    "access_token": payload.accessToken,
-    "expires_at": Date.parse(payload.expires_in),
-  }
-  let platform = 'weixin'
-
-  return AV.User.signUpOrlogInWithAuthData(authData, platform).then((leanUser) => {
-    let userInfo = UserInfo.fromLeancloudObject(leanUser)
-    let token = leanUser.getSessionToken()
-    return({
-      userInfo: userInfo,
-      token: token,
-    })
-  }).catch((error) => {
-    console.log("login error", error)
-
-    throw error
-  })
-}
-
 /**
  * 使用authData完成登录，目前只支持微信登录
  * authData的格式如下：
@@ -150,6 +128,14 @@ export function getJssdkConfig(payload) {
     return configInfo
   }).catch((error) => {
     console.log("获取微信js-sdk config失败：", error)
+    throw error
+  })
+}
+
+export function updateUserRegionApi(payload) {
+  return AV.Cloud.run('authUpdateUserRegion', payload).then(() => {
+
+  }).catch((error) => {
     throw error
   })
 }

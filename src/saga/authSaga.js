@@ -2,7 +2,7 @@
  * Created by wanpeng on 2017/8/14.
  */
 import { call, put, takeEvery, takeLatest } from 'redux-saga/effects'
-import {setMobilePhoneAPi, requestLeanSmsCode, become, getPaymentCharge, getTransfer, getWalletInfo, getDealRecords, verifyIdName, getJssdkConfig, loginAuthData} from  '../api/auth'
+import {setMobilePhoneAPi, requestLeanSmsCode, become, getPaymentCharge, getTransfer, getWalletInfo, getDealRecords, verifyIdName, getJssdkConfig, loginAuthData, updateUserRegionApi} from  '../api/auth'
 import {saveUser, loginSuccess, autoLoginSuccess, logout, fetchOrdersSuccess, paymentOrderSuccess, fetchWalletInfoSuccess, fetchDealRecordsSuccess, saveIdNameInfo, updateOrderSuccess} from '../actions/authActions'
 import * as authActionTypes from '../constants/authActionTypes'
 
@@ -57,6 +57,7 @@ export function* autoLogin(action) {
     let mobilePhoneVerified = user.attributes.mobilePhoneVerified
     yield put(autoLoginSuccess({token: token, user: user, subscribe: subscribe}))
     console.log("自动登录成功：", user)
+    yield call(updateUserRegionApi, {})
     if (payload.success) {
       payload.success(mobilePhoneVerified)
     }
@@ -83,6 +84,7 @@ export function* wechatAuthDataLogin(action) {
     let token = result.token
     let mobilePhoneVerified = userInfo.attributes.mobilePhoneVerified
     yield put(loginSuccess({userInfo: userInfo, token: token}))
+    yield call(updateUserRegionApi, {})
     if (payload.success) {
       payload.success(mobilePhoneVerified)
     }
