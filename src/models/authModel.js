@@ -21,6 +21,7 @@ export const UserInfoRecord = Record({
   idNumber: undefined,      //身份证号码
   idNameVerified: false,    //实名认证
   subscribe: undefined,     //关注微信公众号
+  score: undefined,         //积分
 }, 'UserInfoRecord')
 
 export class UserInfo extends UserInfoRecord {
@@ -76,6 +77,7 @@ export class UserInfo extends UserInfoRecord {
       record.set('createdAt', obj.createdAt)
       record.set('updatedAt', obj.updatedAt)
       record.set('subscribe', obj.subscribe)
+      record.set('score', obj.score)
       record.set('idNameVerified', obj.idNameVerified)
     })
   }
@@ -112,7 +114,7 @@ export const WalletInfoRecord = Record({
   openid: undefined,                  //用户微信openid
   debt: undefined,                    //欠费
   user_name: undefined,               //身份证姓名
-  score: undefined,                   //积分
+  process: undefined,                 //状态
 }, 'WalletInfoRecord')
 
 

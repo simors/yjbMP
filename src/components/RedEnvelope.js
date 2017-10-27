@@ -12,7 +12,7 @@ import io from 'socket.io-client'
 import * as appConfig from '../constants/appConfig'
 import {selectActiveUserId} from '../selector/authSelector'
 import {selectPromByCategoryType} from '../selector/promotionSelector'
-import {fetchPromotionAction} from '../actions/promotionActions'
+import {fetchPromotionAction, fetchPromCategoryAction} from '../actions/promotionActions'
 
 const socket = io(appConfig.LC_SERVER_DOMAIN)
 
@@ -38,7 +38,8 @@ class RedEnvelope extends React.PureComponent {
   }
 
   componentWillMount() {
-    const {fetchPromotionAction} = this.props
+    const {fetchPromotionAction, fetchPromCategoryAction} = this.props
+    fetchPromCategoryAction({})
     fetchPromotionAction({})
   }
 
@@ -134,6 +135,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
   fetchPromotionAction,
+  fetchPromCategoryAction
 }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(RedEnvelope)

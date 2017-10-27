@@ -146,16 +146,13 @@ export function* createTransfer(action) {
 export function* fetchWalletInfo(action) {
   let payload = action.payload
 
-  let walletPayload = {
-    userId: payload.userId
-  }
   try {
-    let walletInfo = yield call(getWalletInfo, walletPayload)
+    let walletInfo = yield call(getWalletInfo, {userId: payload.userId})
     if(walletInfo) {
       yield put(fetchWalletInfoSuccess(walletInfo))
     }
     if(payload.success) {
-      payload.success(walletInfo)
+      payload.success()
     }
   } catch(error) {
     if(payload.error) {
