@@ -189,22 +189,25 @@ class Orders extends Component {
   }
 
   paymentServiceFailedCallback = (error) => {
+    let that = this
     console.log("onPaymentService", error)
-    //TODO 跳转到错误提示页面
     switch (error.code) {
       case errno.EPERM:
-        this.setState({loadingMessage: "用户未登录", loadingIcon: 'error'})
+        this.setState({showLoading: true, loadingMessage: "用户未登录", loadingIcon: 'error'})
         break
       case errno.EINVAL:
-        this.setState({loadingMessage: "参数错误", loadingIcon: 'error'})
+        this.setState({showLoading: true, loadingMessage: "参数错误", loadingIcon: 'error'})
         break
       case errno.ERROR_NO_ENOUGH_BALANCE:
-        this.setState({loadingMessage: "余额不足", loadingIcon: 'error'})
+        this.setState({showLoading: true, loadingMessage: "余额不足", loadingIcon: 'error'})
         break
       default:
-        this.setState({loadingMessage: "内部错误：" + error.code, loadingIcon: 'error'})
+        this.setState({showLoading: true, loadingMessage: "内部错误：" + error.code, loadingIcon: 'error'})
         break
     }
+    setTimeout(function () {
+      that.setState({showLoading: false})
+    }, 2000)
   }
 
   //支付服务订单
