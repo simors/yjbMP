@@ -32,6 +32,7 @@ const {
   MediaBoxDescription,
   Msg,
   Toast,
+  Toptips,
 } = WeUI
 
 class OpenDevice extends Component {
