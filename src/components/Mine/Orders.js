@@ -193,16 +193,16 @@ class Orders extends Component {
     console.log("onPaymentService", error)
     switch (error.code) {
       case errno.EPERM:
-        this.setState({showLoading: true, loadingMessage: "用户未登录", loadingIcon: 'error'})
+        this.setState({showLoading: true, loadingMessage: "用户未登录", loadingIcon: 'warn'})
         break
       case errno.EINVAL:
-        this.setState({showLoading: true, loadingMessage: "参数错误", loadingIcon: 'error'})
+        this.setState({showLoading: true, loadingMessage: "参数错误", loadingIcon: 'warn'})
         break
       case errno.ERROR_NO_ENOUGH_BALANCE:
-        this.setState({showLoading: true, loadingMessage: "余额不足", loadingIcon: 'error'})
+        this.setState({showLoading: true, loadingMessage: "余额不足", loadingIcon: 'warn'})
         break
       default:
-        this.setState({showLoading: true, loadingMessage: "内部错误：" + error.code, loadingIcon: 'error'})
+        this.setState({showLoading: true, loadingMessage: "内部错误：" + error.code, loadingIcon: 'warn'})
         break
     }
     setTimeout(function () {
