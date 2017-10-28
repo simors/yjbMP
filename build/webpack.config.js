@@ -75,7 +75,7 @@ config.module.rules.push({
             useBuiltIns: true // we polyfill Object.assign in src/normalize.js
           },
         ],
-        ['import', { libraryName: 'antd', style: 'css' }],
+        ['import', { libraryName: 'antd-mobile', style: 'css' }],
         ['import', { libraryName: 'react-weui', style: 'css' }],
         ['import', { libraryName: 'weui', libraryDirectory: 'dist', style: true }],
       ],
