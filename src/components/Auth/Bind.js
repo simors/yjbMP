@@ -11,6 +11,7 @@ import 'weui'
 import 'react-weui/build/dist/react-weui.css'
 import './bind.css'
 import {selectActiveUserInfo} from '../../selector/authSelector'
+import * as errno from '../../errno'
 
 const {
   Page,
@@ -160,8 +161,25 @@ class Bind extends Component {
     return true
   }
 
-  submit = () => {
+
+  onSubmitError = (error) => {
     var that = this
+    switch (error.code) {
+      case 603:
+        that.setState({showWarn: true, warnTips: "无效的短信验证码"})
+        break
+      case errno.EPERM:
+        that.setState({showWarn: true, warnTips: "用户未登录"})
+      default:
+        that.setState({showWarn: true, warnTips: "内部错误：" + error.code})
+        break
+    }
+    setTimeout(function () {
+      that.setState({showWarn: false, warnTips: ""})
+    }, 2000)
+  }
+
+  submit = () => {
     var result = this.formCheck()
     if(!result) {
       return
@@ -177,18 +195,7 @@ class Bind extends Component {
           browserHistory.replace('/bind/success')
         }
       },
-      error: (error) => {
-        this.setState({
-          showWarn: true,
-          warnTips: error.message
-        })
-        setTimeout(function () {
-          that.setState({
-            showWarn: false,
-            warnTips: ""
-          })
-        }, 2000)
-      }
+      error: this.onSubmitError
     })
   }
 

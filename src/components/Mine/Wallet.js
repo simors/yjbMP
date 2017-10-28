@@ -33,9 +33,7 @@ class Wallet extends Component {
 
   componentWillMount() {
     this.props.fetchPromCategoryAction({})
-    this.props.fetchWalletInfo({
-      userId: this.props.currentUser.id
-    })
+    this.props.fetchWalletInfo({})
   }
 
   componentDidMount() {

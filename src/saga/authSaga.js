@@ -2,7 +2,7 @@
  * Created by wanpeng on 2017/8/14.
  */
 import { call, put, takeEvery, takeLatest } from 'redux-saga/effects'
-import {setMobilePhoneAPi, requestLeanSmsCode, become, getPaymentCharge, getTransfer, getWalletInfo, getDealRecords, verifyIdName, getJssdkConfig, loginAuthData} from  '../api/auth'
+import {setMobilePhoneAPi, requestLeanSmsCode, become, getPaymentCharge, getTransfer, getWalletInfo, getDealRecords, verifyIdName, getJssdkConfig, loginAuthData, updateUserRegionApi} from  '../api/auth'
 import {saveUser, loginSuccess, autoLoginSuccess, logout, fetchOrdersSuccess, paymentOrderSuccess, fetchWalletInfoSuccess, fetchDealRecordsSuccess, saveIdNameInfo, updateOrderSuccess} from '../actions/authActions'
 import * as authActionTypes from '../constants/authActionTypes'
 
@@ -57,6 +57,7 @@ export function* autoLogin(action) {
     let mobilePhoneVerified = user.attributes.mobilePhoneVerified
     yield put(autoLoginSuccess({token: token, user: user, subscribe: subscribe}))
     console.log("自动登录成功：", user)
+    yield call(updateUserRegionApi, {})
     if (payload.success) {
       payload.success(mobilePhoneVerified)
     }
@@ -81,10 +82,11 @@ export function* wechatAuthDataLogin(action) {
     let result = yield call(loginAuthData, authPayload)
     let userInfo = result.userInfo
     let token = result.token
-    let mobilePhoneVerified = userInfo.attributes.mobilePhoneVerified
+    let mobilePhoneNumber = userInfo.attributes.mobilePhoneNumber
     yield put(loginSuccess({userInfo: userInfo, token: token}))
+    yield call(updateUserRegionApi, {})
     if (payload.success) {
-      payload.success(mobilePhoneVerified)
+      payload.success(mobilePhoneNumber)
     }
   } catch (error) {
     console.error("微信authData登录失败：", error)
@@ -144,16 +146,13 @@ export function* createTransfer(action) {
 export function* fetchWalletInfo(action) {
   let payload = action.payload
 
-  let walletPayload = {
-    userId: payload.userId
-  }
   try {
-    let walletInfo = yield call(getWalletInfo, walletPayload)
+    let walletInfo = yield call(getWalletInfo, {userId: payload.userId})
     if(walletInfo) {
       yield put(fetchWalletInfoSuccess(walletInfo))
     }
     if(payload.success) {
-      payload.success(walletInfo)
+      payload.success()
     }
   } catch(error) {
     if(payload.error) {

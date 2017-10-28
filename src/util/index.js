@@ -74,8 +74,8 @@ export function wechatOauth(nextState, replace) {
       }
     }
     if(authData) {
-      store.dispatch(loginWithWechatAuthData({...authData, success: (mobilePhoneVerified) => {
-        if(!mobilePhoneVerified) {
+      store.dispatch(loginWithWechatAuthData({...authData, success: (mobilePhoneNumber) => {
+        if(!mobilePhoneNumber) {
           setTimeout(() => {browserHistory.replace('/bind')}, 2000)
         }
       }}))
