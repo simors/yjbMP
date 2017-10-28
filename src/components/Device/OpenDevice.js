@@ -235,7 +235,42 @@ class OpenDevice extends Component {
     socket.emit(appConfig.TURN_ON_DEVICE, {
       deviceNo: deviceInfo.deviceNo,
       userId: currentUserId,
-    }, this.handleTurnOnACK)
+    }, function (data) {
+      var errorCode = data.errorCode
+      if(errorCode === 0) {
+        return
+      }
+      that.setState({ showLoading: false })
+      switch (errorCode) {
+        case errno.EINVAL:
+          that.setState({showWarn: true, warnTips: "参数错误"})
+          break
+        case errno.ERROR_INVALID_STATUS:
+          that.setState({showWarn: true, warnTips: "无效的设备状态"})
+          break
+        case errno.ERROR_NO_WALLET:
+          that.setState({showWarn: true, warnTips: "用户钱包信息有误"})
+          break
+        case errno.ERROR_NO_DEPOSIT:
+          that.setState({showWarn: true, warnTips: "用户未交押金"})
+          break
+        case errno.ERROR_UNPAID_ORDER:
+          that.setState({showWarn: true, warnTips: "有未支付订单"})
+          break
+        case errno.ERROR_OCCUPIED_ORDER:
+          that.setState({showWarn: true, warnTips: "有正在使用的订单"})
+          break
+        case errno.ERROR_TURNON_FAILED:
+          that.setState({showWarn: true, warnTips: "设备开机失败"})
+          break
+        default:
+          that.setState({showWarn: true, warnTips: "内部错误：" + errorCode})
+          break
+      }
+      setTimeout(function () {
+        that.setState({showWarn: false, warnTips: ""})
+      }, 2000)
+    })
 
     //监听开机成功消息
     socket.on(appConfig.TURN_ON_DEVICE_SUCCESS, function (data) {
