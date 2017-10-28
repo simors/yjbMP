@@ -55,7 +55,6 @@ export function* paymentOrder(action) {
     userId: payload.userId,
     amount: payload.amount,
     orderId: payload.orderId,
-    endTime: Date.now(),
   }
 
   try {

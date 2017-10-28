@@ -18,20 +18,7 @@ import io from 'socket.io-client'
 
 const socket = io(appConfig.LC_SERVER_DOMAIN)
 
-const {
-  Panel,
-  Tab,
-  NavBar,
-  NavBarItem,
-  TabBody,
-  InfiniteLoader,
-  Cells,
-  Icon,
-  Dialog,
-  Popup,
-  LoadMore,
-  Toast,
-} = WeUI
+const {Panel, Tab, TabBody, InfiniteLoader, Cells, Icon, Dialog, Toast} = WeUI
 
 class Orders extends Component {
   constructor(props) {
