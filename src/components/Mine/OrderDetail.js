@@ -17,6 +17,8 @@ import './orderDetail.css'
 import {formatTime} from '../../util'
 import * as appConfig from '../../constants/appConfig'
 import io from 'socket.io-client'
+import * as errno from '../../errno'
+
 
 const socket = io(appConfig.LC_SERVER_DOMAIN)
 
@@ -182,8 +184,25 @@ class OrderDetail extends Component {
   }
 
   paymentServiceFailedCallback = (error) => {
+    let that = this
     console.log("onPaymentService", error)
-    //TODO 跳转到错误提示页面
+    switch (error.code) {
+      case errno.EPERM:
+        this.setState({showLoading: true, loadingMessage: "用户未登录", loadingIcon: 'warn'})
+        break
+      case errno.EINVAL:
+        this.setState({showLoading: true, loadingMessage: "参数错误", loadingIcon: 'warn'})
+        break
+      case errno.ERROR_NO_ENOUGH_BALANCE:
+        this.setState({showLoading: true, loadingMessage: "余额不足", loadingIcon: 'warn'})
+        break
+      default:
+        this.setState({showLoading: true, loadingMessage: "内部错误：" + error.code, loadingIcon: 'warn'})
+        break
+    }
+    setTimeout(function () {
+      that.setState({showLoading: false})
+    }, 2000)
   }
 
   //支付服务订单
