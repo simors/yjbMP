@@ -83,7 +83,7 @@ function handleAutoLogin(state, action) {
 function handleSaveWalletInfo(state, action) {
   let walletInfo = action.payload
 
-  let walletRecord = new WalletInfoRecord(walletInfo)
+  let walletRecord =walletInfo? new WalletInfoRecord(walletInfo): new WalletInfoRecord()
   state = state.set('wallet', walletRecord)
   return state
 }

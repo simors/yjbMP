@@ -97,7 +97,7 @@ class Wallet extends Component {
           </div>
         </div>
         <div className="deposit">
-          <text className="depositTrip">{'押金：' + this.props.walletInfo.deposit + '元'}</text>
+          <text className="depositTrip">{'押金：' + (this.props.walletInfo.deposit || 0) + '元'}</text>
           <div className="depositButton-area">
             <Button type='primary' plain className="depositButton" onClick={this.onPress}>{this.props.walletInfo.deposit === 0? '交押金' : '退押金'}</Button>
           </div>

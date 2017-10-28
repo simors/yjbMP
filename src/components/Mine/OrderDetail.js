@@ -185,7 +185,6 @@ class OrderDetail extends Component {
 
   paymentServiceFailedCallback = (error) => {
     let that = this
-    console.log("onPaymentService", error)
     switch (error.code) {
       case errno.EPERM:
         this.setState({showLoading: true, loadingMessage: "用户未登录", loadingIcon: 'warn'})
