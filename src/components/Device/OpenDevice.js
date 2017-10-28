@@ -193,31 +193,31 @@ class OpenDevice extends Component {
     if(errorCode === 0) {
       return
     }
-    this.setState({ showLoading: false })
+    that.setState({ showLoading: false })
     switch (errorCode) {
       case errno.EINVAL:
-        this.setState({showWarn: true, warnTips: "参数错误"})
+        that.setState({showWarn: true, warnTips: "参数错误"})
         break
       case errno.ERROR_INVALID_STATUS:
-        this.setState({showWarn: true, warnTips: "无效的设备状态"})
+        that.setState({showWarn: true, warnTips: "无效的设备状态"})
         break
       case errno.ERROR_NO_WALLET:
-        this.setState({showWarn: true, warnTips: "用户钱包信息有误"})
+        that.setState({showWarn: true, warnTips: "用户钱包信息有误"})
         break
       case errno.ERROR_NO_DEPOSIT:
-        this.setState({showWarn: true, warnTips: "用户未交押金"})
+        that.setState({showWarn: true, warnTips: "用户未交押金"})
         break
       case errno.ERROR_UNPAID_ORDER:
-        this.setState({showWarn: true, warnTips: "有未支付订单"})
+        that.setState({showWarn: true, warnTips: "有未支付订单"})
         break
       case errno.ERROR_OCCUPIED_ORDER:
-        this.setState({showWarn: true, warnTips: "有正在使用的订单"})
+        that.setState({showWarn: true, warnTips: "有正在使用的订单"})
         break
       case errno.ERROR_TURNON_FAILED:
-        this.setState({showWarn: true, warnTips: "设备开机失败"})
+        that.setState({showWarn: true, warnTips: "设备开机失败"})
         break
       default:
-        this.setState({showWarn: true, warnTips: "内部错误：" + errorCode})
+        that.setState({showWarn: true, warnTips: "内部错误：" + errorCode})
         break
     }
     setTimeout(function () {
