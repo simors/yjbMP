@@ -17,6 +17,7 @@ import 'weui'
 import 'react-weui/build/dist/react-weui.css'
 import './device.css'
 import io from 'socket.io-client'
+import * as errno from '../../errno'
 
 const socket = io(appConfig.LC_SERVER_DOMAIN)
 
@@ -40,6 +41,8 @@ class OpenDevice extends Component {
       deviceLoading: true,
       walletLoading: true,
       showLoading: false,
+      showWarn: false,
+      warnTips: "",
     }
   }
 
@@ -51,7 +54,6 @@ class OpenDevice extends Component {
       success: () => {this.setState({deviceLoading: false})},
       error: (error) => {this.setState({deviceLoading: false})}
     })
-    console.log("componentWillMount currentUserId", currentUserId)
     if(currentUserId) {
       fetchWalletInfo({
         userId: currentUserId,
@@ -184,6 +186,44 @@ class OpenDevice extends Component {
     }
   }
 
+  handleTurnOnACK(data) {
+    let that = this
+    var errorCode = data.errorCode
+    if(errorCode === 0) {
+      return
+    }
+    this.setState({ showLoading: false })
+    switch (errorCode) {
+      case errno.EINVAL:
+        this.setState({showWarn: true, warnTips: "参数错误"})
+        break
+      case errno.ERROR_INVALID_STATUS:
+        this.setState({showWarn: true, warnTips: "无效的设备状态"})
+        break
+      case errno.ERROR_NO_WALLET:
+        this.setState({showWarn: true, warnTips: "用户钱包信息有误"})
+        break
+      case errno.ERROR_NO_DEPOSIT:
+        this.setState({showWarn: true, warnTips: "用户未交押金"})
+        break
+      case errno.ERROR_UNPAID_ORDER:
+        this.setState({showWarn: true, warnTips: "有未支付订单"})
+        break
+      case errno.ERROR_OCCUPIED_ORDER:
+        this.setState({showWarn: true, warnTips: "有正在使用的订单"})
+        break
+      case errno.ERROR_TURNON_FAILED:
+        this.setState({showWarn: true, warnTips: "设备开机失败"})
+        break
+      default:
+        this.setState({showWarn: true, warnTips: "内部错误：" + errorCode})
+        break
+    }
+    setTimeout(function () {
+      that.setState({showWarn: false, warnTips: ""})
+    }, 2000)
+  }
+
   turnOnDevice() {
     const {deviceInfo, currentUserId} = this.props
     var that = this
@@ -194,16 +234,7 @@ class OpenDevice extends Component {
     socket.emit(appConfig.TURN_ON_DEVICE, {
       deviceNo: deviceInfo.deviceNo,
       userId: currentUserId,
-    }, function (data) {
-      var errorCode = data.errorCode
-      if(errorCode != 0) {
-        that.setState({
-          showLoading: false
-        })
-        console.log("开机请求失败", data.errorMessage)
-        //TODO 提示开机请求失败原因
-      }
-    })
+    }, this.handleTurnOnACK)
 
     //监听开机成功消息
     socket.on(appConfig.TURN_ON_DEVICE_SUCCESS, function (data) {
@@ -262,6 +293,7 @@ class OpenDevice extends Component {
           <Button className='device-button' onClick={this.onPress}>{this.getButtonTitle()}</Button>
         </div>
         <Toast icon="loading" show={deviceLoading || walletLoading || showLoading}>加载...</Toast>
+        <Toptips type="warn" show={this.state.showWarn}>{this.state.warnTips}</Toptips>
       </Page>
     )
   }

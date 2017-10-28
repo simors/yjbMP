@@ -15,16 +15,7 @@ import { createPayment, createTransfer, fetchWalletInfo} from '../../actions/aut
 import {fetchPromCategoryAction} from '../../actions/promotionActions'
 import * as appConfig from '../../constants/appConfig'
 
-const {
-  Button,
-  Panel,
-  Page,
-  PanelHeader,
-  PanelBody,
-  MediaBox,
-  MediaBoxTitle,
-  MediaBoxDescription,
-} = WeUI
+const {Button, Page} = WeUI
 
 class Wallet extends Component {
   constructor(props) {
@@ -40,7 +31,7 @@ class Wallet extends Component {
     document.title = "钱包"
   }
 
-  onPress = () => {
+    onPress = () => {
     if(this.props.walletInfo.deposit === 0) {  //交押金
       this.payDeposit()
     } else {  //退押金
@@ -86,7 +77,7 @@ class Wallet extends Component {
 
   render() {
     return(
-      <Page ptr={false}>
+      <Page ptr={false} infiniteLoader={false}>
         <div className="walletcontainer">
           <text className="amount">{(this.props.walletInfo.balance || 0) + '元'}</text>
           <text className="amountTrip">当前余额</text>
