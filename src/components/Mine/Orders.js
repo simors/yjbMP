@@ -15,6 +15,7 @@ import 'weui'
 import 'react-weui/build/dist/react-weui.css'
 import './orders.css'
 import io from 'socket.io-client'
+import * as errno from '../../errno'
 
 const socket = io(appConfig.LC_SERVER_DOMAIN)
 
@@ -190,6 +191,20 @@ class Orders extends Component {
   paymentServiceFailedCallback = (error) => {
     console.log("onPaymentService", error)
     //TODO 跳转到错误提示页面
+    switch (error.code) {
+      case errno.EPERM:
+        this.setState({loadingMessage: "用户未登录", loadingIcon: 'error'})
+        break
+      case errno.EINVAL:
+        this.setState({loadingMessage: "参数错误", loadingIcon: 'error'})
+        break
+      case errno.ERROR_NO_ENOUGH_BALANCE:
+        this.setState({loadingMessage: "余额不足", loadingIcon: 'error'})
+        break
+      default:
+        this.setState({loadingMessage: "内部错误：" + error.code, loadingIcon: 'error'})
+        break
+    }
   }
 
   //支付服务订单
