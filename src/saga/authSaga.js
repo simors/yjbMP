@@ -82,11 +82,11 @@ export function* wechatAuthDataLogin(action) {
     let result = yield call(loginAuthData, authPayload)
     let userInfo = result.userInfo
     let token = result.token
-    let mobilePhoneVerified = userInfo.attributes.mobilePhoneVerified
+    let mobilePhoneNumber = userInfo.attributes.mobilePhoneNumber
     yield put(loginSuccess({userInfo: userInfo, token: token}))
     yield call(updateUserRegionApi, {})
     if (payload.success) {
-      payload.success(mobilePhoneVerified)
+      payload.success(mobilePhoneNumber)
     }
   } catch (error) {
     console.error("微信authData登录失败：", error)
