@@ -14,6 +14,7 @@ import {selectActiveUserInfo, selectWalletInfo} from '../../selector/authSelecto
 import { createPayment, createTransfer, fetchWalletInfo} from '../../actions/authActions'
 import {fetchPromCategoryAction} from '../../actions/promotionActions'
 import * as appConfig from '../../constants/appConfig'
+import {ActivityIndicator, Toast} from 'antd-mobile'
 
 const {Button, Page} = WeUI
 
@@ -31,7 +32,7 @@ class Wallet extends Component {
     document.title = "钱包"
   }
 
-    onPress = () => {
+  onPress = () => {
     if(this.props.walletInfo.deposit === 0) {  //交押金
       this.payDeposit()
     } else {  //退押金
@@ -43,16 +44,20 @@ class Wallet extends Component {
     pingpp.createPayment(charge, function (result, err) {
       if (result == "success") {
         // 只有微信公众账号 wx_pub 支付成功的结果会在这里返回，其他的支付结果都会跳转到 extra 中对应的 URL。
+        Toast.success("支付成功", 1)
       } else if (result == "fail") {
         // charge 不正确或者微信公众账号支付失败时会在此处返回
+        Toast.fail("支付失败", 2)
       } else if (result == "cancel") {
         // 微信公众账号支付取消支付
+        Toast.info("取消支付", 1)
       }
     })
   }
 
   createPaymentFailedCallback = (error) => {
     console.log('onDeposit', error)
+    Toast.fail("支付渠道错误")
   }
 
   payDeposit() {
@@ -76,25 +81,30 @@ class Wallet extends Component {
   }
 
   render() {
-    return(
-      <Page ptr={false} infiniteLoader={false}>
-        <div className="walletcontainer">
-          <text className="amount">{(this.props.walletInfo.balance || 0) + '元'}</text>
-          <text className="amountTrip">当前余额</text>
+    const {walletInfo} = this.props
+    if(walletInfo) {
+      return(
+        <div>
+          <div className="walletcontainer">
+            <text className="amount">{(walletInfo.balance || 0) + '元'}</text>
+            <text className="amountTrip">当前余额</text>
 
-          <div className="buttons-area">
-            <Button type='primary' plain className="detailsButton" onClick={() => {browserHistory.push('/mine/wallet/walletDetail')}}>明细</Button>
-            <Button type='primary' plain className="rechargeButton" onClick={() => {browserHistory.push('/mine/wallet/recharge')}}>充值</Button>
+            <div className="buttons-area">
+              <Button type='primary' plain className="detailsButton" onClick={() => {browserHistory.push('/mine/wallet/walletDetail')}}>明细</Button>
+              <Button type='primary' plain className="rechargeButton" onClick={() => {browserHistory.push('/mine/wallet/recharge')}}>充值</Button>
+            </div>
+          </div>
+          <div className="deposit">
+            <text className="depositTrip">{'押金：' + (walletInfo.deposit || 0) + '元'}</text>
+            <div className="depositButton-area">
+              <Button type='primary' plain className="depositButton" onClick={this.onPress}>{walletInfo.deposit === 0? '交押金' : '退押金'}</Button>
+            </div>
           </div>
         </div>
-        <div className="deposit">
-          <text className="depositTrip">{'押金：' + (this.props.walletInfo.deposit || 0) + '元'}</text>
-          <div className="depositButton-area">
-            <Button type='primary' plain className="depositButton" onClick={this.onPress}>{this.props.walletInfo.deposit === 0? '交押金' : '退押金'}</Button>
-          </div>
-        </div>
-      </Page>
-    )
+      )
+    } else {
+      return(<ActivityIndicator toast text="正在加载" />)
+    }
   }
 }
 
