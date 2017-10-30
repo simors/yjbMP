@@ -41,6 +41,7 @@ class Refund extends Component {
         break
       case errno.ERROR_CREATE_TRANSFER:
         Toast.fail("创建交易请求失败", 2)
+        break
       default:
         Toast.fail("内部错误：" + error.code, 2)
         break
