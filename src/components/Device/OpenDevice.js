@@ -263,7 +263,7 @@ class OpenDevice extends Component {
 
   onPress = () => {
     if(this.props.walletInfo.deposit === 0) {
-      browserHistory.push('/mine/wallet')
+      browserHistory.push('/mine/deposit')
     } else if(this.props.walletInfo.debt > 0) { //欠费
       browserHistory.push('/mine/orders')
     } else if(this.props.deviceInfo.status === 0) { //空闲
@@ -292,7 +292,7 @@ class OpenDevice extends Component {
         </div>
         <Toast icon="loading" show={deviceLoading || walletLoading || showLoading}>加载...</Toast>
         <Toptips type="warn" show={this.state.showWarn}>{this.state.warnTips}</Toptips>
-        <RedEnvelope/>
+        <RedEnvelope />
       </div>
     )
   }

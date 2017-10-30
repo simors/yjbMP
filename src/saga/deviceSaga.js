@@ -5,7 +5,7 @@ import { call, put, takeEvery } from 'redux-saga/effects'
 import {fetchDeviceInfo} from '../api/device'
 import {saveDevice} from '../actions/deviceActions'
 import * as deviceActiontypes from '../constants/deviceActiontypes'
-import {saveStationAction} from '../actions/stationActions'
+import {saveStationAction, updateCurrentStation} from '../actions/stationActions'
 
 //获取设备信息
 export function* fetchDeviceInfoAction(action) {
@@ -18,7 +18,7 @@ export function* fetchDeviceInfoAction(action) {
       yield put(saveDevice({device: device}))
     }
     if(station) {
-      yield put(saveStationAction({station: station}))
+      yield put(updateCurrentStation({station: station}))
     }
     if(payload.success) {
       payload.success()

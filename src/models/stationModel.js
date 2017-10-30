@@ -35,5 +35,6 @@ export class Station extends StationRecord {
 }
 
 export const StationState = Record({
+  currentStationId: undefined, //当前服务点id
   stations: Map(),             //服务网点 键为id，值为StationRecord
 }, 'StationState')

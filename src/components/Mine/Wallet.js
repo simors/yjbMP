@@ -34,7 +34,7 @@ class Wallet extends Component {
 
   onPress = () => {
     if(this.props.walletInfo.deposit === 0) {  //交押金
-      this.payDeposit()
+      browserHistory.push('/mine/deposit')
     } else {  //退押金
       this.refundDeposit()
     }
@@ -60,24 +60,28 @@ class Wallet extends Component {
     Toast.fail("支付渠道错误")
   }
 
-  payDeposit() {
-    this.props.createPayment({
-      amount: __DEV__ || __STAGE__? 100 * 0.01 : 100, //TODO 押金从服务点读取
-      channel: 'wx_pub',
-      metadata: {
-        'fromUser': this.props.currentUser.id,
-        'toUser': 'platform',
-        'dealType': appConfig.DEPOSIT
-      },
-      openid: this.props.currentUser.authData.weixin.openid,
-      subject: '衣家宝押金支付',
-      success: this.createPaymentSuccessCallback,
-      error: this.createPaymentFailedCallback,
-    })
-  }
-
   refundDeposit() {
     browserHistory.push('/mine/refund')
+  }
+
+  renderDeposit = () => {
+    const {walletInfo} = this.props
+    if(walletInfo.deposit > 0) {
+      return(
+        <div className="deposit">
+          <text className="depositTrip">{'押金：' + (walletInfo.deposit || 0) + '元'}</text>
+          <div className="depositButton-area">
+            <Button type='primary' plain className="depositButton" onClick={this.onPress}>{walletInfo.deposit === 0? '交押金' : '退押金'}</Button>
+          </div>
+        </div>
+      )
+    } else {
+      return(
+        <div className="deposit">
+          <text className="depositTrip">{'押金：' + 0 + '元'}</text>
+        </div>
+      )
+    }
   }
 
   render() {
@@ -94,12 +98,7 @@ class Wallet extends Component {
               <Button type='primary' plain className="rechargeButton" onClick={() => {browserHistory.push('/mine/wallet/recharge')}}>充值</Button>
             </div>
           </div>
-          <div className="deposit">
-            <text className="depositTrip">{'押金：' + (walletInfo.deposit || 0) + '元'}</text>
-            <div className="depositButton-area">
-              <Button type='primary' plain className="depositButton" onClick={this.onPress}>{walletInfo.deposit === 0? '交押金' : '退押金'}</Button>
-            </div>
-          </div>
+          {this.renderDeposit()}
         </div>
       )
     } else {

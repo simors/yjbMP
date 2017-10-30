@@ -6,3 +6,5 @@ import * as stationActionTypes from '../constants/stationActionTypes'
 
 export const saveStationAction = createAction(stationActionTypes.SAVE_STATION)
 export const saveStationsAction = createAction(stationActionTypes.SAVE_STATIONS)
+
+export const updateCurrentStation = createAction(stationActionTypes.UPDATE_CURRENT_STATION)

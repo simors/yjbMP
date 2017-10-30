@@ -14,11 +14,21 @@ export default function stationReducer(state = initialState, action) {
       return handleSaveStation(state, action)
     case stationActionTypes.SAVE_STATIONS:
       return handleSaveStations(state, action)
+    case stationActionTypes.UPDATE_CURRENT_STATION:
+      return handleUpdateCurrentStation(state, action)
     case REHYDRATE:
       return onRehydrate(state, action)
     default:
       return state
   }
+}
+
+function handleUpdateCurrentStation(state, action) {
+  let station = action.payload.station
+  let stationRecord = Station.fromApi(station)
+  state = state.setIn(['stations', station.id], stationRecord)
+  state = state.set('currentStationId', station.id)
+  return state
 }
 
 function handleSaveStation(state, action) {
