@@ -121,7 +121,7 @@ class RedEnvelope extends React.PureComponent {
     const {visible} = this.state
     const {promotion} = this.props
     return(
-      <Modal visible={visible} transparent={true} popup={true}>
+      <Modal visible={visible && !!promotion} transparent={true} popup={true}>
         {this.renderOverlay()}
       </Modal>
     )
