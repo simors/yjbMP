@@ -15,6 +15,7 @@ import WeUI from 'react-weui'
 import 'weui'
 import 'react-weui/build/dist/react-weui.css'
 import './recharge.css'
+import {Toast} from 'antd-mobile'
 
 const {
   Button,
@@ -69,7 +70,7 @@ class Recharge extends Component {
     if(promotion) {
       promotion.awards.rechargeList.forEach((value) => {
         if(value.recharge === this.state.selectAmount) {
-          tripText = "您选择了“充"+ value.recharge +"元得"+ value.award +"元”"
+          tripText = "您选择了“充"+ value.recharge +"元送"+ value.award +"元”"
         }
       })
     } else {
@@ -107,11 +108,14 @@ class Recharge extends Component {
       that.setState({disableButton: false})
       if (result == "success") {
         // 只有微信公众账号 wx_pub 支付成功的结果会在这里返回，其他的支付结果都会跳转到 extra 中对应的 URL。
+        Toast.success("支付成功", 1)
         browserHistory.push('/mine/wallet')
       } else if (result == "fail") {
         // charge 不正确或者微信公众账号支付失败时会在此处返回
+        Toast.fail("支付失败", 2)
       } else if (result == "cancel") {
         // 微信公众账号支付取消支付
+        Toast.info("取消支付", 1)
       }
     })
   }
@@ -119,13 +123,14 @@ class Recharge extends Component {
   createPaymentFailedCallback = (error) => {
     this.setState({disableButton: false})
     console.log('onRecharge', error)
+    Toast.fail("支付渠道错误")
   }
 
   onRecharge = () => {
     const {currentUser, promotion, createPayment} = this.props
     this.setState({disableButton: true})
     createPayment({
-      amount: __DEV__ || __STAGE__? this.state.selectAmount * 0.01 : this.state.selectAmount,
+      amount: this.state.selectAmount,
       channel: 'wx_pub',
       metadata: {
         'fromUser': currentUser.id,
@@ -152,7 +157,7 @@ class Recharge extends Component {
                     plain={this.state.selectAmount != value.recharge}
                     style={this.state.selectAmount == value.recharge? {color: `#fff`}: {}}
                     onClick={() => this.changeAmount(value.recharge, value.award)} >
-              {'充' + value.recharge + '元' + (value.award? ('得' + value.award + '元') : '')}
+              {'充' + value.recharge + '元' + (value.award? ('送' + value.award + '元') : '')}
             </Button>
           ))
         }
