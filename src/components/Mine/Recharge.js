@@ -167,7 +167,7 @@ class Recharge extends Component {
 
   render() {
     return(
-      <Page ptr={false}>
+      <div>
         <div className="banner">
         </div>
         <div className="button-area">
@@ -182,7 +182,7 @@ class Recharge extends Component {
             {"充值" + this.state.selectAmount + '元'}
           </Button>
         </div>
-      </Page>
+      </div>
     )
   }
 }
