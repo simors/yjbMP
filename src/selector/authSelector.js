@@ -31,6 +31,6 @@ export function selectDealRecord(state) {
 }
 
 export function selectWalletInfo(state) {
-  let AUTH = state.AUTH
-  return AUTH.wallet.toJS()
+  let walletRecord = state.AUTH.get('wallet')
+  return walletRecord? walletRecord.toJS() : undefined
 }

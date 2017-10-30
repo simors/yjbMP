@@ -136,7 +136,6 @@ class OpenDevice extends Component {
               计费标准
             </MediaBoxDescription>
           </MediaBox>
-          <Button type="warn">获得运气红包 1 元，轻触领取</Button>
           <MediaBox type="text">
             <MediaBoxTitle>请您将衣物预先脱水甩干后再放入干衣柜</MediaBoxTitle>
             <MediaBoxDescription>

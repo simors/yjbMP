@@ -5,7 +5,7 @@ import React from 'react'
 import WeUI from 'react-weui'
 import 'weui'
 import 'react-weui/build/dist/react-weui.css'
-const {Toast} = WeUI
+import {ActivityIndicator} from 'antd-mobile'
 
 export default class Loading extends React.PureComponent {
   constructor(props) {
@@ -13,10 +13,6 @@ export default class Loading extends React.PureComponent {
   }
 
   render() {
-    return (
-      <div style={{height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-        <Toast icon="loading" show={true}>加载...</Toast>
-      </div>
-    )
+    return(<ActivityIndicator toast text="正在加载" />)
   }
 }

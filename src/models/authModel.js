@@ -123,5 +123,5 @@ export const AuthState = Record({
   token: undefined,                   //自动登录token
   profiles: Map(),                    //用户信息: 键为userId, 值为UserInfoRecord
   dealRecords: Map(),                 //交易记录：键为order_no,值为DealInfoRecord
-  wallet: WalletInfoRecord(),         //钱包信息
+  wallet: undefined,         //钱包信息
 }, "AuthState")
