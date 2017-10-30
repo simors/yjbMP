@@ -173,6 +173,7 @@ export const ERROR_PROM_REGION  = (ERROR_BASE_PROMOTION - 5)       /* 活动范�
 export const ERROR_PROM_INVALID = (ERROR_BASE_PROMOTION - 6)       /* 活动已失效 */
 export const ERROR_PROM_LIMIT   = (ERROR_BASE_PROMOTION - 6)       /* 活动参与次数超限 */
 export const ERROR_PROM_NOSCORE = (ERROR_BASE_PROMOTION - 7)       /* 积分不足 */
+export const ERROT_PROM_LIMIT   = (ERROR_BASE_PROMOTION - 8)       /* 用户参数次数限制 */
 
 /* Deal */
 export const ERROR_UNSUPPORT_CHANNEL        = (ERROR_BASE_DEAL - 1)         /* 不支持的支付渠道 */
@@ -182,3 +183,4 @@ export const ERROR_IN_REFUND_PROCESS        = (ERROR_BASE_DEAL - 4)         /* �
 
 /* Station */
 export const ERROR_STATION_NOMAN = (ERROR_BASE_STATION - 1)       /* 查无此人 */
+export const ERROR_STATION_HAVESTATION = (ERROR_BASE_STATION - 2)       /* 该用户仍和服务点有关联 */
