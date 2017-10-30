@@ -33,7 +33,11 @@ class Wallet extends Component {
   }
 
   onPress = () => {
-    if(this.props.walletInfo.deposit === 0) {  //交押金
+    const {walletInfo} = this.props
+
+    if(walletInfo.process === appConfig.WALLET_PROCESS_TYPE_REFUND) {
+      return
+    } else if(walletInfo.deposit === 0) {  //交押金
       browserHistory.push('/mine/deposit')
     } else {  //退押金
       this.refundDeposit()
@@ -68,7 +72,9 @@ class Wallet extends Component {
         <div className="deposit">
           <text className="depositTrip">{'押金：' + (walletInfo.deposit || 0) + '元'}</text>
           <div className="depositButton-area">
-            <Button type='primary' plain className="depositButton" onClick={this.onPress}>{walletInfo.deposit === 0? '交押金' : '退押金'}</Button>
+            <Button type='primary' plain className="depositButton" onClick={this.onPress}>
+              {walletInfo.process === appConfig.WALLET_PROCESS_TYPE_REFUND? '押金退款处理中' : '退押金'}
+              </Button>
           </div>
         </div>
       )
