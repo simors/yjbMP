@@ -14,6 +14,7 @@ export const StationRecord = Record({
   deviceSum: undefined,       //设备总数
   addr: undefined,            //详细地址
   unitPrice: undefined,       //计费单价 单位：元／分钟
+  deposit: undefined,         //设备押金
 }, 'StationRecord')
 
 export class Station extends StationRecord {
@@ -30,6 +31,7 @@ export class Station extends StationRecord {
       record.set('deviceSum', obj.deviceSum)
       record.set('addr', obj.addr)
       record.set('unitPrice', obj.unitPrice)
+      record.set('deposit', obj.deposit)
     })
   }
 }

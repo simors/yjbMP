@@ -49,7 +49,7 @@ class Deposit extends Component {
   payDeposit = () => {
     const {currentStation, currentUser} = this.props
     this.props.createPayment({
-      amount: currentStation.unitPrice,
+      amount: currentStation.deposit,
       channel: 'wx_pub',
       metadata: {
         'fromUser': currentUser.id,
@@ -73,7 +73,7 @@ class Deposit extends Component {
           </div>
           <div>
             <div className="deposit-amount-trip">请支付押金</div>
-            <div className="deposit-amount">229元</div>
+            <div className="deposit-amount">{currentStation.deposit + '元'}</div>
           </div>
           <div className="deposit-button-area" >
             <div className="deposit-button-trip">押金可在“个人中心－钱包”中申请退还</div>
