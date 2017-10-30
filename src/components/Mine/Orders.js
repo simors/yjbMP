@@ -16,7 +16,7 @@ import 'react-weui/build/dist/react-weui.css'
 import './orders.css'
 import io from 'socket.io-client'
 import * as errno from '../../errno'
-import {Toast} from 'antd-mobile'
+// import {Toast} from 'antd-mobile'
 
 const socket = io(appConfig.LC_SERVER_DOMAIN)
 
