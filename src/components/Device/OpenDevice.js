@@ -110,63 +110,85 @@ class OpenDevice extends Component {
           />
         </PanelBody>
       )
-    } else if(status === undefined) {
-      return(
-        <PanelBody style={{borderBottomWidth: `0`}}>
-          <Msg
-            type="warn"
-            title="无效的设备"
-            description="请尝试扫描其他设备，或联系客服"
-          />
-        </PanelBody>
-      )
-    } else if(status === appConfig.DEVICE_STATUS_IDLE) { //空闲
-      return(
-        <PanelBody style={{borderBottomWidth: `0`}}>
-          <MediaBox type="text">
-            <MediaBoxTitle>{deviceInfo.deviceAddr}</MediaBoxTitle>
-            <MediaBoxDescription>
-              请将衣物平整放入干衣柜，注意保持间隙。放置后请关门。
-            </MediaBoxDescription>
-          </MediaBox>
-          <MediaBox type="text">
-            <MediaBoxTitle>{stationInfo.unitPrice + '元／分钟'}</MediaBoxTitle>
-            <MediaBoxDescription>
-              计费标准
-            </MediaBoxDescription>
-          </MediaBox>
-          <MediaBox type="text">
-            <MediaBoxTitle>请您将衣物预先脱水甩干后再放入干衣柜</MediaBoxTitle>
-            <MediaBoxDescription>
-              衣柜中有湿度探测器，在您的衣物烘干后会通过微信提醒您，届时请您及时收取衣物。
-            </MediaBoxDescription>
-          </MediaBox>
+    } else {
+      switch (status) {
+        case appConfig.DEVICE_STATUS_IDLE:
+          return(
+            <PanelBody style={{borderBottomWidth: `0`}}>
+              <MediaBox type="text">
+                <MediaBoxTitle>{deviceInfo.deviceAddr}</MediaBoxTitle>
+                <MediaBoxDescription>
+                  请将衣物平整放入干衣柜，注意保持间隙。放置后请关门。
+                </MediaBoxDescription>
+              </MediaBox>
+              <MediaBox type="text">
+                <MediaBoxTitle>{stationInfo.unitPrice + '元／分钟'}</MediaBoxTitle>
+                <MediaBoxDescription>
+                  计费标准
+                </MediaBoxDescription>
+              </MediaBox>
+              <MediaBox type="text">
+                <MediaBoxTitle>请您将衣物预先脱水甩干后再放入干衣柜</MediaBoxTitle>
+                <MediaBoxDescription>
+                  衣柜中有湿度探测器，在您的衣物烘干后会通过微信提醒您，届时请您及时收取衣物。
+                </MediaBoxDescription>
+              </MediaBox>
 
-        </PanelBody>
-      )
-    } else if(status === appConfig.DEVICE_STATUS_OCCUPIED ) {  //使用中
-      return(
-        <PanelBody style={{borderBottomWidth: `0`}}>
-          <Msg
-            type="warn"
-            title="该柜正在被使用，无法为您提供服务"
-            description="请尝试扫码其他柜门"
-          />
-        </PanelBody>
-      )
-    } else if(status === appConfig.DEVICE_STATUS_OFFLINE
-           || status === appConfig.DEVICE_STATUS_FAULT
-           || status === appConfig.DEVICE_STATUS_MAINTAIN
-           || status === appConfig.DEVICE_STATUS_UNREGISTER) {
-      return(
-        <PanelBody style={{borderBottomWidth: `0`}}>
-          <Msg
-            type="info"
-            title="设备故障"
-            description="请尝试扫码其他柜门"
-          />
-        </PanelBody>
-      )
+            </PanelBody>
+          )
+        case appConfig.DEVICE_STATUS_OCCUPIED:
+          return(
+            <PanelBody style={{borderBottomWidth: `0`}}>
+              <Msg
+                type="warn"
+                title="该柜正在被使用，无法为您提供服务"
+                description="请尝试扫码其他柜门"
+              />
+            </PanelBody>
+          )
+        case appConfig.DEVICE_STATUS_OFFLINE:
+          return(
+            <PanelBody style={{borderBottomWidth: `0`}}>
+              <Msg
+                type="info"
+                title="设备下线"
+                description="请尝试扫码其他柜门"
+              />
+            </PanelBody>
+          )
+        case appConfig.DEVICE_STATUS_FAULT:
+          return(
+            <PanelBody style={{borderBottomWidth: `0`}}>
+              <Msg
+                type="info"
+                title="设备故障"
+                description="请尝试扫码其他柜门"
+              />
+            </PanelBody>
+          )
+        case appConfig.DEVICE_STATUS_MAINTAIN:
+          return(
+            <PanelBody style={{borderBottomWidth: `0`}}>
+              <Msg
+                type="info"
+                title="设备维修保养"
+                description="请尝试扫码其他柜门"
+              />
+            </PanelBody>
+          )
+        case appConfig.DEVICE_STATUS_UNREGISTER:
+          return(
+            <PanelBody style={{borderBottomWidth: `0`}}>
+              <Msg
+                type="info"
+                title="设备未注册"
+                description="请尝试扫码其他柜门"
+              />
+            </PanelBody>
+          )
+        default:
+          return null
+      }
     }
   }
 
