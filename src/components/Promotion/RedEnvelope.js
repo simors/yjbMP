@@ -24,7 +24,7 @@ class RedEnvelope extends React.PureComponent {
     super(props)
     this.state = {
       visible: true,
-      amount: 10,
+      amount: undefined,
       loading: false,
     }
   }
@@ -58,7 +58,7 @@ class RedEnvelope extends React.PureComponent {
       let errorCode = data.errorCode
       let amount = data.amount
       if(errorCode === 0) {
-        that.setState({amount: amount})
+        that.setState({amount: amount, loading: false})
       } else {
         switch (errorCode) {
           case errno.EINVAL:
@@ -90,27 +90,25 @@ class RedEnvelope extends React.PureComponent {
     })
   }
 
-  getButtonTitle() {
-    const {amount, loading} = this.state
-    if(!amount) {
-      return "领取红包"
-    } else if(amount === 0) {
-      return "没有红包啦"
-    }
-  }
-
   renderOverlay() {
     const {amount, loading} = this.state
-    if(!amount || amount === 0) {
+    if(!amount) {
       return(<Button loading={loading}
                      className="redEnvelope-button"
                      onClick={this.sendRedEnvelopeRequest}>
-        {this.getButtonTitle()}
+        领取红包
       </Button>)
-    } else {
+    } else if(amount > 0) {
       return(
         <div className="redEnvelope">
           <div className="redEnvelopeAmount">{amount + "元运气红包"}</div>
+          <div className="closeButton" onClick={() => this.setState({visible: false})}></div>
+        </div>
+      )
+    } else if(amount === 0) {
+      return(
+        <div className="redEnvelope">
+          <div className="redEnvelopeAmount">没有抢到红包</div>
           <div className="closeButton" onClick={() => this.setState({visible: false})}></div>
         </div>
       )

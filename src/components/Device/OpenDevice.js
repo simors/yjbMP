@@ -25,7 +25,6 @@ const socket = io(appConfig.LC_SERVER_DOMAIN)
 const {
   Button,
   Panel,
-  Page,
   PanelHeader,
   PanelBody,
   MediaBox,
