@@ -5,7 +5,7 @@ import {browserHistory} from 'react-router'
 import querystring from 'querystring'
 import URL from  'url'
 import {store} from '../store/persistStore'
-import {selectActiveUserId} from '../selector/authSelector'
+import {selectToken} from '../selector/authSelector'
 import * as appConfig from '../constants/appConfig'
 import {loginWithWechatAuthData} from '../actions/authActions'
 import {selectIsRehydrated} from '../selector/configSelector'
@@ -61,8 +61,8 @@ export function wechatOauth(nextState, replace) {
     return
   }
 
-  let activeUser = selectActiveUserId(state)
-  if(!activeUser) {
+  let token = selectToken(state)
+  if(!token) {
     let urlObj = URL.parse(document.location.href)
     const {openid, access_token, expires_at} = querystring.parse(urlObj.query)
     let authData = undefined

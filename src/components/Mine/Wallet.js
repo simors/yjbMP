@@ -10,9 +10,8 @@ import WeUI from 'react-weui'
 import 'weui'
 import 'react-weui/build/dist/react-weui.css'
 import './wallet.css'
-import {selectActiveUserInfo, selectWalletInfo} from '../../selector/authSelector'
+import {selectActiveUserInfo, selectWalletInfo, selectActiveUserId} from '../../selector/authSelector'
 import { createPayment, createTransfer, fetchWalletInfo} from '../../actions/authActions'
-import {fetchPromCategoryAction} from '../../actions/promotionActions'
 import * as appConfig from '../../constants/appConfig'
 import {ActivityIndicator, Toast} from 'antd-mobile'
 
@@ -24,17 +23,25 @@ class Wallet extends Component {
   }
 
   componentWillMount() {
-    this.props.fetchPromCategoryAction({})
-    this.props.fetchWalletInfo({})
+    const {currentUserId} = this.props
+    if(currentUserId) {
+      this.props.fetchWalletInfo({})
+    }
   }
 
   componentDidMount() {
     document.title = "钱包"
   }
 
+  componentWillReceiveProps(newProps) {
+    const {currentUserId} = newProps
+    if(currentUserId && currentUserId != this.props.currentUserId) {
+      this.props.fetchWalletInfo({})
+    }
+  }
+
   onPress = () => {
     const {walletInfo} = this.props
-
     if(walletInfo.process === appConfig.WALLET_PROCESS_TYPE_REFUND) {
       return
     } else if(walletInfo.deposit === 0) {  //交押金
@@ -88,30 +95,30 @@ class Wallet extends Component {
   }
 
   render() {
-    const {walletInfo} = this.props
-    if(walletInfo) {
-      return(
-        <div>
-          <div className="walletcontainer">
-            <text className="amount">{(walletInfo.balance || 0) + '元'}</text>
-            <text className="amountTrip">当前余额</text>
-
-            <div className="buttons-area">
-              <Button type='primary' plain className="detailsButton" onClick={() => {browserHistory.push('/mine/wallet/walletDetail')}}>明细</Button>
-              <Button type='primary' plain className="rechargeButton" onClick={() => {browserHistory.push('/mine/wallet/recharge')}}>充值</Button>
-            </div>
-          </div>
-          {this.renderDeposit()}
-        </div>
-      )
-    } else {
+    const {walletInfo, currentUserId} = this.props
+    if(!currentUserId || !walletInfo) {
       return(<ActivityIndicator toast text="正在加载" />)
     }
+    return(
+      <div>
+        <div className="walletcontainer">
+          <text className="amount">{(walletInfo.balance || 0) + '元'}</text>
+          <text className="amountTrip">当前余额</text>
+
+          <div className="buttons-area">
+            <Button type='primary' plain className="detailsButton" onClick={() => {browserHistory.push('/mine/wallet/walletDetail')}}>明细</Button>
+            <Button type='primary' plain className="rechargeButton" onClick={() => {browserHistory.push('/mine/wallet/recharge')}}>充值</Button>
+          </div>
+        </div>
+        {this.renderDeposit()}
+      </div>
+    )
   }
 }
 
 const mapStateToProps = (state, ownProps) => {
   return {
+    currentUserId: selectActiveUserId(state),
     currentUser: selectActiveUserInfo(state),
     walletInfo: selectWalletInfo(state)
   }
@@ -121,7 +128,6 @@ const mapDispatchToProps = (dispatch) => bindActionCreators({
   createPayment,
   createTransfer,
   fetchWalletInfo,
-  fetchPromCategoryAction
 }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(Wallet)

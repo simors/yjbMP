@@ -89,17 +89,17 @@ function handleSaveWalletInfo(state, action) {
 }
 
 function handleSaveIdNameInfo(state, action) {
-  let idInfo = action.payload
-  let activeUser = state.get('activeUser')
-  let profileMap = state.get('profiles')
-  if(!activeUser || !profileMap) {
-    return state
-  }
-  profileMap = profileMap.setIn([activeUser, 'idName'], idInfo.idName)
-  profileMap = profileMap.setIn([activeUser, 'idNumber'], idInfo.idNumber)
-  profileMap = profileMap.setIn([activeUser, 'idNameVerified'], idInfo.idNameVerified)
-
-  state = state.set('profiles', profileMap)
+  // let idInfo = action.payload
+  // let activeUser = state.get('activeUser')
+  // let profileMap = state.get('profiles')
+  // if(!activeUser || !profileMap) {
+  //   return state
+  // }
+  // profileMap = profileMap.setIn([activeUser, 'idName'], idInfo.idName)
+  // profileMap = profileMap.setIn([activeUser, 'idNumber'], idInfo.idNumber)
+  // profileMap = profileMap.setIn([activeUser, 'idNameVerified'], idInfo.idNameVerified)
+  //
+  // state = state.set('profiles', profileMap)
   return state
 }
 
@@ -129,11 +129,6 @@ function onRehydrate(state, action) {
   const token = incoming.token
   if(token) {
     state = state.set('token', token)
-  }
-
-  const activeUser = incoming.activeUser
-  if(activeUser) {
-    state = state.set('activeUser', activeUser)
   }
 
   let profileMap = new Map(incoming.profiles)

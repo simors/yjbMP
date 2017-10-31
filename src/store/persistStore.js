@@ -20,8 +20,8 @@ export default function persist(store) {
     let state = store.getState()
     let token = selectToken(state)
     if(token) {
-      store.dispatch(autoLogin({token: token, success: (mobilePhoneVerified) => {
-        if(!mobilePhoneVerified) {
+      store.dispatch(autoLogin({token: token, success: (mobilePhoneNumber) => {
+        if(!mobilePhoneNumber) {
           browserHistory.replace('/bind')
         }
       }}))

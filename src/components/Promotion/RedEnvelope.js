@@ -30,15 +30,18 @@ class RedEnvelope extends React.PureComponent {
   }
 
   componentWillMount() {
-    const {fetchPromotionAction, fetchPromCategoryAction} = this.props
-    fetchPromCategoryAction({})
-    fetchPromotionAction({})
+    const {fetchPromotionAction, fetchPromCategoryAction, currentUserId} = this.props
+    if(currentUserId) {
+      fetchPromCategoryAction({})
+      fetchPromotionAction({})
+    }
   }
 
-  componentDidMount() {
-    const {promotion} = this.props
-    if(promotion) {
-      this.setState({visible: true})
+  componentWillReceiveProps(newProps) {
+    const {currentUserId} = newProps
+    if(currentUserId && currentUserId != this.props.currentUserId) {
+      fetchPromCategoryAction({})
+      fetchPromotionAction({})
     }
   }
 
@@ -117,7 +120,10 @@ class RedEnvelope extends React.PureComponent {
 
   render() {
     const {visible} = this.state
-    const {promotion} = this.props
+    const {promotion, currentUserId} = this.props
+    if(!currentUserId) {
+      return(null)
+    }
     return(
       <Modal visible={visible && !!promotion} transparent={true} popup={true}>
         {this.renderOverlay()}

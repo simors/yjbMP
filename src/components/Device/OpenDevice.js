@@ -19,6 +19,7 @@ import './device.css'
 import io from 'socket.io-client'
 import * as errno from '../../errno'
 import RedEnvelope from '../Promotion/RedEnvelope'
+import {ActivityIndicator} from 'antd-mobile'
 
 const socket = io(appConfig.LC_SERVER_DOMAIN)
 
@@ -50,14 +51,15 @@ class OpenDevice extends Component {
   componentWillMount() {
     const {params, requestDeviceInfo, fetchWalletInfo, fetchWechatJssdkConfig, currentUserId} = this.props
     let deviceNo = params.deviceNo
-    requestDeviceInfo({
-      deviceNo: deviceNo,
-      success: () => {this.setState({deviceLoading: false})},
-      error: (error) => {this.setState({deviceLoading: false})}
-    })
+    if(deviceNo) {
+      requestDeviceInfo({
+        deviceNo: deviceNo,
+        success: () => {this.setState({deviceLoading: false})},
+        error: (error) => {this.setState({deviceLoading: false})}
+      })
+    }
     if(currentUserId) {
       fetchWalletInfo({
-        userId: currentUserId,
         success: () => {this.setState({walletLoading: false})},
         error: (error) => {this.setState({walletLoading: false})}
       })
@@ -77,7 +79,6 @@ class OpenDevice extends Component {
     const {currentUserId, fetchWalletInfo} = newProps
     if(currentUserId && this.props.currentUserId != currentUserId) {
       fetchWalletInfo({
-        userId: currentUserId,
         success: () => {this.setState({walletLoading: false})},
         error: (error) => {this.setState({walletLoading: false})}
       })
@@ -257,18 +258,14 @@ class OpenDevice extends Component {
 
     //监听开机成功消息
     socket.on(appConfig.TURN_ON_DEVICE_SUCCESS, function (data) {
-      that.setState({
-        showLoading: false
-      })
+      that.setState({showLoading: false})
       browserHistory.replace('/mine/orders')
     })
 
     //监听开机失败消息
     socket.on(appConfig.TURN_ON_DEVICE_FAILED, function (data) {
       console.log("收到开机失败消息", data)
-      that.setState({
-        showLoading: false
-      })
+      that.setState({showLoading: false})
 
     })
   }
@@ -294,8 +291,11 @@ class OpenDevice extends Component {
   }
 
   render() {
-    const {params} = this.props
+    const {params, currentUserId} = this.props
     const {deviceLoading, walletLoading, showLoading} = this.state
+    if(!currentUserId) {
+      return(<ActivityIndicator toast text="正在加载" />)
+    }
     return(
       <div>
         <div className="device-banner">

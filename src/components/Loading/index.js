@@ -4,8 +4,8 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {browserHistory} from 'react-router'
-import Loading from '../Loading'
 import {selectIsRehydrated} from '../../selector/configSelector'
+import {ActivityIndicator} from 'antd-mobile'
 
 class LoadingPage extends React.Component {
   constructor(props) {
@@ -21,9 +21,7 @@ class LoadingPage extends React.Component {
   }
 
   render() {
-    return (
-      <Loading/>
-    )
+    return (<ActivityIndicator toast text="正在加载" />)
   }
 }
 

@@ -5,13 +5,14 @@ import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import {browserHistory} from 'react-router'
-import {selectActiveUserInfo} from '../../selector/authSelector'
+import {selectActiveUserInfo, selectActiveUserId} from '../../selector/authSelector'
 import {fetchPromCategoryAction} from '../../actions/promotionActions'
 import WeUI from 'react-weui'
 import 'weui'
 import 'react-weui/build/dist/react-weui.css'
 import './mine.css'
-import Loading from '../../components/Loading'
+import {ActivityIndicator} from 'antd-mobile'
+
 
 const {
   Button,
@@ -34,7 +35,17 @@ class Mine extends Component {
   }
 
   componentWillMount() {
-    this.props.fetchPromCategoryAction({})
+    const {currentUserId} = this.props
+    if(currentUserId) {
+      this.props.fetchPromCategoryAction({})
+    }
+  }
+
+  componentWillReceiveProps(newProps) {
+    const {currentUserId} = this.props
+    if(currentUserId != newProps.currentUserId) {
+      this.props.fetchPromCategoryAction({})
+    }
   }
 
   componentDidMount() {
@@ -42,82 +53,81 @@ class Mine extends Component {
   }
 
   render() {
-    if(this.props.currentUser) {
-      return (
-        <Page ptr={false} style={{backgroundColor: `#EFEFF4`}}>
-          <div className="container">
-            <img src="/logo.png" alt="" style={{display: `block`, width: `7.5rem`, height: `6.75rem`}}/>
-          </div>
-
-          <Cells style={{marginTop: 0}}>
-            <Cell access onClick={() => {browserHistory.push('/modifyProfile')}}>
-              <CellHeader>
-                <img src={this.props.currentUser.avatar || '/defaultAvatar.svg'} alt="" style={{display: `block`, width: `3.13rem`, marginRight: `0.63rem`}}/>
-              </CellHeader>
-              <CellBody primary={true}>
-                <h6>{this.props.currentUser.nickname || '衣家宝'}</h6>
-                <p style={{fontSize: `0.9rem`, marginTop: `0.1rem`}}>普通用户</p>
-              </CellBody>
-              <CellFooter style={{fontSize: `1.1rem`}}>
-                修改资料
-              </CellFooter>
-            </Cell>
-          </Cells>
-
-          <Cells>
-            <Cell access onClick={() => {browserHistory.push('/mine/score', {score: 100})}}>
-              <CellHeader>
-                <img src="/score.png" alt="" style={{display: `block`, width: `1.3rem`, marginRight: `1.1rem`}}/>
-              </CellHeader>
-              <CellBody>
-                积分
-              </CellBody>
-              <CellFooter/>
-            </Cell>
-            <Cell access onClick={() => {browserHistory.push('/mine/wallet')}}>
-              <CellHeader>
-                <img src="/wallet.png" alt="" style={{display: `block`, width: `1.3rem`, marginRight: `1.1rem`}}/>
-              </CellHeader>
-              <CellBody>
-                钱包
-              </CellBody>
-              <CellFooter/>
-            </Cell>
-            <Cell access onClick={() => {browserHistory.push('/mine/orders')}}>
-              <CellHeader>
-                <img src="/order.png" alt="" style={{display: `block`, width: `1.3rem`, marginRight: `1.1rem`}}/>
-              </CellHeader>
-              <CellBody>
-                我的订单
-              </CellBody>
-              <CellFooter/>
-            </Cell>
-          </Cells>
-
-          <Cells>
-            <Cell access onClick={() => {browserHistory.push('/about')}}>
-              <CellHeader>
-                <img src="/about_us.png" alt="" style={{display: `block`, width: `1.3rem`, marginRight: `1.1rem`}}/>
-              </CellHeader>
-              <CellBody>
-                关于衣家宝
-              </CellBody>
-              <CellFooter/>
-            </Cell>
-          </Cells>
-        </Page>
-      )
-    } else {
-      return (
-        <Loading />
-      )
+    const {currentUserId} = this.props
+    if(!currentUserId) {
+      return(<ActivityIndicator toast text="正在加载" />)
     }
+    return (
+      <Page ptr={false} style={{backgroundColor: `#EFEFF4`}}>
+        <div className="container">
+          <img src="/logo.png" alt="" style={{display: `block`, width: `7.5rem`, height: `6.75rem`}}/>
+        </div>
+
+        <Cells style={{marginTop: 0}}>
+          <Cell access onClick={() => {browserHistory.push('/modifyProfile')}}>
+            <CellHeader>
+              <img src={this.props.currentUser.avatar || '/defaultAvatar.svg'} alt="" style={{display: `block`, width: `3.13rem`, marginRight: `0.63rem`}}/>
+            </CellHeader>
+            <CellBody primary={true}>
+              <h6>{this.props.currentUser.nickname || '衣家宝'}</h6>
+              <p style={{fontSize: `0.9rem`, marginTop: `0.1rem`}}>普通用户</p>
+            </CellBody>
+            <CellFooter style={{fontSize: `1.1rem`}}>
+              修改资料
+            </CellFooter>
+          </Cell>
+        </Cells>
+
+        <Cells>
+          <Cell access onClick={() => {browserHistory.push('/mine/score', {score: 100})}}>
+            <CellHeader>
+              <img src="/score.png" alt="" style={{display: `block`, width: `1.3rem`, marginRight: `1.1rem`}}/>
+            </CellHeader>
+            <CellBody>
+              积分
+            </CellBody>
+            <CellFooter/>
+          </Cell>
+          <Cell access onClick={() => {browserHistory.push('/mine/wallet')}}>
+            <CellHeader>
+              <img src="/wallet.png" alt="" style={{display: `block`, width: `1.3rem`, marginRight: `1.1rem`}}/>
+            </CellHeader>
+            <CellBody>
+              钱包
+            </CellBody>
+            <CellFooter/>
+          </Cell>
+          <Cell access onClick={() => {browserHistory.push('/mine/orders')}}>
+            <CellHeader>
+              <img src="/order.png" alt="" style={{display: `block`, width: `1.3rem`, marginRight: `1.1rem`}}/>
+            </CellHeader>
+            <CellBody>
+              我的订单
+            </CellBody>
+            <CellFooter/>
+          </Cell>
+        </Cells>
+
+        <Cells>
+          <Cell access onClick={() => {browserHistory.push('/about')}}>
+            <CellHeader>
+              <img src="/about_us.png" alt="" style={{display: `block`, width: `1.3rem`, marginRight: `1.1rem`}}/>
+            </CellHeader>
+            <CellBody>
+              关于衣家宝
+            </CellBody>
+            <CellFooter/>
+          </Cell>
+        </Cells>
+      </Page>
+    )
   }
 }
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    currentUser: selectActiveUserInfo(state)
+    currentUserId: selectActiveUserId(state),
+    currentUser: selectActiveUserInfo(state),
   }
 };
 

@@ -54,12 +54,12 @@ export function* autoLogin(action) {
     let token = result.token
     let user = result.user
     let subscribe = result.subscribe
-    let mobilePhoneVerified = user.attributes.mobilePhoneVerified
+    let mobilePhoneNumber = user.attributes.mobilePhoneNumber
     yield put(autoLoginSuccess({token: token, user: user, subscribe: subscribe}))
     console.log("自动登录成功：", user)
     yield call(updateUserRegionApi, {})
     if (payload.success) {
-      payload.success(mobilePhoneVerified)
+      payload.success(mobilePhoneNumber)
     }
   } catch(error) {
     console.log("自动登录失败：", error)
@@ -148,7 +148,7 @@ export function* fetchWalletInfo(action) {
   let payload = action.payload
 
   try {
-    let walletInfo = yield call(getWalletInfo, {userId: payload.userId})
+    let walletInfo = yield call(getWalletInfo, {})
     yield put(fetchWalletInfoSuccess(walletInfo))
     if(payload.success) {
       payload.success()

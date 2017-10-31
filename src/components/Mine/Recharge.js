@@ -8,14 +8,14 @@ import {browserHistory} from 'react-router'
 var pingpp = require('pingpp-js')
 import {createPayment} from '../../actions/authActions'
 import * as appConfig from '../../constants/appConfig'
-import {selectActiveUserInfo} from '../../selector/authSelector'
+import {selectActiveUserInfo, selectActiveUserId} from '../../selector/authSelector'
 import {fetchPromotionAction} from '../../actions/promotionActions'
 import {selectCategoryByTitle, selectPromByCategoryId} from '../../selector/promotionSelector'
 import WeUI from 'react-weui'
 import 'weui'
 import 'react-weui/build/dist/react-weui.css'
 import './recharge.css'
-import {Toast} from 'antd-mobile'
+import {Toast, ActivityIndicator} from 'antd-mobile'
 
 const {
   Button,
@@ -39,17 +39,22 @@ class Recharge extends Component {
   }
 
   componentWillMount() {
-    const {fetchPromotionAction} = this.props
-    fetchPromotionAction({})
+    const {fetchPromotionAction, currentUserId} = this.props
+    if(currentUserId) {
+      fetchPromotionAction({})
+    }
   }
 
   componentWillReceiveProps(newProps) {
-    const {promotion} = newProps
-    if(promotion) {
+    const {promotion, currentUserId} = newProps
+    if(promotion && this.props.promotion === undefined) {
       this.setState({
         selectAmount: promotion.awards.rechargeList[0].recharge,
         selectAward: promotion.awards.rechargeList[0].award,
       })
+    }
+    if(currentUserId && currentUserId != this.props.currentUserId) {
+      fetchPromotionAction({})
     }
   }
 
@@ -166,6 +171,10 @@ class Recharge extends Component {
   }
 
   render() {
+    const {currentUserId} = this.props
+    if(!currentUserId) {
+      return(<ActivityIndicator toast text="正在加载" />)
+    }
     return(
       <div>
         <div className="banner">
@@ -195,7 +204,8 @@ const mapStateToProps = (state, ownProps) => {
   }
   return {
     promotion: promotion,
-    currentUser: selectActiveUserInfo(state)
+    currentUser: selectActiveUserInfo(state),
+    currentUserId: selectActiveUserId(state)
   }
 }
 

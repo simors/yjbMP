@@ -46,7 +46,7 @@ function* fetchPromotionCategories(action) {
   let payload = action.payload
 
   try {
-    let categories = yield call(fetchPromotionCategoriesApi, payload)
+    let categories = yield call(fetchPromotionCategoriesApi, {})
     yield put(savePromotionCategories({ categories }))
     if(payload.success) {
       payload.success()
