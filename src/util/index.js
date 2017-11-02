@@ -54,6 +54,16 @@ export function formatTime(milliseconds, format) {
 export function wechatOauth(nextState, replace) {
   let state = store.getState()
   let isRehydrated = selectIsRehydrated(state)
+  console.log("url:", document.location.href)
+  store.dispatch(fetchWechatJssdkConfig({
+    debug: __DEV__? true: true,
+    jsApiList: ['scanQRCode', 'getLocation'],
+    url: document.location.href,
+    success: (configInfo) => {
+      wx.config(configInfo)
+    },
+    error: (error) => {console.log(error)}
+  }))
   if(!isRehydrated) {
     replace({
       pathname: '/loading',
@@ -86,15 +96,5 @@ export function wechatOauth(nextState, replace) {
       let redirectUrl = getAuthorizeURL(wechatOauthUrl, nextPathname, 'snsapi_userinfo')
       document.location = redirectUrl
     }
-  } else {
-    store.dispatch(fetchWechatJssdkConfig({
-      debug: __DEV__? true: true,
-      jsApiList: ['scanQRCode', 'getLocation'],
-      url: document.location.href,
-      success: (configInfo) => {
-        wx.config(configInfo)
-      },
-      error: (error) => {console.log(error)}
-    }))
   }
 }
