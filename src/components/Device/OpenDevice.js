@@ -20,6 +20,8 @@ import io from 'socket.io-client'
 import * as errno from '../../errno'
 import RedEnvelope from '../Promotion/RedEnvelope'
 import {ActivityIndicator} from 'antd-mobile'
+import {getMobileOperatingSystem} from '../../util'
+import {selectInitUrl} from '../../selector/configSelector'
 
 const socket = io(appConfig.LC_SERVER_DOMAIN)
 
@@ -49,7 +51,9 @@ class OpenDevice extends Component {
   }
 
   componentWillMount() {
-    const {params, requestDeviceInfo, fetchWalletInfo, fetchWechatJssdkConfig, currentUserId} = this.props
+    const {params, requestDeviceInfo, fetchWalletInfo, fetchWechatJssdkConfig, currentUserId, initUrl} = this.props
+    const OS = getMobileOperatingSystem()
+    let jssdkURL = window.location.href
     let deviceNo = params.deviceNo
     if(deviceNo) {
       requestDeviceInfo({
@@ -64,10 +68,14 @@ class OpenDevice extends Component {
         error: (error) => {this.setState({walletLoading: false})}
       })
     }
+    if(OS === 'iOS') {
+      //微信JS-SDK Bug: SPA(单页应用)ios系统必须使用首次加载的url初始化jssdk
+      jssdkURL = initUrl
+    }
     fetchWechatJssdkConfig({
       debug: __DEV__? true: false,
       jsApiList: ['scanQRCode', 'getLocation'],
-      url: "http://dev.yiijiabao.com/loading",
+      url: jssdkURL,
       success: (configInfo) => {
         wx.config(configInfo)
       },
@@ -330,6 +338,7 @@ const mapStateToProps = (state, ownProps) => {
     stationInfo: stationInfo,
     currentUserId: selectActiveUserId(state),
     walletInfo: selectWalletInfo(state),
+    initUrl: selectInitUrl(state)
   }
 };
 

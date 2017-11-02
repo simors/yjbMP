@@ -14,3 +14,8 @@ export function selectIsRehydrated(state) {
   let isRehydrated = state.CONFIG.get('isRehydrated')
   return isRehydrated
 }
+
+export function selectInitUrl(state) {
+  let initUrl = state.CONFIG.get('initUrl')
+  return initUrl
+}

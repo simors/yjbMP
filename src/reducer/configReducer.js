@@ -16,6 +16,8 @@ export default function configReducer(state = initialState, action) {
       return handleSaveLocation(state, action)
     case configActionTypes.UPDATE_REHYDRATE_SUCCESS:
       return handleUpdateAppRehydrate(state, action)
+    case configActionTypes.UPDATE_INIT_URL_SUCCESS:
+      return handleUpdateInitUrl(state, action)
     case REHYDRATE:
       return onRehydrate(state, action)
     default:
@@ -25,6 +27,15 @@ export default function configReducer(state = initialState, action) {
 
 function handleUpdateAppRehydrate(state, action) {
   state = state.set('isRehydrated', action.payload.rehydrated)
+  return state
+}
+
+function handleUpdateInitUrl(state, action) {
+  let url = action.payload.url
+  let initUrl = state.get('initUrl')
+  if(initUrl === undefined) {
+    state = state.set('initUrl', url)
+  }
   return state
 }
 

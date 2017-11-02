@@ -7,9 +7,9 @@ import URL from  'url'
 import {store} from '../store/persistStore'
 import {selectToken} from '../selector/authSelector'
 import * as appConfig from '../constants/appConfig'
-import {loginWithWechatAuthData, fetchWechatJssdkConfig} from '../actions/authActions'
+import {loginWithWechatAuthData} from '../actions/authActions'
 import {selectIsRehydrated} from '../selector/configSelector'
-import wx from 'tencent-wx-jssdk'
+import {updateInitUrl} from '../actions/configActions'
 
 
 function getAuthorizeURL(redirect, state, scope) {
@@ -51,19 +51,35 @@ export function formatTime(milliseconds, format) {
   return result
 }
 
+/**
+ * Determine the mobile operating system.
+ * This function returns one of 'iOS', 'Android', 'Windows Phone', or 'unknown'.
+ *
+ * @returns {String}
+ */
+export function getMobileOperatingSystem() {
+  var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+  // Windows Phone must come first because its UA also contains "Android"
+  if (/windows phone/i.test(userAgent)) {
+    return "Windows Phone";
+  }
+
+  if (/android/i.test(userAgent)) {
+    return "Android";
+  }
+
+  // iOS detection from: http://stackoverflow.com/a/9039885/177710
+  if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+    return "iOS";
+  }
+
+  return "unknown";
+}
+
 export function wechatOauth(nextState, replace) {
   let state = store.getState()
   let isRehydrated = selectIsRehydrated(state)
-  // console.log("url:", document.location.href)
-  // store.dispatch(fetchWechatJssdkConfig({
-  //   debug: __DEV__? true: true,
-  //   jsApiList: ['scanQRCode', 'getLocation'],
-  //   url: document.location.href,
-  //   success: (configInfo) => {
-  //     wx.config(configInfo)
-  //   },
-  //   error: (error) => {console.log(error)}
-  // }))
   if(!isRehydrated) {
     replace({
       pathname: '/loading',
@@ -96,5 +112,15 @@ export function wechatOauth(nextState, replace) {
       let redirectUrl = getAuthorizeURL(wechatOauthUrl, nextPathname, 'snsapi_userinfo')
       document.location = redirectUrl
     }
+  } else {
+    store.dispatch(updateInitUrl({
+      url: document.location.href,
+    }))
   }
+}
+
+export function setInitUrl(nextState, replace) {
+  store.dispatch(updateInitUrl({
+    url: document.location.href,
+  }))
 }

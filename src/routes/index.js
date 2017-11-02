@@ -1,7 +1,7 @@
 // We only need to import the modules necessary for initial render
 import React from 'react'
 import { Router, Route, IndexRoute, browserHistory} from 'react-router'
-import { wechatOauth } from  '../util'
+import { wechatOauth, setInitUrl} from  '../util'
 
 import AppIndex from '../components/AppIndex'
 import Home from '../components/Home'
@@ -50,7 +50,7 @@ const rootRouter = (
     <Route path='modifyProfile/nickname' component={ModifyNickname}/>
     <Route path='modifyProfile/certification' component={Certification}/>
     <Route path='about' component={About}/>
-    <Route path='loading' component={LoadingPage}/>
+    <Route path='loading' component={LoadingPage} onEnter={setInitUrl}/>
     <Route path='authSuccess' component={AuthSuccess}/>
   </Router>
 )

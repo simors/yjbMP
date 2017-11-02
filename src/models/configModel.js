@@ -20,6 +20,7 @@ export const ConfigState = Record({
   appname: undefined,
   location: undefined,
   isRehydrated: undefined,      //持久化数据恢复结束
+  initUrl: undefined,           //应用首次进入的URL
 }, "ConfigState")
 
 export class Location extends LocationRecord {
