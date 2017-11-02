@@ -64,15 +64,15 @@ class OpenDevice extends Component {
         error: (error) => {this.setState({walletLoading: false})}
       })
     }
-    fetchWechatJssdkConfig({
-      debug: __DEV__? true: false,
-      jsApiList: ['scanQRCode', 'getLocation'],
-      url: window.location.href,
-      success: (configInfo) => {
-        wx.config(configInfo)
-      },
-      error: (error) => {console.log(error)}
-    })
+    // fetchWechatJssdkConfig({
+    //   debug: __DEV__? true: false,
+    //   jsApiList: ['scanQRCode', 'getLocation'],
+    //   url: window.location.href,
+    //   success: (configInfo) => {
+    //     wx.config(configInfo)
+    //   },
+    //   error: (error) => {console.log(error)}
+    // })
   }
 
   componentWillReceiveProps(newProps) {

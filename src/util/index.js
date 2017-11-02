@@ -7,8 +7,9 @@ import URL from  'url'
 import {store} from '../store/persistStore'
 import {selectToken} from '../selector/authSelector'
 import * as appConfig from '../constants/appConfig'
-import {loginWithWechatAuthData} from '../actions/authActions'
+import {loginWithWechatAuthData, fetchWechatJssdkConfig} from '../actions/authActions'
 import {selectIsRehydrated} from '../selector/configSelector'
+import wx from 'tencent-wx-jssdk'
 
 
 function getAuthorizeURL(redirect, state, scope) {
@@ -85,5 +86,15 @@ export function wechatOauth(nextState, replace) {
       let redirectUrl = getAuthorizeURL(wechatOauthUrl, nextPathname, 'snsapi_userinfo')
       document.location = redirectUrl
     }
+  } else {
+    store.dispatch(fetchWechatJssdkConfig({
+      debug: __DEV__? true: true,
+      jsApiList: ['scanQRCode', 'getLocation'],
+      url: document.location.href,
+      success: (configInfo) => {
+        wx.config(configInfo)
+      },
+      error: (error) => {console.log(error)}
+    }))
   }
 }

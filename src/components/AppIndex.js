@@ -21,7 +21,8 @@ class AppIndex extends Component {
     fetchWechatJssdkConfig({
       debug: __DEV__? true: false,
       jsApiList: ['scanQRCode', 'getLocation'],
-      url: window.location.href,
+      // url: window.location.href,
+      url: "http://yiijiabao.ngrok.io/openDevice/yjb0003",
       success: (configInfo) => {
         wx.config(configInfo)
       },
