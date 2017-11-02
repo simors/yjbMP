@@ -48,6 +48,7 @@ class Deposit extends Component {
 
   payDeposit = () => {
     const {currentStation, currentUser} = this.props
+    this.setState({disableButton: true})
     this.props.createPayment({
       amount: currentStation.deposit,
       channel: 'wx_pub',
