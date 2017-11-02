@@ -33,6 +33,7 @@ class Deposit extends Component {
       that.setState({disableButton: false})
       if (result == "success") {
         Toast.success("支付成功", 1)
+        browserHistory.goBack()
       } else if (result == "fail") {
         Toast.fail("支付失败", 2)
       } else if (result == "cancel") {
