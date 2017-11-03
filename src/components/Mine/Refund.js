@@ -22,6 +22,9 @@ const {
 class Refund extends Component {
   constructor(props) {
     super(props)
+    this.state = {
+      disableButton: false,
+    }
   }
 
   componentDidMount() {
@@ -29,6 +32,7 @@ class Refund extends Component {
   }
 
   onRefundError = (error) => {
+    this.setState({disableButton: true})
     switch (error.code) {
       case errno.ERROR_UNSUPPORT_CHANNEL:
         Toast.fail("支付渠道错误", 2)
@@ -60,7 +64,10 @@ class Refund extends Component {
       },
       openid: currentUser.authData.weixin.openid,
       username: '',
-      success: () => {browserHistory.push('/mine/wallet')},
+      success: () => {
+        this.setState({disableButton: false})
+        browserHistory.push('/mine/wallet')
+      },
       error: this.onRefundError
     })
   }
@@ -76,7 +83,7 @@ class Refund extends Component {
           </div>
           <div className="refund-trip">退款实时到账，请您注意微信支付的通知并查看微信钱包余额变动。</div>
           <div className="button-area">
-            <Button onClick={this.refundDeposit}>确认退回</Button>
+            <Button onClick={this.refundDeposit} disabled={this.state.disableButton}>确认退回</Button>
           </div>
         </div>
       )
