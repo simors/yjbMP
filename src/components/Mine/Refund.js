@@ -46,6 +46,12 @@ class Refund extends Component {
       case errno.ERROR_CREATE_TRANSFER:
         Toast.fail("创建交易请求失败", 2)
         break
+      case errno.ERROR_UNPAID_ORDER:
+        Toast.fail("有未支付订单", 2)
+        break
+      case errno.ERROR_OCCUPIED_ORDER:
+        Toast.fail("有正在使用中订单", 2)
+        break
       default:
         Toast.fail("内部错误：" + error.code, 2)
         break
