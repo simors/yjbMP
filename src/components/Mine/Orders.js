@@ -20,7 +20,9 @@ import {Toast} from 'antd-mobile'
 
 const socket = io(appConfig.LC_SERVER_DOMAIN)
 
-const {Panel, Tab, TabBody, InfiniteLoader, Cells, Icon, Dialog} = WeUI
+const {Panel, Tab, TabBody, InfiniteLoader, Cells, Icon, Dialog, LoadMore} = WeUI
+
+const LoaderFinishIcon = (<LoadMore showLine>没有订单啦！</LoadMore>)
 
 class Orders extends Component {
   constructor(props) {
@@ -362,7 +364,7 @@ class Orders extends Component {
 
   render() {
     return(
-    <InfiniteLoader onLoadMore={this.onLoadMoreOrders}>
+    <InfiniteLoader onLoadMore={this.onLoadMoreOrders} loaderDefaultIcon={LoaderFinishIcon}>
       <Tab className="order-tab">
         <TabBody style={{backgroundColor: `#EFEFF4`}}>
           <Cells style={{backgroundColor: `#EFEFF4`, marginTop: `0.6rem`}}>

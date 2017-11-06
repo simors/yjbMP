@@ -23,6 +23,7 @@ import Deposit from '../components/Mine/Deposit'
 import Refund from '../components/Mine/Refund'
 import LoadingPage from '../components/Loading/'
 import AuthSuccess from '../components/Auth/AuthSuccess'
+import Focus from '../components/Focus'
 
 
 const routes = (
@@ -51,6 +52,7 @@ const rootRouter = (
     <Route path='modifyProfile/certification' component={Certification}/>
     <Route path='about' component={About}/>
     <Route path='loading' component={LoadingPage} onEnter={setInitUrl}/>
+    <Route path='focus' component={Focus} />
     <Route path='authSuccess' component={AuthSuccess}/>
   </Router>
 )

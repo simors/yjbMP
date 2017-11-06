@@ -8,25 +8,9 @@ import {browserHistory} from 'react-router'
 import WeUI from 'react-weui'
 import 'weui'
 import 'react-weui/build/dist/react-weui.css'
-import appConfig from '../../constants/appConfig'
 
 import './bindsuccess.css'
-
-const {
-  Page,
-  Flex,
-  FlexItem,
-  Button,
-  Msg,
-  CellHeader,
-  CellBody,
-  CellFooter,
-  Form,
-  FormCell,
-  Input,
-  Label,
-  Select,
-} = WeUI
+const {Page, Msg} = WeUI
 
 class BindSuccess extends Component {
   constructor(props) {
@@ -48,7 +32,7 @@ class BindSuccess extends Component {
             buttons={[{
               type: 'primary',
               label: '关注衣家宝公众号',
-              onClick: () => {document.location = appConfig.FOCUS_MP_URL}
+              onClick: () => {browserHistory.push('/focus')}
             }]}
           />
         </div>

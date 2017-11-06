@@ -2,6 +2,7 @@
  * Created by wanpeng on 2017/10/25.
  */
 import React, {PureComponent} from 'react'
+import {browserHistory} from 'react-router'
 import WeUI from 'react-weui'
 import 'weui'
 import 'react-weui/build/dist/react-weui.css'
@@ -30,7 +31,7 @@ export default class AuthSuccess extends PureComponent {
             buttons={[{
               type: 'primary',
               label: '关注衣家宝公众号',
-              onClick: () => {document.location = appConfig.FOCUS_MP_URL}
+              onClick: () => {browserHistory.push('/focus')}
             }]}
             footer={() =>(<img className="logo" src="/logo_gray.png" alt=""/>)}
           />
