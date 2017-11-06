@@ -13,7 +13,7 @@ import * as appConfig from '../../constants/appConfig'
 import {selectActiveUserId} from '../../selector/authSelector'
 import {selectPromByCategoryType} from '../../selector/promotionSelector'
 import {fetchPromotionAction, fetchPromCategoryAction} from '../../actions/promotionActions'
-import {Button, Modal, Toast } from 'antd-mobile'
+import {Modal, Toast, ActivityIndicator} from 'antd-mobile'
 import './redEnvelope.css'
 import * as errno from '../../errno'
 
@@ -25,7 +25,7 @@ class RedEnvelope extends React.PureComponent {
     this.state = {
       visible: true,
       amount: undefined,
-      loading: false,
+      loading: true,
     }
   }
 
@@ -60,8 +60,8 @@ class RedEnvelope extends React.PureComponent {
     socket.on(appConfig.PROMOTION_RESPONSE, function (data) {
       let errorCode = data.errorCode
       let amount = data.amount
+      that.setState({amount: amount, loading: false})
       if(errorCode === 0) {
-        that.setState({amount: amount, loading: false})
       } else {
         switch (errorCode) {
           case errno.EINVAL:
@@ -95,15 +95,17 @@ class RedEnvelope extends React.PureComponent {
 
   renderOverlay() {
     const {amount, loading} = this.state
+    if(loading) {
+      return(<ActivityIndicator toast text="正在加载" />)
+    }
     if(!amount) {
-      return(<Button loading={loading}
-                     className="redEnvelope-button"
-                     onClick={this.sendRedEnvelopeRequest}>
-        领取红包
-      </Button>)
+      return(
+        <div className="redEnvelope" onClick={this.sendRedEnvelopeRequest}>
+        </div>
+      )
     } else if(amount > 0) {
       return(
-        <div className="redEnvelope">
+        <div className="redEnvelopeOpen">
           <div className="redEnvelopeAmount">{amount + "元运气红包"}</div>
           <div className="closeButton" onClick={() => this.setState({visible: false})}></div>
         </div>
@@ -125,7 +127,7 @@ class RedEnvelope extends React.PureComponent {
       return(null)
     }
     return(
-      <Modal visible={visible && !!promotion} transparent={true} popup={true}>
+      <Modal visible={visible && !!promotion} transparent={true} popup={true} onClose={() => this.setState({visible: false})}>
         {this.renderOverlay()}
       </Modal>
     )

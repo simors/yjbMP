@@ -16,11 +16,11 @@ import 'react-weui/build/dist/react-weui.css'
 import './orders.css'
 import io from 'socket.io-client'
 import * as errno from '../../errno'
-// import {Toast} from 'antd-mobile'
+import {Toast} from 'antd-mobile'
 
 const socket = io(appConfig.LC_SERVER_DOMAIN)
 
-const {Panel, Tab, TabBody, InfiniteLoader, Cells, Icon, Dialog, Toast} = WeUI
+const {Panel, Tab, TabBody, InfiniteLoader, Cells, Icon, Dialog} = WeUI
 
 class Orders extends Component {
   constructor(props) {
@@ -44,10 +44,7 @@ class Orders extends Component {
             onClick: () => {}
           }
         ]
-      },
-      showLoading: false,
-      loadingMessage: '加载中...',
-      loadingIcon: 'loading',
+      }
     }
   }
 
@@ -190,25 +187,21 @@ class Orders extends Component {
   }
 
   paymentServiceFailedCallback = (error) => {
-    let that = this
     console.log("onPaymentService", error)
     switch (error.code) {
       case errno.EPERM:
-        this.setState({showLoading: true, loadingMessage: "用户未登录", loadingIcon: 'warn'})
+        Toast.fail("用户未登录")
         break
       case errno.EINVAL:
-        this.setState({showLoading: true, loadingMessage: "参数错误", loadingIcon: 'warn'})
+        Toast.fail("参数错误")
         break
       case errno.ERROR_NO_ENOUGH_BALANCE:
-        this.setState({showLoading: true, loadingMessage: "余额不足", loadingIcon: 'warn'})
+        Toast.fail("余额不足")
         break
       default:
-        this.setState({showLoading: true, loadingMessage: "内部错误：" + error.code, loadingIcon: 'warn'})
+        Toast.fail("内部错误" + error.code)
         break
     }
-    setTimeout(function () {
-      that.setState({showLoading: false})
-    }, 2000)
   }
 
   //支付服务订单
@@ -249,8 +242,6 @@ class Orders extends Component {
   }
   //关机
   trunOffDevice(order) {
-    var that = this
-    this.setState({showLoading: true, showDialog: false})
     //发送关机请求
     socket.emit(appConfig.TURN_OFF_DEVICE, {
       userId: this.props.currentUser.id,
@@ -262,35 +253,21 @@ class Orders extends Component {
       if(order) { //订单已结束，设备已自动关机
         console.log('trunOffDevice socket.emit ack: order', order)
         this.props.updateOrder({order: order})
-        that.setState({loadingMessage: "衣物已烘干，干衣柜自动关闭", loadingIcon: 'info'})
-        setTimeout(function () {
-          that.setState({showLoading: false})
-        }, 2000)
+        Toast.info("衣物已烘干，干衣柜自动关闭")
         return
       }
       if(errorCode != 0) {
-        that.setState({loadingMessage: "关机请求失败", loadingIcon: 'info'})
-        console.log("关机请求失败", data.errorMessage)
-        setTimeout(function () {
-          that.setState({showLoading: false})
-        }, 2000)
+        Toast.fail("关机请求失败")
       }
     })
 
     socket.on(appConfig.TURN_OFF_DEVICE_SUCCESS, function (data) {
-      console.log("收到关机成功消息", data)
-      that.setState({loadingMessage: "关机成功", loadingIcon: 'success-circle'})
-      setTimeout(function () {
-        that.setState({showLoading: false})
-      }, 2000)
+      Toast.success("关机成功")
+
     })
 
     socket.on(appConfig.TURN_OFF_DEVICE_FAILED, function (data) {
-      console.log("收到关机失败消息", data)
-      that.setState({loadingMessage: "关机失败", loadingIcon: 'info'})
-      setTimeout(function () {
-        that.setState({showLoading: false})
-      }, 2000)
+      Toast.fail("关机失败")
     })
   }
 
@@ -407,7 +384,6 @@ class Orders extends Component {
         </TabBody>
       </Tab>
       <Dialog type="ios" title={this.state.Dialog.title} buttons={this.state.Dialog.buttons} show={this.state.showDialog}>{this.state.Dialog.trip}</Dialog>
-      <Toast icon={this.state.loadingIcon} show={this.state.showLoading}>{this.state.loadingMessage}</Toast>
     </InfiniteLoader>
     )
   }
