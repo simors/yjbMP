@@ -31,3 +31,18 @@ export function selectMyOrders(state) {
   })
   return myOrders
 }
+
+export function selectOrderByStatus(state, status) {
+  if(status === undefined) {
+    return undefined
+  }
+  let myOrderList = state.ORDER.get('myOrderList')
+  let myOrders = []
+  myOrderList.toArray().forEach((orderId) => {
+    let orderInfo = selectOrderById(state, orderId)
+    if(orderInfo.status === status) {
+      myOrders.push(orderInfo)
+    }
+  })
+  return myOrders
+}

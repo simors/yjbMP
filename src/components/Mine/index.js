@@ -7,26 +7,23 @@ import { bindActionCreators } from 'redux'
 import {browserHistory} from 'react-router'
 import {selectActiveUserInfo, selectActiveUserId} from '../../selector/authSelector'
 import {fetchPromCategoryAction} from '../../actions/promotionActions'
+import {fetchOrders} from '../../actions/orderActions'
+import {selectOrderByStatus} from '../../selector/orderSelector'
 import WeUI from 'react-weui'
 import 'weui'
 import 'react-weui/build/dist/react-weui.css'
 import './mine.css'
 import {ActivityIndicator} from 'antd-mobile'
-
+import * as appConfig from '../../constants/appConfig'
 
 const {
-  Button,
   Page,
   Cells,
   Cell,
   CellHeader,
   CellBody,
   CellFooter,
-  Form,
-  FormCell,
-  Input,
-  Label,
-  Select,
+  Badge,
 } = WeUI
 
 class Mine extends Component {
@@ -38,6 +35,10 @@ class Mine extends Component {
     const {currentUserId} = this.props
     if(currentUserId) {
       this.props.fetchPromCategoryAction({})
+      this.props.fetchOrders({
+        limit: 2,
+        isRefresh: true,
+      })
     }
   }
 
@@ -45,6 +46,10 @@ class Mine extends Component {
     const {currentUserId} = this.props
     if(currentUserId != newProps.currentUserId) {
       this.props.fetchPromCategoryAction({})
+      this.props.fetchOrders({
+        limit: 2,
+        isRefresh: true,
+      })
     }
   }
 
@@ -52,8 +57,17 @@ class Mine extends Component {
     document.title = "个人中心"
   }
 
+  renderOrderBadge() {
+    const {activeOrderNum} = this.props
+    if(activeOrderNum > 0) {
+      return(<Badge preset="body">{activeOrderNum}</Badge>)
+    } else {
+      return null
+    }
+  }
+
   render() {
-    const {currentUserId} = this.props
+    const {currentUserId, activeOrderNum} = this.props
     if(!currentUserId) {
       return(<ActivityIndicator toast text="正在加载" />)
     }
@@ -103,11 +117,11 @@ class Mine extends Component {
             </CellHeader>
             <CellBody>
               我的订单
+              {this.renderOrderBadge()}
             </CellBody>
             <CellFooter/>
           </Cell>
         </Cells>
-
         <Cells>
           <Cell access onClick={() => {browserHistory.push('/about')}}>
             <CellHeader>
@@ -125,14 +139,21 @@ class Mine extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
+  const unpaidOrders = selectOrderByStatus(state, appConfig.ORDER_STATUS_UNPAID)
+  const occupiedOrders = selectOrderByStatus(state, appConfig.ORDER_STATUS_OCCUPIED)
+  console.log("unpaidOrders", unpaidOrders)
+  console.log("occupiedOrders", occupiedOrders)
+  const activeOrderNum = (unpaidOrders? unpaidOrders.length: 0) + (occupiedOrders? occupiedOrders.length: 0)
   return {
     currentUserId: selectActiveUserId(state),
     currentUser: selectActiveUserInfo(state),
+    activeOrderNum: activeOrderNum,
   }
 };
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
   fetchPromCategoryAction,
+  fetchOrders,
 }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(Mine)

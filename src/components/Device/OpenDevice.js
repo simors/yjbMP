@@ -253,7 +253,7 @@ class OpenDevice extends Component {
     //监听开机成功消息
     socket.on(appConfig.TURN_ON_DEVICE_SUCCESS, function (data) {
       that.setState({showLoading: false})
-      browserHistory.replace('/mine/orders')
+      browserHistory.replace('openDevice/success')
     })
 
     //监听开机失败消息
