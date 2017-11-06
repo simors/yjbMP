@@ -142,7 +142,6 @@ class OpenDevice extends Component {
                   衣柜中有湿度探测器，在您的衣物烘干后会通过微信提醒您，届时请您及时收取衣物。
                 </MediaBoxDescription>
               </MediaBox>
-
             </PanelBody>
           )
         case appConfig.DEVICE_STATUS_OCCUPIED:
@@ -204,7 +203,7 @@ class OpenDevice extends Component {
 
 
   turnOnDevice() {
-    const {deviceInfo, currentUserId} = this.props
+    const {deviceInfo, currentUserId, location} = this.props
     var that = this
     that.setState({
       showLoading: true
@@ -214,6 +213,7 @@ class OpenDevice extends Component {
       deviceNo: deviceInfo.deviceNo,
       userId: currentUserId,
     }, function (data) {
+      let jumpPath = undefined
       var errorCode = data.errorCode
       if(errorCode === 0) {
         return
@@ -231,12 +231,15 @@ class OpenDevice extends Component {
           break
         case errno.ERROR_NO_DEPOSIT:
           that.setState({showWarn: true, warnTips: "用户未交押金"})
+          jumpPath = '/mine/deposit'
           break
         case errno.ERROR_UNPAID_ORDER:
           that.setState({showWarn: true, warnTips: "有未支付订单"})
+          jumpPath = '/mine/orders'
           break
         case errno.ERROR_OCCUPIED_ORDER:
           that.setState({showWarn: true, warnTips: "有正在使用的订单"})
+          jumpPath = '/mine/orders'
           break
         case errno.ERROR_TURNON_FAILED:
           that.setState({showWarn: true, warnTips: "设备开机失败"})
@@ -247,6 +250,7 @@ class OpenDevice extends Component {
       }
       setTimeout(function () {
         that.setState({showWarn: false, warnTips: ""})
+        browserHistory.push(jumpPath, {from: location.pathname})
       }, 3000)
     })
 
@@ -290,7 +294,6 @@ class OpenDevice extends Component {
 
   onPress = () => {
     const {walletInfo, deviceInfo, location} = this.props
-
     if(walletInfo.deposit === 0 || walletInfo.process === appConfig.WALLET_PROCESS_TYPE_REFUND) {
       browserHistory.push('/mine/deposit')
     } else if(walletInfo.debt > 0) { //欠费
@@ -344,7 +347,7 @@ const mapStateToProps = (state, ownProps) => {
     walletInfo: selectWalletInfo(state),
     initUrl: selectInitUrl(state)
   }
-};
+}
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
   requestDeviceInfo,
