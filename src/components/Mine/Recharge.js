@@ -112,14 +112,11 @@ class Recharge extends Component {
     pingpp.createPayment(charge, function (result, err) {
       that.setState({disableButton: false})
       if (result == "success") {
-        // 只有微信公众账号 wx_pub 支付成功的结果会在这里返回，其他的支付结果都会跳转到 extra 中对应的 URL。
         Toast.success("支付成功", 1)
-        browserHistory.push('/mine/wallet')
+        browserHistory.goBack()
       } else if (result == "fail") {
-        // charge 不正确或者微信公众账号支付失败时会在此处返回
         Toast.fail("支付失败", 2)
       } else if (result == "cancel") {
-        // 微信公众账号支付取消支付
         Toast.info("取消支付", 1)
       }
     })
@@ -127,7 +124,6 @@ class Recharge extends Component {
 
   createPaymentFailedCallback = (error) => {
     this.setState({disableButton: false})
-    console.log('onRecharge', error)
     Toast.fail("支付渠道错误")
   }
 

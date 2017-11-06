@@ -314,7 +314,6 @@ class OrderDetail extends Component {
       </Page>
     )
   }
-
 }
 
 

@@ -201,21 +201,7 @@ class OpenDevice extends Component {
     }
   }
 
-  getButtonTitle() {
-    const {walletInfo, deviceInfo} = this.props
-    if(!walletInfo || !deviceInfo) {
-      return "扫一扫"
-    }
-    if(walletInfo.debt > 0) {               //欠费
-      return "去支付"
-    } else if(walletInfo.deposit === 0 || walletInfo.process === appConfig.WALLET_PROCESS_TYPE_REFUND) {   //押金
-      return "交押金"
-    } else if(deviceInfo.status === 0) {    //正常使用
-      return "已放好衣物，开始使用"
-    }  else {
-      return "扫一扫"
-    }
-  }
+
 
   turnOnDevice() {
     const {deviceInfo, currentUserId} = this.props
@@ -286,13 +272,29 @@ class OpenDevice extends Component {
     })
   }
 
-  onPress = () => {
+  getButtonTitle() {
     const {walletInfo, deviceInfo} = this.props
+    if(!walletInfo || !deviceInfo) {
+      return "扫一扫"
+    }
+    if(walletInfo.debt > 0) {               //欠费
+      return "去支付"
+    } else if(walletInfo.deposit === 0 || walletInfo.process === appConfig.WALLET_PROCESS_TYPE_REFUND) {   //押金
+      return "交押金"
+    } else if(deviceInfo.status === 0) {    //正常使用
+      return "已放好衣物，开始使用"
+    }  else {
+      return "扫一扫"
+    }
+  }
+
+  onPress = () => {
+    const {walletInfo, deviceInfo, location} = this.props
 
     if(walletInfo.deposit === 0 || walletInfo.process === appConfig.WALLET_PROCESS_TYPE_REFUND) {
       browserHistory.push('/mine/deposit')
     } else if(walletInfo.debt > 0) { //欠费
-      browserHistory.push('/mine/orders')
+      browserHistory.push('/mine/orders', {from: location.pathname})
     } else if(deviceInfo.status === 0) { //空闲
       this.turnOnDevice()
     } else{
