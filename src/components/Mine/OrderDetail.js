@@ -18,7 +18,7 @@ import {formatTime} from '../../util'
 import * as appConfig from '../../constants/appConfig'
 import io from 'socket.io-client'
 import * as errno from '../../errno'
-import {Toast} from 'antd-mobile'
+import {Toast, Card, WhiteSpace, Flex} from 'antd-mobile'
 
 const socket = io(appConfig.LC_SERVER_DOMAIN)
 
@@ -81,11 +81,6 @@ class OrderDetail extends Component {
     return (duration * this.props.stationInfo.unitPrice).toFixed(2)
   }
 
-  getDuration(createTime) {
-    let duration = ((Date.now() - new Date(createTime)) * 0.001 / 60).toFixed(0) //分钟
-    return duration
-  }
-
   getButtonTitle(order) {
     switch (order.status) {
       case appConfig.ORDER_STATUS_PAID:
@@ -105,13 +100,13 @@ class OrderDetail extends Component {
   getOrderStatus(order) {
     switch (order.status) {
       case appConfig.ORDER_STATUS_PAID:
-        return "已完成"
+        return (<span style={{color: 'green'}}>已完成</span>)
         break
       case appConfig.ORDER_STATUS_UNPAID:
-        return "未支付"
+        return (<span style={{color: 'red'}}>未支付</span>)
         break
       case appConfig.ORDER_STATUS_OCCUPIED:
-        return "正在烘干"
+        return (<span style={{color: 'yellow'}}>正在烘干</span>)
         break
       default:
         break
@@ -285,33 +280,62 @@ class OrderDetail extends Component {
     }
   }
 
+  getDuration(order) {
+    switch (order.status) {
+      case appConfig.ORDER_STATUS_PAID:
+      case appConfig.ORDER_STATUS_UNPAID:
+        return ((new Date(order.endTime) - new Date(order.createTime)) * 0.001 / 60).toFixed(0)
+        break
+      case appConfig.ORDER_STATUS_OCCUPIED:
+        return ((Date.now() - new Date(order.createTime)) * 0.001 / 60).toFixed(0)
+        break
+      default:
+        return 0
+        break
+    }
+  }
+
   render() {
+    const {orderInfo, deviceInfo} = this.props
     return(
-      <Page ptr={false} infiniteLoader={false} className="order-detail-page">
-        <div className="item-area">
-          <div className="order-detail-item">{"当前状态：" + this.getOrderStatus(this.props.orderInfo)}</div>
-          <div className="order-detail-item">
-            <div>{'订单编号：' + this.props.orderInfo.orderNo}</div>
-            <div>{'下单时间：' + formatTime(this.props.orderInfo.createTime, 'YYYY/MM/DD HH:mm')}</div>
-          </div>
-          <div className="order-detail-item">
-            <div>服务名称：普通干衣</div>
-            <div>{'进行时长：' + this.getDuration(this.props.orderInfo.createTime) + '分钟'}</div>
-            <div>所在柜门：13号</div>
-          </div>
-          <div className="order-detail-item">
-            <div>{'衣柜编号：' + this.props.deviceInfo.deviceNo}</div>
-            <div>{'衣柜位置：' + this.props.deviceInfo.deviceAddr}</div>
-          </div>
-          <div className="order-detail-item">
-            {'实时计费：' + this.getAmount(this.props.orderInfo) + '元'}
-          </div>
-        </div>
+      <div>
+        <WhiteSpace size="lg" />
+        <Card>
+          <Card.Header title="普通干衣" extra={this.getOrderStatus(orderInfo)}/>
+          <Card.Body>
+            <Flex>
+              <div>订单编号</div>
+              <Flex.Item>{orderInfo.orderNo}</Flex.Item>
+            </Flex>
+            <Flex>
+              <div>下单时间</div>
+              <Flex.Item>{formatTime(orderInfo.createTime, 'YYYY/MM/DD HH:mm')}</Flex.Item>
+            </Flex>
+            <Flex>
+              <div>进行时长</div>
+              <Flex.Item>{this.getDuration(orderInfo) + '分钟'}</Flex.Item>
+            </Flex>
+            <Flex>
+              <div>衣柜编号</div>
+              <Flex.Item>{deviceInfo.deviceNo}</Flex.Item>
+            </Flex>
+            <Flex>
+              <div>衣柜位置</div>
+              <Flex.Item>{deviceInfo.deviceAddr}</Flex.Item>
+            </Flex>
+            <Flex>
+              <div>实时计费</div>
+              <Flex.Item>{this.getAmount(orderInfo) + '元'}</Flex.Item>
+            </Flex>
+          </Card.Body>
+        </Card>
         <div className="order-detail-buttom-area">
           <Button onClick={this.onButtonPress}>{this.getButtonTitle(this.props.orderInfo)}</Button>
         </div>
-        <Dialog type="ios" title={this.state.Dialog.title} buttons={this.state.Dialog.buttons} show={this.state.showDialog}>{this.state.Dialog.trip}</Dialog>
-      </Page>
+        <Dialog type="ios" title={this.state.Dialog.title} buttons={this.state.Dialog.buttons} show={this.state.showDialog}>
+          {this.state.Dialog.trip}
+        </Dialog>
+      </div>
     )
   }
 }
