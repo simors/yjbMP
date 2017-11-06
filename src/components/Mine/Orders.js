@@ -5,6 +5,7 @@ import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import {browserHistory} from 'react-router'
+import {fetchWalletInfo} from '../../actions/authActions'
 import {fetchOrders, paymentOrder, updateOrder} from '../../actions/orderActions'
 import {selectActiveUserInfo, selectWalletInfo} from '../../selector/authSelector'
 import {selectMyOrders} from '../../selector/orderSelector'
@@ -16,7 +17,7 @@ import 'react-weui/build/dist/react-weui.css'
 import './orders.css'
 import io from 'socket.io-client'
 import * as errno from '../../errno'
-import {Toast} from 'antd-mobile'
+import {Toast, ActivityIndicator} from 'antd-mobile'
 
 const socket = io(appConfig.LC_SERVER_DOMAIN)
 
@@ -28,6 +29,7 @@ class Orders extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      animating: false,
       payAmount: 0,
       payOrderId: '',
       showDialog: false,
@@ -59,6 +61,7 @@ class Orders extends Component {
       limit: 10,
       isRefresh: true,
     })
+    this.props.fetchWalletInfo({})
   }
 
   getDuration(order) {
@@ -245,6 +248,7 @@ class Orders extends Component {
   //关机
   trunOffDevice(order) {
     //发送关机请求
+    this.setState({animating: true})
     socket.emit(appConfig.TURN_OFF_DEVICE, {
       userId: this.props.currentUser.id,
       deviceNo: order.deviceNo,
@@ -253,7 +257,6 @@ class Orders extends Component {
       var errorCode = data.errorCode
       let order = data.order
       if(order) { //订单已结束，设备已自动关机
-        console.log('trunOffDevice socket.emit ack: order', order)
         this.props.updateOrder({order: order})
         Toast.info("衣物已烘干，干衣柜自动关闭")
         return
@@ -264,11 +267,13 @@ class Orders extends Component {
     })
 
     socket.on(appConfig.TURN_OFF_DEVICE_SUCCESS, function (data) {
+      this.setState({animating: false})
       Toast.success("关机成功")
-
+      browserHistory.push('/mine/orders/' + order.id)
     })
 
     socket.on(appConfig.TURN_OFF_DEVICE_FAILED, function (data) {
+      this.setState({animating: false})
       Toast.fail("关机失败")
     })
   }
@@ -363,6 +368,10 @@ class Orders extends Component {
   }
 
   render() {
+    const {animating} = this.state
+    if(animating) {
+      return(<ActivityIndicator toast text="正在加载" />)
+    }
     return(
     <InfiniteLoader onLoadMore={this.onLoadMoreOrders} loaderDefaultIcon={LoaderFinishIcon}>
       <Tab className="order-tab">
@@ -408,7 +417,8 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => bindActionCreators({
   fetchOrders,
   paymentOrder,
-  updateOrder
+  updateOrder,
+  fetchWalletInfo,
 }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(Orders)

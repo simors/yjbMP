@@ -9,7 +9,7 @@ import {selectActiveUserInfo, selectWalletInfo} from '../../selector/authSelecto
 import {selectOrderById} from '../../selector/orderSelector'
 import {selectDeviceById} from '../../selector/deviceSelector'
 import {selectStationById} from '../../selector/stationSelector'
-import {paymentOrder} from '../../actions/orderActions'
+import {paymentOrder, fetchOrders} from '../../actions/orderActions'
 import WeUI from 'react-weui'
 import 'weui'
 import 'react-weui/build/dist/react-weui.css'
@@ -18,7 +18,7 @@ import {formatTime} from '../../util'
 import * as appConfig from '../../constants/appConfig'
 import io from 'socket.io-client'
 import * as errno from '../../errno'
-
+import {Toast, ActivityIndicator} from 'antd-mobile'
 
 const socket = io(appConfig.LC_SERVER_DOMAIN)
 
@@ -27,13 +27,13 @@ const {
   Button,
   Page,
   Dialog,
-  Toast
 } = WeUI
 
 class OrderDetail extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      animating: false,
       showDialog: false,
       Dialog: {
         title: '确认支付',
@@ -50,11 +50,15 @@ class OrderDetail extends Component {
             onClick: () => {}
           }
         ]
-      },
-      showLoading: false,
-      loadingMessage: '加载中...',
-      loadingIcon: 'loading',
+      }
     }
+  }
+
+  componentWillMount() {
+    this.props.fetchOrders({
+      limit: 10,
+      isRefresh: true,
+    })
   }
 
   componentDidMount() {
@@ -75,7 +79,6 @@ class OrderDetail extends Component {
         break
     }
     duration = duration < 1? 1: duration
-    console.log("unitPrice:", this.props.stationInfo.unitPrice)
     return (duration * this.props.stationInfo.unitPrice).toFixed(2)
   }
 
@@ -184,24 +187,20 @@ class OrderDetail extends Component {
   }
 
   paymentServiceFailedCallback = (error) => {
-    let that = this
     switch (error.code) {
       case errno.EPERM:
-        this.setState({showLoading: true, loadingMessage: "用户未登录", loadingIcon: 'warn'})
+        Toast.fail("用户未登录")
         break
       case errno.EINVAL:
-        this.setState({showLoading: true, loadingMessage: "参数错误", loadingIcon: 'warn'})
+        Toast.fail("参数错误")
         break
       case errno.ERROR_NO_ENOUGH_BALANCE:
-        this.setState({showLoading: true, loadingMessage: "余额不足", loadingIcon: 'warn'})
+        Toast.fail("余额不足")
         break
       default:
-        this.setState({showLoading: true, loadingMessage: "内部错误：" + error.code, loadingIcon: 'warn'})
+        Toast.fail("内部错误" + error.code)
         break
     }
-    setTimeout(function () {
-      that.setState({showLoading: false})
-    }, 2000)
   }
 
   //支付服务订单
@@ -239,38 +238,35 @@ class OrderDetail extends Component {
 
   //关机
   trunOffDevice(order) {
-    var that = this
-    this.setState({showLoading: true, showDialog: false})
     //发送关机请求
+    this.setState({animating: true})
     socket.emit(appConfig.TURN_OFF_DEVICE, {
       userId: this.props.currentUser.id,
-      deviceNo: this.props.deviceInfo.deviceNo,
+      deviceNo: order.deviceNo,
       orderId: order.id
     }, function (data) {
       var errorCode = data.errorCode
+      let order = data.order
+      if(order) { //订单已结束，设备已自动关机
+        this.props.updateOrder({order: order})
+        Toast.info("衣物已烘干，干衣柜自动关闭")
+        return
+      }
       if(errorCode != 0) {
-        that.setState({loadingMessage: "关机请求失败", loadingIcon: 'info'})
-        console.log("关机请求失败", data.errorMessage)
-        setTimeout(function () {
-          that.setState({showLoading: false})
-        }, 2000)
+        Toast.fail("关机请求失败")
       }
     })
 
     socket.on(appConfig.TURN_OFF_DEVICE_SUCCESS, function (data) {
-      console.log("收到关机成功消息", data)
-      that.setState({loadingMessage: "关机成功", loadingIcon: 'success-circle'})
-      setTimeout(function () {
-        that.setState({showLoading: false})
-        browserHistory.goBack()
-      }, 2000)
+      this.setState({animating: false})
+      Toast.success("关机成功")
+      browserHistory.goBack()
+
     })
+
     socket.on(appConfig.TURN_OFF_DEVICE_FAILED, function (data) {
-      console.log("收到关机失败消息", data)
-      that.setState({loadingMessage: "关机失败", loadingIcon: 'info'})
-      setTimeout(function () {
-        that.setState({showLoading: false})
-      }, 2000)
+      this.setState({animating: false})
+      Toast.fail("关机失败")
     })
   }
 
@@ -291,7 +287,10 @@ class OrderDetail extends Component {
   }
 
   render() {
-
+    const {animating} = this.state
+    if(animating) {
+      return(<ActivityIndicator toast text="正在加载" />)
+    }
     return(
       <Page ptr={false} infiniteLoader={false} className="order-detail-page">
         <div className="item-area">
@@ -317,7 +316,6 @@ class OrderDetail extends Component {
           <Button onClick={this.onButtonPress}>{this.getButtonTitle(this.props.orderInfo)}</Button>
         </div>
         <Dialog type="ios" title={this.state.Dialog.title} buttons={this.state.Dialog.buttons} show={this.state.showDialog}>{this.state.Dialog.trip}</Dialog>
-        <Toast icon={this.state.loadingIcon} show={this.state.showLoading}>{this.state.loadingMessage}</Toast>
       </Page>
     )
   }
@@ -340,6 +338,7 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
+  fetchOrders,
   paymentOrder
 }, dispatch)
 

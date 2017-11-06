@@ -6,7 +6,6 @@ import {browserHistory} from 'react-router'
 import WeUI from 'react-weui'
 import 'weui'
 import 'react-weui/build/dist/react-weui.css'
-import * as appConfig from '../../constants/appConfig'
 import './bindsuccess.css'
 
 
