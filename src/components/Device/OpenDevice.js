@@ -287,11 +287,13 @@ class OpenDevice extends Component {
   }
 
   onPress = () => {
-    if(this.props.walletInfo.deposit === 0 || walletInfo.process === appConfig.WALLET_PROCESS_TYPE_REFUND) {
+    const {walletInfo, deviceInfo} = this.props
+
+    if(walletInfo.deposit === 0 || walletInfo.process === appConfig.WALLET_PROCESS_TYPE_REFUND) {
       browserHistory.push('/mine/deposit')
-    } else if(this.props.walletInfo.debt > 0) { //欠费
+    } else if(walletInfo.debt > 0) { //欠费
       browserHistory.push('/mine/orders')
-    } else if(this.props.deviceInfo.status === 0) { //空闲
+    } else if(deviceInfo.status === 0) { //空闲
       this.turnOnDevice()
     } else{
       this.onScanQRCode()

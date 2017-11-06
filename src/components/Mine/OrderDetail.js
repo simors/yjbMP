@@ -18,7 +18,7 @@ import {formatTime} from '../../util'
 import * as appConfig from '../../constants/appConfig'
 import io from 'socket.io-client'
 import * as errno from '../../errno'
-import {Toast, ActivityIndicator} from 'antd-mobile'
+import {Toast} from 'antd-mobile'
 
 const socket = io(appConfig.LC_SERVER_DOMAIN)
 
@@ -33,7 +33,6 @@ class OrderDetail extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      animating: false,
       showDialog: false,
       Dialog: {
         title: '确认支付',
@@ -238,8 +237,10 @@ class OrderDetail extends Component {
 
   //关机
   trunOffDevice(order) {
+    Toast.loading("处理中...", 15, () => {
+      Toast.info("网络超时")
+    })
     //发送关机请求
-    this.setState({animating: true})
     socket.emit(appConfig.TURN_OFF_DEVICE, {
       userId: this.props.currentUser.id,
       deviceNo: order.deviceNo,
@@ -258,14 +259,12 @@ class OrderDetail extends Component {
     })
 
     socket.on(appConfig.TURN_OFF_DEVICE_SUCCESS, function (data) {
-      this.setState({animating: false})
       Toast.success("关机成功")
       browserHistory.goBack()
 
     })
 
     socket.on(appConfig.TURN_OFF_DEVICE_FAILED, function (data) {
-      this.setState({animating: false})
       Toast.fail("关机失败")
     })
   }
@@ -287,10 +286,6 @@ class OrderDetail extends Component {
   }
 
   render() {
-    const {animating} = this.state
-    if(animating) {
-      return(<ActivityIndicator toast text="正在加载" />)
-    }
     return(
       <Page ptr={false} infiniteLoader={false} className="order-detail-page">
         <div className="item-area">
