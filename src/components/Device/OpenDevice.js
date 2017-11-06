@@ -99,7 +99,7 @@ class OpenDevice extends Component {
     if(!deviceInfo || !walletInfo || !stationInfo) {
       return null
     }
-    if(walletInfo.deposit === 0) {  //未交押金
+    if(walletInfo.deposit === 0 || walletInfo.process === appConfig.WALLET_PROCESS_TYPE_REFUND) {  //未交押金
       return(
         <PanelBody style={{borderBottomWidth: `0`}}>
           <Msg
@@ -208,7 +208,7 @@ class OpenDevice extends Component {
     }
     if(walletInfo.debt > 0) {               //欠费
       return "去支付"
-    } else if(walletInfo.deposit === 0) {   //押金
+    } else if(walletInfo.deposit === 0 || walletInfo.process === appConfig.WALLET_PROCESS_TYPE_REFUND) {   //押金
       return "交押金"
     } else if(deviceInfo.status === 0) {    //正常使用
       return "已放好衣物，开始使用"
@@ -287,7 +287,7 @@ class OpenDevice extends Component {
   }
 
   onPress = () => {
-    if(this.props.walletInfo.deposit === 0) {
+    if(this.props.walletInfo.deposit === 0 || walletInfo.process === appConfig.WALLET_PROCESS_TYPE_REFUND) {
       browserHistory.push('/mine/deposit')
     } else if(this.props.walletInfo.debt > 0) { //欠费
       browserHistory.push('/mine/orders')
