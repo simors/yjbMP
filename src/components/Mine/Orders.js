@@ -29,7 +29,6 @@ class Orders extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      animating: false,
       payAmount: 0,
       payOrderId: '',
       showDialog: false,
@@ -247,8 +246,10 @@ class Orders extends Component {
   }
   //关机
   trunOffDevice(order) {
+    Toast.loading("处理中...", 15, () => {
+      Toast.info("网络超时")
+    })
     //发送关机请求
-    this.setState({animating: true})
     socket.emit(appConfig.TURN_OFF_DEVICE, {
       userId: this.props.currentUser.id,
       deviceNo: order.deviceNo,
@@ -267,13 +268,11 @@ class Orders extends Component {
     })
 
     socket.on(appConfig.TURN_OFF_DEVICE_SUCCESS, function (data) {
-      this.setState({animating: false})
       Toast.success("关机成功")
       browserHistory.push('/mine/orders/' + order.id)
     })
 
     socket.on(appConfig.TURN_OFF_DEVICE_FAILED, function (data) {
-      this.setState({animating: false})
       Toast.fail("关机失败")
     })
   }
@@ -368,10 +367,6 @@ class Orders extends Component {
   }
 
   render() {
-    const {animating} = this.state
-    if(animating) {
-      return(<ActivityIndicator toast text="正在加载" />)
-    }
     return(
     <InfiniteLoader onLoadMore={this.onLoadMoreOrders} loaderDefaultIcon={LoaderFinishIcon}>
       <Tab className="order-tab">
