@@ -64,7 +64,7 @@ class Refund extends Component {
       amount: walletInfo.deposit,
       success: () => {
         this.setState({disableButton: false})
-        browserHistory.push('/mine/wallet')
+        browserHistory.goBack()
       },
       error: this.onRefundError
     })
