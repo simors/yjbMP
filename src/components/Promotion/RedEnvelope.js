@@ -7,13 +7,12 @@ import { bindActionCreators } from 'redux'
 import WeUI from 'react-weui'
 import 'weui'
 import 'react-weui/build/dist/react-weui.css'
-// const {Button, Dialog, LoadMore} = WeUI
 import io from 'socket.io-client'
 import * as appConfig from '../../constants/appConfig'
 import {selectActiveUserId} from '../../selector/authSelector'
 import {selectPromByCategoryType} from '../../selector/promotionSelector'
 import {fetchPromotionAction, fetchPromCategoryAction} from '../../actions/promotionActions'
-import {Modal, Toast, ActivityIndicator} from 'antd-mobile'
+import {Modal, Toast} from 'antd-mobile'
 import './redEnvelope.css'
 import * as errno from '../../errno'
 
@@ -25,7 +24,6 @@ class RedEnvelope extends React.PureComponent {
     this.state = {
       visible: true,
       amount: undefined,
-      loading: true,
     }
   }
 
@@ -50,7 +48,9 @@ class RedEnvelope extends React.PureComponent {
     var that = this
     const {promotion, currentUserId} = this.props
     //发送红包请求
-    this.setState({loading: true})
+    Toast.loading("处理中", 15, () => {
+      Toast.info("网络超时")
+    })
     socket.emit(appConfig.PROMOTION_REQUEST, {
       promotionId: promotion.id,
       userId: currentUserId,
@@ -60,8 +60,9 @@ class RedEnvelope extends React.PureComponent {
     socket.on(appConfig.PROMOTION_RESPONSE, function (data) {
       let errorCode = data.errorCode
       let amount = data.amount
-      that.setState({amount: amount, loading: false})
       if(errorCode === 0) {
+        Toast.success('成功')
+        that.setState({amount: amount})
       } else {
         switch (errorCode) {
           case errno.EINVAL:
@@ -94,10 +95,7 @@ class RedEnvelope extends React.PureComponent {
   }
 
   renderOverlay() {
-    const {amount, loading} = this.state
-    if(loading) {
-      return(<ActivityIndicator toast text="正在加载" />)
-    }
+    const {amount} = this.state
     if(!amount) {
       return(
         <div className="redEnvelope" onClick={this.sendRedEnvelopeRequest}>

@@ -312,18 +312,20 @@ class OpenDevice extends Component {
       return(<ActivityIndicator toast text="正在加载" />)
     }
     return(
-      <div>
+      <div style={{display: 'flex', flexDirection: 'column', height: '100vh'}}>
         <div className="device-banner">
           <img src="/logo.png" alt="" style={{display: `block`, width: `7.5rem`, height: `6.75rem`}}/>
         </div>
-        <Panel style={{marginTop: `0`}}>
-          <PanelHeader>
-            {'设备编号：' + params.deviceNo}
-          </PanelHeader>
-          {this.renderDeviceStatus()}
-        </Panel>
-        <div className="device-button-area" >
-          <Button className='device-button' onClick={this.onPress}>{this.getButtonTitle()}</Button>
+        <div>
+          <Panel style={{marginTop: `0`}}>
+            <PanelHeader>
+              {'设备编号：' + params.deviceNo}
+            </PanelHeader>
+            {this.renderDeviceStatus()}
+          </Panel>
+        </div>
+        <div className="device-button">
+          <Button onClick={this.onPress}>{this.getButtonTitle()}</Button>
         </div>
         <Toast icon="loading" show={deviceLoading || walletLoading || showLoading}>加载...</Toast>
         <Toptips type="warn" show={this.state.showWarn}>{this.state.warnTips}</Toptips>

@@ -7,15 +7,14 @@
   background-size:100% 100%;
 }
 
-.device-button-area {
-  position: absolute;
-  bottom: 0.9rem;
-  left: 1.25rem;
-  right: 1.25rem;
-}
 
 .device-button {
-  height: 2.9rem;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  margin-right: 1.25rem;
+  margin-left: 1.25rem;
+  justify-content: center;
 }
 
 .device-loadmore {

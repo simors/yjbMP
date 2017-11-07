@@ -26,9 +26,6 @@
 .closeButton {
   width: 50%;
   height: 4rem;
-  border-width: 1px;
-  border-color: yellow;
-  border-style: solid;
   margin-top: 6.5rem;
   margin-left: 25%;
 }
