@@ -14,7 +14,8 @@ import {
   getJssdkConfig,
   loginAuthData,
   updateUserRegionApi,
-  createWithdrawApply
+  createWithdrawApply,
+  fetchLastRefund,
 } from  '../api/auth'
 import {
   saveUser,
@@ -27,6 +28,7 @@ import {
   fetchDealRecordsSuccess,
   saveIdNameInfo,
   updateOrderSuccess,
+  updateIsRefund,
 } from '../actions/authActions'
 import * as authActionTypes from '../constants/authActionTypes'
 
@@ -265,6 +267,23 @@ export function* sagaRequestRefund(action) {
   }
 }
 
+export function* sagaFetchLastRefund(action) {
+  let payload = action.payload
+  try {
+    let result = yield call(fetchLastRefund)
+    console.log('refund', result)
+    let isRefunding = result ? true : false
+    yield put(updateIsRefund({isRefunding}))
+    if(payload.success) {
+      payload.success(isRefunding)
+    }
+  } catch(error) {
+    if(payload.error) {
+      payload.error(error)
+    }
+  }
+}
+
 export const authSaga = [
   takeLatest(authActionTypes.REQUEST_SMSCODE, requestSmsCode),
   takeLatest(authActionTypes.AUTO_LOGIN, autoLogin),
@@ -277,4 +296,5 @@ export const authSaga = [
   takeLatest(authActionTypes.LOGIN_WITH_WECHAT_AUTHDATA, wechatAuthDataLogin),
   takeLatest(authActionTypes.SET_MOBILE_PHONE, setMobilePhone),
   takeLatest(authActionTypes.REQUEST_REFUND, sagaRequestRefund),
+  takeLatest(authActionTypes.FETCH_LAST_REFUND, sagaFetchLastRefund),
 ]

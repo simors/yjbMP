@@ -147,3 +147,7 @@ export async function createWithdrawApply(payload) {
   }
   return await AV.Cloud.run('withdrawCreateApply', params)
 }
+
+export async function fetchLastRefund(payload) {
+  return await AV.Cloud.run('withdrawFetchLastRefund')
+}

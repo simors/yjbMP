@@ -10,12 +10,11 @@ import WeUI from 'react-weui'
 import 'weui'
 import 'react-weui/build/dist/react-weui.css'
 import './wallet.css'
-import {selectActiveUserInfo, selectWalletInfo, selectActiveUserId} from '../../selector/authSelector'
-import { createPayment, createTransfer, fetchWalletInfo} from '../../actions/authActions'
-import * as appConfig from '../../constants/appConfig'
+import {selectActiveUserInfo, selectWalletInfo, selectActiveUserId, selectIsRefunding} from '../../selector/authSelector'
+import { createPayment, createTransfer, fetchWalletInfo, fetchLastRefund} from '../../actions/authActions'
 import {ActivityIndicator, Toast} from 'antd-mobile'
 
-const {Button, Page} = WeUI
+const {Button} = WeUI
 
 class Wallet extends Component {
   constructor(props) {
@@ -26,6 +25,7 @@ class Wallet extends Component {
     const {currentUserId} = this.props
     if(currentUserId) {
       this.props.fetchWalletInfo({})
+      this.props.fetchLastRefund({})
     }
   }
 
@@ -41,8 +41,8 @@ class Wallet extends Component {
   }
 
   onPress = () => {
-    const {walletInfo} = this.props
-    if(walletInfo.process === appConfig.WALLET_PROCESS_TYPE_REFUND) {
+    const {walletInfo, isRequestRefund} = this.props
+    if(isRequestRefund) {
       return
     } else if(walletInfo.deposit === 0) {  //交押金
       browserHistory.push('/mine/deposit')
@@ -73,15 +73,15 @@ class Wallet extends Component {
   }
 
   renderDeposit = () => {
-    const {walletInfo} = this.props
+    const {walletInfo, isRequestRefund} = this.props
     if(walletInfo.deposit > 0) {
       return(
         <div className="deposit">
           <text className="depositTrip">{'押金：' + (walletInfo.deposit || 0) + '元'}</text>
           <div className="depositButton-area">
             <Button type='primary' plain className="depositButton" onClick={this.onPress}>
-              {walletInfo.process === appConfig.WALLET_PROCESS_TYPE_REFUND? '押金退款处理中' : '退押金'}
-              </Button>
+              {isRequestRefund ? '押金退款处理中' : '退押金'}
+            </Button>
           </div>
         </div>
       )
@@ -120,7 +120,8 @@ const mapStateToProps = (state, ownProps) => {
   return {
     currentUserId: selectActiveUserId(state),
     currentUser: selectActiveUserInfo(state),
-    walletInfo: selectWalletInfo(state)
+    walletInfo: selectWalletInfo(state),
+    isRequestRefund: selectIsRefunding(state),
   }
 };
 
@@ -128,6 +129,7 @@ const mapDispatchToProps = (dispatch) => bindActionCreators({
   createPayment,
   createTransfer,
   fetchWalletInfo,
+  fetchLastRefund,
 }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(Wallet)

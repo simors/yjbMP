@@ -26,6 +26,8 @@ export default function authReducer(state = initialState, action) {
       return handleSaveUser(state, action)
     case authActionTypes.SAVE_USERS:
       return handleSaveUsers(state, action)
+    case authActionTypes.UPDATE_IS_REQUEST_REFUND:
+      return handleUpdateIsRequestRefund(state, action)
     case REHYDRATE:
       return onRehydrate(state, action)
     default:
@@ -117,6 +119,13 @@ function handleFetchDealRecords(state, action) {
   dealRecordList.forEach((dealRecord) => {
     state = state.setIn(['dealRecords', dealRecord.orderNo], dealRecord)
   })
+  return state
+}
+
+function handleUpdateIsRequestRefund(state, action) {
+  let payload = action.payload
+  let isRefunding = payload.isRefunding
+  state = state.set('isRequestRefund', isRefunding)
   return state
 }
 
