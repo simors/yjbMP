@@ -13,7 +13,6 @@ import {paymentOrder, fetchOrders} from '../../actions/orderActions'
 import WeUI from 'react-weui'
 import 'weui'
 import 'react-weui/build/dist/react-weui.css'
-import './orderDetail.css'
 import {formatTime} from '../../util'
 import * as appConfig from '../../constants/appConfig'
 import io from 'socket.io-client'
@@ -22,10 +21,8 @@ import {Toast, Card, WhiteSpace, Flex} from 'antd-mobile'
 
 const socket = io(appConfig.LC_SERVER_DOMAIN)
 
-
 const {
   Button,
-  Page,
   Dialog,
 } = WeUI
 
@@ -106,7 +103,7 @@ class OrderDetail extends Component {
         return (<span style={{color: 'red'}}>未支付</span>)
         break
       case appConfig.ORDER_STATUS_OCCUPIED:
-        return (<span style={{color: 'yellow'}}>正在烘干</span>)
+        return (<span style={{color: 'red'}}>正在烘干</span>)
         break
       default:
         break
@@ -298,43 +295,45 @@ class OrderDetail extends Component {
   render() {
     const {orderInfo, deviceInfo} = this.props
     return(
-      <div>
-        <WhiteSpace size="lg" />
-        <Card>
-          <Card.Header title="普通干衣" extra={this.getOrderStatus(orderInfo)}/>
-          <Card.Body>
-            <Flex>
-              <div>订单编号</div>
-              <Flex.Item>{orderInfo.orderNo}</Flex.Item>
-            </Flex>
-            <Flex>
-              <div>下单时间</div>
-              <Flex.Item>{formatTime(orderInfo.createTime, 'YYYY/MM/DD HH:mm')}</Flex.Item>
-            </Flex>
-            <Flex>
-              <div>进行时长</div>
-              <Flex.Item>{this.getDuration(orderInfo) + '分钟'}</Flex.Item>
-            </Flex>
-            <Flex>
-              <div>衣柜编号</div>
-              <Flex.Item>{deviceInfo.deviceNo}</Flex.Item>
-            </Flex>
-            <Flex>
-              <div>衣柜位置</div>
-              <Flex.Item>{deviceInfo.deviceAddr}</Flex.Item>
-            </Flex>
-            <Flex>
-              <div>实时计费</div>
-              <Flex.Item>{this.getAmount(orderInfo) + '元'}</Flex.Item>
-            </Flex>
-          </Card.Body>
-        </Card>
-        <div className="order-detail-buttom-area">
-          <Button onClick={this.onButtonPress}>{this.getButtonTitle(this.props.orderInfo)}</Button>
+      <div style={{display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'space-between'}}>
+        <div>
+          <WhiteSpace size="lg" />
+          <Card>
+            <Card.Header title="普通干衣" extra={this.getOrderStatus(orderInfo)}/>
+            <Card.Body>
+              <Flex>
+                <div>订单编号</div>
+                <Flex.Item>{orderInfo.orderNo}</Flex.Item>
+              </Flex>
+              <Flex>
+                <div>下单时间</div>
+                <Flex.Item>{formatTime(orderInfo.createTime, 'YYYY/MM/DD HH:mm')}</Flex.Item>
+              </Flex>
+              <Flex>
+                <div>进行时长</div>
+                <Flex.Item>{this.getDuration(orderInfo) + '分钟'}</Flex.Item>
+              </Flex>
+              <Flex>
+                <div>衣柜编号</div>
+                <Flex.Item>{deviceInfo.deviceNo}</Flex.Item>
+              </Flex>
+              <Flex>
+                <div>衣柜位置</div>
+                <Flex.Item>{deviceInfo.deviceAddr}</Flex.Item>
+              </Flex>
+              <Flex>
+                <div>实时计费</div>
+                <Flex.Item>{this.getAmount(orderInfo) + '元'}</Flex.Item>
+              </Flex>
+            </Card.Body>
+          </Card>
         </div>
-        <Dialog type="ios" title={this.state.Dialog.title} buttons={this.state.Dialog.buttons} show={this.state.showDialog}>
-          {this.state.Dialog.trip}
-        </Dialog>
+        <div style={{padding: '1.2rem'}}>
+          <Button onClick={this.onButtonPress}>{this.getButtonTitle(this.props.orderInfo)}</Button>
+          <Dialog type="ios" title={this.state.Dialog.title} buttons={this.state.Dialog.buttons} show={this.state.showDialog}>
+            {this.state.Dialog.trip}
+          </Dialog>
+        </div>
       </div>
     )
   }

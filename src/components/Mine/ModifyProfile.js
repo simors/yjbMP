@@ -16,14 +16,7 @@ const {
   Cells,
   CellBody,
   CellFooter,
-  Button,
-  Panel,
   Page,
-  PanelHeader,
-  PanelBody,
-  MediaBox,
-  MediaBoxTitle,
-  MediaBoxDescription,
 } = WeUI
 
 class ModifyProfile extends  Component {

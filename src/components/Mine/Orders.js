@@ -17,7 +17,7 @@ import 'react-weui/build/dist/react-weui.css'
 import './orders.css'
 import io from 'socket.io-client'
 import * as errno from '../../errno'
-import {Toast, ActivityIndicator} from 'antd-mobile'
+import {Toast} from 'antd-mobile'
 
 const socket = io(appConfig.LC_SERVER_DOMAIN)
 
@@ -148,46 +148,7 @@ class Orders extends Component {
 
 
   paymentServiceSuccessCallback = (orderRecord) => {
-    if(orderRecord.status === appConfig.ORDER_STATUS_PAID) {
-      this.setState({
-        showDialog: true,
-        Dialog: {
-          title: '支付成功',
-          trip: '',
-          buttons: [
-            {
-              label: '确定',
-              onClick: () => {
-                this.setState({showDialog: false})
-              }
-            },
-          ]
-        },
-      })
-    } else if(orderRecord.status === appConfig.ORDER_STATUS_UNPAID) {
-      this.setState({
-        showDialog: true,
-        Dialog: {
-          title: '干衣服务结束',
-          trip: '',
-          buttons: [
-            {
-              type: 'default',
-              label: '返回',
-              onClick: () => {this.setState({showDialog: false})}
-            },
-            {
-              type: 'primary',
-              label: '充值',
-              onClick: () => {
-                browserHistory.push('/mine/wallet/recharge')
-                this.setState({showDialog: false})
-              }
-            }
-          ]
-        },
-      })
-    }
+    browserHistory.push('/result' + '/订单支付成功' + '/success')
   }
 
   paymentServiceFailedCallback = (error) => {
@@ -210,6 +171,7 @@ class Orders extends Component {
 
   //支付服务订单
   onPaymentService = () => {
+    this.setState({showDialog: false})
     this.props.paymentOrder({
       userId: this.props.currentUser.id,
       amount: this.state.payAmount,
