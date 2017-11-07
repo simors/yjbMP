@@ -22,12 +22,21 @@ class Result extends PureComponent {
   }
 
   onPress = () => {
-    const {subscribe} = this.props
+    const {subscribe, title} = this.props
     if(!subscribe) {
       browserHistory.push('/focus')
       return
     }
-    browserHistory.goBack()
+    switch (title) {
+      case '开机成功':
+        browserHistory.push('/mine')
+        break
+      case '订单支付成功':
+        browserHistory.goBack()
+        break
+      default:
+        browserHistory.push('/mine')
+    }
   }
 
   render() {

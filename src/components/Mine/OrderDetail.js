@@ -160,21 +160,7 @@ class OrderDetail extends Component {
   }
 
   paymentServiceSuccessCallback = (orderRecord) => {
-    this.setState({
-      showDialog: true,
-      Dialog: {
-        title: '支付成功',
-        trip: '',
-        buttons: [
-          {
-            label: '确定',
-            onClick: () => {
-              this.setState({showDialog: false})
-            }
-          },
-        ]
-      },
-    })
+    browserHistory.push('/result' + '/订单支付成功' + '/success')
   }
 
   paymentServiceFailedCallback = (error) => {

@@ -141,8 +141,6 @@ class Mine extends Component {
 const mapStateToProps = (state, ownProps) => {
   const unpaidOrders = selectOrderByStatus(state, appConfig.ORDER_STATUS_UNPAID)
   const occupiedOrders = selectOrderByStatus(state, appConfig.ORDER_STATUS_OCCUPIED)
-  console.log("unpaidOrders", unpaidOrders)
-  console.log("occupiedOrders", occupiedOrders)
   const activeOrderNum = (unpaidOrders? unpaidOrders.length: 0) + (occupiedOrders? occupiedOrders.length: 0)
   return {
     currentUserId: selectActiveUserId(state),
