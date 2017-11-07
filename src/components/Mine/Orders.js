@@ -340,7 +340,7 @@ class Orders extends Component {
       )
     }
     return(
-    <InfiniteLoader onLoadMore={this.onLoadMoreOrders} loaderDefaultIcon={LoaderFinishIcon}>
+    <InfiniteLoader onLoadMore={this.onLoadMoreOrders} loaderDefaultIcon={null}>
       <Tab className="order-tab">
         <TabBody style={{backgroundColor: `#EFEFF4`}}>
           <Cells style={{backgroundColor: `#EFEFF4`, marginTop: `0.6rem`}}>
