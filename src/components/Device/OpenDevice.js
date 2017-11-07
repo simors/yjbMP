@@ -312,7 +312,7 @@ class OpenDevice extends Component {
       return(<ActivityIndicator toast text="正在加载" />)
     }
     return(
-      <div style={{display: 'flex', flexDirection: 'column', height: '100vh'}}>
+      <div>
         <div className="device-banner">
           <img src="/logo.png" alt="" style={{display: `block`, width: `7.5rem`, height: `6.75rem`}}/>
         </div>
