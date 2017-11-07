@@ -2,8 +2,32 @@
  * Created by wanpeng on 2017/8/14.
  */
 import { call, put, takeEvery, takeLatest } from 'redux-saga/effects'
-import {setMobilePhoneAPi, requestLeanSmsCode, become, getPaymentCharge, getTransfer, getWalletInfo, getDealRecords, verifyIdName, getJssdkConfig, loginAuthData, updateUserRegionApi} from  '../api/auth'
-import {saveUser, loginSuccess, autoLoginSuccess, logout, fetchOrdersSuccess, paymentOrderSuccess, fetchWalletInfoSuccess, fetchDealRecordsSuccess, saveIdNameInfo, updateOrderSuccess} from '../actions/authActions'
+import {
+  setMobilePhoneAPi,
+  requestLeanSmsCode,
+  become,
+  getPaymentCharge,
+  getTransfer,
+  getWalletInfo,
+  getDealRecords,
+  verifyIdName,
+  getJssdkConfig,
+  loginAuthData,
+  updateUserRegionApi,
+  createWithdrawApply
+} from  '../api/auth'
+import {
+  saveUser,
+  loginSuccess,
+  autoLoginSuccess,
+  logout,
+  fetchOrdersSuccess,
+  paymentOrderSuccess,
+  fetchWalletInfoSuccess,
+  fetchDealRecordsSuccess,
+  saveIdNameInfo,
+  updateOrderSuccess,
+} from '../actions/authActions'
 import * as authActionTypes from '../constants/authActionTypes'
 
 
@@ -222,6 +246,25 @@ export function* fetchJssdkConfig(action) {
   }
 }
 
+export function* sagaRequestRefund(action) {
+  let payload = action.payload
+  try {
+    let transferPayload = {
+      amount: payload.amount,
+      applyType: authActionTypes.WITHDRAW_APPLY_TYPE.REFUND,
+    }
+
+    let result = yield call(createWithdrawApply, transferPayload)
+    if(payload.success) {
+      payload.success(result)
+    }
+  } catch(error) {
+    if(payload.error) {
+      payload.error(error)
+    }
+  }
+}
+
 export const authSaga = [
   takeLatest(authActionTypes.REQUEST_SMSCODE, requestSmsCode),
   takeLatest(authActionTypes.AUTO_LOGIN, autoLogin),
@@ -233,4 +276,5 @@ export const authSaga = [
   takeLatest(authActionTypes.FETCH_WECHAT_JSSDK_CONFIG, fetchJssdkConfig),
   takeLatest(authActionTypes.LOGIN_WITH_WECHAT_AUTHDATA, wechatAuthDataLogin),
   takeLatest(authActionTypes.SET_MOBILE_PHONE, setMobilePhone),
+  takeLatest(authActionTypes.REQUEST_REFUND, sagaRequestRefund),
 ]

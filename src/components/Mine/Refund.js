@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import {browserHistory} from 'react-router'
 import {selectActiveUserInfo, selectWalletInfo} from '../../selector/authSelector'
-import {createTransfer} from '../../actions/authActions'
+import {requestRefund} from '../../actions/authActions'
 import * as appConfig from '../../constants/appConfig'
 import WeUI from 'react-weui'
 import 'weui'
@@ -59,17 +59,9 @@ class Refund extends Component {
   }
 
   refundDeposit = () => {
-    const {createTransfer, walletInfo, currentUser} = this.props
-    createTransfer({
+    const {requestRefund, walletInfo} = this.props
+    requestRefund({
       amount: walletInfo.deposit,
-      channel: 'wx_pub',
-      metadata: {
-        'fromUser': 'platform',
-        'toUser': currentUser.id,
-        'dealType': appConfig.REFUND
-      },
-      openid: currentUser.authData.weixin.openid,
-      username: '',
       success: () => {
         this.setState({disableButton: false})
         browserHistory.push('/mine/wallet')
@@ -107,7 +99,7 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
-  createTransfer
+  requestRefund
 }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(Refund)

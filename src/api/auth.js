@@ -139,3 +139,11 @@ export function updateUserRegionApi(payload) {
     throw error
   })
 }
+
+export async function createWithdrawApply(payload) {
+  let params = {
+    amount: payload.amount,
+    applyType: payload.applyType,
+  }
+  return await AV.Cloud.run('withdrawCreateApply', params)
+}

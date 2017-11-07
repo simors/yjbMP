@@ -26,3 +26,5 @@ export const fetchDealRecords = createAction(authActionTypes.FETCH_DEAL_RECORDS)
 export const fetchDealRecordsSuccess = createAction(authActionTypes.FETCH_DEAL_RECORDS_SUCCESS)
 
 export const fetchWechatJssdkConfig = createAction(authActionTypes.FETCH_WECHAT_JSSDK_CONFIG)
+
+export const requestRefund = createAction(authActionTypes.REQUEST_REFUND)

@@ -24,3 +24,14 @@ export const FETCH_DEAL_RECORDS_SUCCESS = 'FETCH_DEAL_RECORDS_SUCCESS'
 
 export const FETCH_WECHAT_JSSDK_CONFIG = 'FETCH_WECHAT_JSSDK_CONFIG'
 
+export const REQUEST_REFUND = 'REQUEST_REFUND'
+
+export const WITHDRAW_STATUS = {
+  APPLYING: 1,      // 提交申请
+  DONE: 2,          // 处理完成
+}
+
+export const WITHDRAW_APPLY_TYPE = {
+  REFUND: 1,        // 微信端用户申请退还押金
+  PROFIT: 2,        // 服务单位和投资人申请收益取现
+}
