@@ -271,8 +271,13 @@ export function* sagaFetchLastRefund(action) {
   let payload = action.payload
   try {
     let result = yield call(fetchLastRefund)
-    console.log('refund', result)
-    let isRefunding = result ? true : false
+    let status = result ? result.status : undefined
+    let isRefunding = true
+    if (status && status == authActionTypes.WITHDRAW_STATUS.APPLYING) {
+      isRefunding = true
+    } else {
+      isRefunding = false
+    }
     yield put(updateIsRefund({isRefunding}))
     if(payload.success) {
       payload.success(isRefunding)
