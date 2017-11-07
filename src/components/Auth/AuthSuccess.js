@@ -32,7 +32,7 @@ export default class AuthSuccess extends PureComponent {
               label: '关注衣家宝公众号',
               onClick: () => {browserHistory.push('/focus')}
             }]}
-            footer={() =>(<img className="logo" src="/logo_gray.png" alt=""/>)}
+            footer={() =>(<img className="logo" style={{padding: '0.5rem'}} src="/logo_gray.png" alt=""/>)}
           />
         </div>
       </Page>

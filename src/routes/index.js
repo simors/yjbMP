@@ -24,7 +24,7 @@ import Refund from '../components/Mine/Refund'
 import LoadingPage from '../components/Loading/'
 import AuthSuccess from '../components/Auth/AuthSuccess'
 import Focus from '../components/Focus'
-import OpenSuccess from '../components/Device/OpenSuccess'
+import Result from '../components/Result'
 
 
 const routes = (
@@ -47,7 +47,6 @@ const rootRouter = (
     <Route path='mine/score' component={Score} />
     <Route path='mine/deposit' component={Deposit} />
     <Route path='mine/refund' component={Refund} />
-    <Route path='openDevice/success' component={OpenSuccess} />
     <Route path='openDevice/:deviceNo' component={OpenDevice} onEnter={wechatOauth}/>
     <Route path='modifyProfile' component={ModifyProfile}/>
     <Route path='modifyProfile/nickname' component={ModifyNickname}/>
@@ -56,6 +55,7 @@ const rootRouter = (
     <Route path='loading' component={LoadingPage} onEnter={setInitUrl}/>
     <Route path='focus' component={Focus} />
     <Route path='authSuccess' component={AuthSuccess}/>
+    <Route path='result/:title/:type' component={Result}/>
   </Router>
 )
 
