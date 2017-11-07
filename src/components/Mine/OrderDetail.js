@@ -239,7 +239,6 @@ class OrderDetail extends Component {
     socket.on(appConfig.TURN_OFF_DEVICE_SUCCESS, function (data) {
       Toast.success("关机成功")
       browserHistory.goBack()
-
     })
 
     socket.on(appConfig.TURN_OFF_DEVICE_FAILED, function (data) {

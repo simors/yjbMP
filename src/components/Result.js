@@ -29,13 +29,13 @@ class Result extends PureComponent {
     }
     switch (title) {
       case '开机成功':
-        browserHistory.push('/mine')
+        browserHistory.replace('/mine')
         break
       case '订单支付成功':
         browserHistory.goBack()
         break
       default:
-        browserHistory.push('/mine')
+        browserHistory.replace('/mine')
     }
   }
 
