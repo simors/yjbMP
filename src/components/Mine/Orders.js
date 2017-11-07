@@ -21,7 +21,7 @@ import {Toast} from 'antd-mobile'
 
 const socket = io(appConfig.LC_SERVER_DOMAIN)
 
-const {Panel, Tab, TabBody, InfiniteLoader, Cells, Icon, Dialog, LoadMore} = WeUI
+const {Panel, Tab, TabBody, InfiniteLoader, Cells, Icon, Dialog, LoadMore, Msg} = WeUI
 
 const LoaderFinishIcon = (<LoadMore showLine>没有订单啦！</LoadMore>)
 
@@ -329,13 +329,23 @@ class Orders extends Component {
   }
 
   render() {
+    const {orderList} = this.props
+    if(orderList.length === 0) {
+      return(
+        <Msg
+          type="info"
+          title="没有订单记录！"
+          footer={() =>(<img style={{width: '6.3rem', marginBottom: '3rem'}}  src="/logo_gray.png" alt=""/>)}
+        />
+      )
+    }
     return(
     <InfiniteLoader onLoadMore={this.onLoadMoreOrders} loaderDefaultIcon={LoaderFinishIcon}>
       <Tab className="order-tab">
         <TabBody style={{backgroundColor: `#EFEFF4`}}>
           <Cells style={{backgroundColor: `#EFEFF4`, marginTop: `0.6rem`}}>
             {
-              this.props.orderList.map((item, i) => {
+              orderList.map((item, i) => {
                 switch (item.status) {
                   case appConfig.ORDER_STATUS_UNPAID:
                     return this.renderUnpaidOrder(item, i)
