@@ -37,7 +37,7 @@ export function selectWalletInfo(state) {
 
 export function selectIsRefunding(state) {
   let isRequestRefund = state.AUTH.get('isRequestRefund')
-  if (!isRequestRefund) {
+  if (isRequestRefund == undefined) {
     return true       // 为了资金安全，如果没有获取到是否提交了押金取现申请，也返回true，是的用户无法提交申请
   }
   return isRequestRefund
