@@ -60,22 +60,18 @@ class WalletDetail extends Component {
     switch (record.dealType) {
       case appConfig.DEPOSIT:
         return "付款成功-押金"
-        break
       case appConfig.RECHARGE:
         return "付款成功-充值"
-        break
       case appConfig.SERVICE:
         return "付款成功-干衣"
-        break
       case appConfig.REFUND:
         return "退款成功-押金"
-        break
       case appConfig.WITHDRAW:
         return "提现成功-余额"
-        break
       case appConfig.SYS_PRESENT:
         return "付款成功-充值"
-        break
+      case appConfig.ORDER_PAY:
+        return "付款成功-订单"
       default:
         break
     }
@@ -85,22 +81,18 @@ class WalletDetail extends Component {
     switch (record.dealType) {
       case appConfig.DEPOSIT:
         return "押金"
-        break
       case appConfig.RECHARGE:
         return "平台充值"
-        break
       case appConfig.SERVICE:
         return "干衣消费"
-        break
       case appConfig.REFUND:
         return "押金退款"
-        break
       case appConfig.WITHDRAW:
         return "余额提现"
-        break
       case appConfig.SYS_PRESENT:
         return "系统赠送"
-        break
+      case appConfig.ORDER_PAY:
+        return "订单支付"
       default:
         break
     }
