@@ -22,6 +22,8 @@ const {
   Cells,
   Cell,
   CellBody,
+  Icon,
+  LoadMore,
 } = WeUI
 
 class WalletDetail extends Component {
@@ -64,17 +66,17 @@ class WalletDetail extends Component {
     const {total} = this.state
     const {dealRecords, currentUser, fetchDealRecords} = this.props
     const lastDealTime = dealRecords.length > 0? dealRecords[dealRecords.length - 1].dealTime : undefined
+    if(dealRecords.length === total) {
+      finish()
+      return
+    }
     fetchDealRecords({
       userId: currentUser.id,
       isRefresh: false,
       lastDealTime: lastDealTime,
       limit: 10,
       success: () => {
-        if(total === dealRecords.length) {
-          finish()
-        } else {
-          resolve()
-        }
+        resolve()
       },
       error: this.onFetchDealRecordsError,
     })
@@ -129,30 +131,28 @@ class WalletDetail extends Component {
   render(){
     return (
     <InfiniteLoader onLoadMore={this.onLoadMoreRecord} loaderDefaultIcon={null}>
-      <Page ptr={false}>
-        <Cells>
-          {
-            this.props.dealRecords.map( (item, i) => {
-              return (
-                <Cell key={i} access onClick={() => {this.showRecordDetail(item)}}>
-                  <CellBody>
-                    <div className="wallet_detail_record">
-                      <div className="record-header">
-                        <text className="content-primary">{this.getDealTitle(item)}</text>
-                        <text className="content-trip">{formatTime((new Date(item.dealTime)).getTime(),'YYYY-MM-DD HH:mm')}</text>
-                      </div>
-                      <div className="record-content">
-                        <text className="content-primary">{item.amount + '元'}</text>
-                        <text className="content-trip">{this.getDealType(item)}</text>
-                      </div>
+      <Cells>
+        {
+          this.props.dealRecords.map( (item, i) => {
+            return (
+              <Cell key={i} access onClick={() => {this.showRecordDetail(item)}}>
+                <CellBody>
+                  <div className="wallet_detail_record">
+                    <div className="record-header">
+                      <text className="content-primary">{this.getDealTitle(item)}</text>
+                      <text className="content-trip">{formatTime((new Date(item.dealTime)).getTime(),'YYYY-MM-DD HH:mm')}</text>
                     </div>
-                  </CellBody>
-                </Cell>
-              )
-            })
-          }
-        </Cells>
-      </Page>
+                    <div className="record-content">
+                      <text className="content-primary">{item.amount + '元'}</text>
+                      <text className="content-trip">{this.getDealType(item)}</text>
+                    </div>
+                  </div>
+                </CellBody>
+              </Cell>
+            )
+          })
+        }
+      </Cells>
     </InfiniteLoader>
     )
   }
