@@ -104,14 +104,6 @@ class ModifyProfile extends  Component {
               {this.props.currentUser.mobilePhoneNumber}
             </CellFooter>
           </Cell>
-          <Cell>
-            <CellBody>
-              微信号
-            </CellBody>
-            <CellFooter>
-              {this.props.currentUser.authData.weixin.openid}
-            </CellFooter>
-          </Cell>
 
         </Cells>
       </Page>

@@ -1,11 +1,19 @@
+.walletpage {
+  height: 100vh;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
 .walletcontainer {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  height: 26.9rem;
-  background: url("/bg_wallet.png");
-  background-size: auto;
+  height: 22rem;
+  background: url("../../../public/bg_wallet.png");
+  background-size: cover;
 }
 
 .amount {
@@ -21,7 +29,7 @@
 }
 
 .buttons-area {
-  padding-top: 4.6rem;
+  padding-top: 2.6rem;
   width: 11.3rem;
 }
 
@@ -44,7 +52,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 4.5rem;
+  padding-bottom: 1.5rem;
 }
 
 .depositTrip {

@@ -1,7 +1,10 @@
 .page {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+  height: 100vh;
 }
+
 .header {
   display: flex;
   height: 9.7rem;
@@ -16,7 +19,7 @@
 .button {
   flex: 1;
   margin-top: 1.63rem;
-  margin-bottom: 10.6rem;
+  margin-bottom: 1rem;
   padding-left: 1.31rem;
   padding-right: 1.19rem;
 }
@@ -33,6 +36,7 @@
   align-items: flex-end;
   padding-bottom: 1.6rem;
 }
+
 .bind-logo {
   width: 6.25rem;
   height: 5.63rem;
