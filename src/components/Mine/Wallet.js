@@ -45,7 +45,7 @@ class Wallet extends Component {
     if(isRequestRefund) {
       return
     } else if(walletInfo.deposit === 0) {  //交押金
-      browserHistory.push('/mine/deposit')
+      // browserHistory.push('/mine/deposit')
     } else {  //退押金
       this.refundDeposit()
     }

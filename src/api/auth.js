@@ -102,12 +102,8 @@ export function getWalletInfo(payload) {
 }
 
 export function getDealRecords(payload) {
-  return AV.Cloud.run('authFetchDealRecords', payload).then((records) => {
-    let dealRecordList = []
-    records.forEach((record) => {
-      dealRecordList.push(DealInfo.fromLeancloudApi(record))
-    })
-    return dealRecordList
+  return AV.Cloud.run('pingppFetchDealRecord', payload).then((result) => {
+    return result
   }).catch((error) => {
     console.log("获取交易信息失败：", error)
     throw error
