@@ -74,16 +74,16 @@ class Mine extends Component {
     return (
       <Page ptr={false} style={{backgroundColor: `#EFEFF4`}}>
         <div className="container">
-          <img src="/logo.png" alt="" style={{display: `block`, width: `7.5rem`, height: `6.75rem`}}/>
+          <img src={require('../../../public/logo.png')} alt="" style={{display: `block`, width: `7.5rem`, height: `6.75rem`}}/>
         </div>
 
         <Cells style={{marginTop: 0}}>
           <Cell access onClick={() => {browserHistory.push('/modifyProfile')}}>
             <CellHeader>
-              <img src={this.props.currentUser.avatar || '/defaultAvatar.svg'} alt="" style={{display: `block`, width: `3.13rem`, marginRight: `0.63rem`}}/>
+              <img src={this.props.currentUser.avatar || require('../../../public/defaultAvatar.svg')} alt="" style={{display: `block`, width: `3.13rem`, marginRight: `0.63rem`}}/>
             </CellHeader>
             <CellBody primary={true}>
-              <h6>{this.props.currentUser.nickname || '衣家宝'}</h6>
+              <h4>{this.props.currentUser.nickname || '衣家宝'}</h4>
               <p style={{fontSize: `0.9rem`, marginTop: `0.1rem`}}>普通用户</p>
             </CellBody>
             <CellFooter style={{fontSize: `1.1rem`}}>
@@ -95,7 +95,7 @@ class Mine extends Component {
         <Cells>
           <Cell access onClick={() => {browserHistory.push('/mine/score', {score: 100})}}>
             <CellHeader>
-              <img src="/score.png" alt="" style={{display: `block`, width: `1.3rem`, marginRight: `1.1rem`}}/>
+              <img src={require('../../../public/score.png')} alt="" style={{display: `block`, width: `1.3rem`, marginRight: `1.1rem`}}/>
             </CellHeader>
             <CellBody>
               积分
@@ -104,7 +104,7 @@ class Mine extends Component {
           </Cell>
           <Cell access onClick={() => {browserHistory.push('/mine/wallet')}}>
             <CellHeader>
-              <img src="/wallet.png" alt="" style={{display: `block`, width: `1.3rem`, marginRight: `1.1rem`}}/>
+              <img src={require('../../../public/wallet.png')} alt="" style={{display: `block`, width: `1.3rem`, marginRight: `1.1rem`}}/>
             </CellHeader>
             <CellBody>
               钱包
@@ -113,7 +113,7 @@ class Mine extends Component {
           </Cell>
           <Cell access onClick={() => {browserHistory.push('/mine/orders')}}>
             <CellHeader>
-              <img src="/order.png" alt="" style={{display: `block`, width: `1.3rem`, marginRight: `1.1rem`}}/>
+              <img src={require('../../../public/order.png')} alt="" style={{display: `block`, width: `1.3rem`, marginRight: `1.1rem`}}/>
             </CellHeader>
             <CellBody>
               我的订单
@@ -125,7 +125,7 @@ class Mine extends Component {
         <Cells>
           <Cell access onClick={() => {browserHistory.push('/about')}}>
             <CellHeader>
-              <img src="/about_us.png" alt="" style={{display: `block`, width: `1.3rem`, marginRight: `1.1rem`}}/>
+              <img src={require('../../../public/about_us.png')} alt="" style={{display: `block`, width: `1.3rem`, marginRight: `1.1rem`}}/>
             </CellHeader>
             <CellBody>
               关于衣家宝

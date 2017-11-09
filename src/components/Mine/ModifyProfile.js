@@ -67,7 +67,7 @@ class ModifyProfile extends  Component {
               头像
             </CellBody>
             <CellFooter>
-              <img src={this.props.currentUser.avatar || '/defaultAvatar.svg'} alt="" style={{display: `block`, width: `3.13rem`, marginRight: `0.63rem`}}/>
+              <img src={this.props.currentUser.avatar || require('../../../public/defaultAvatar.svg')} alt="" style={{display: `block`, width: `3.13rem`, marginRight: `0.63rem`}}/>
             </CellFooter>
           </Cell>
         </Cells>

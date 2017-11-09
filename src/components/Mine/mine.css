@@ -3,7 +3,7 @@
   justify-content: center;
   align-items: center;
   height: 11.69rem;
-  background: url("/bg_mine.png");
+  background: url("../../../public/bg_mine.png");
   background-size:100% 100%;
 }
 
