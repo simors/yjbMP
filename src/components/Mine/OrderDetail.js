@@ -5,7 +5,7 @@ import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import {browserHistory} from 'react-router'
-import {selectActiveUserInfo, selectWalletInfo} from '../../selector/authSelector'
+import {selectActiveUserInfo} from '../../selector/authSelector'
 import {selectOrderById} from '../../selector/orderSelector'
 import {selectDeviceById} from '../../selector/deviceSelector'
 import {selectStationById} from '../../selector/stationSelector'
@@ -111,53 +111,29 @@ class OrderDetail extends Component {
   //触发支付动作
   triggerPayment(order) {
     var amount = this.getAmount(order)
-    if(this.props.walletInfo.balance < amount) {  //余额不足
-      this.setState({
-        showDialog: true,
-        Dialog: {
-          title: '余额不足',
-          trip: '请充值后再试',
-          buttons: [
-            {
-              type: 'default',
-              label: '取消',
-              onClick: () => {this.setState({showDialog: false})}
-            },
-            {
-              type: 'primary',
-              label: '充值',
-              onClick: () => {
-                browserHistory.push('/mine/wallet/recharge')
-                this.setState({showDialog: false})
-              }
-            }
-          ]
-        },
-      })
-    } else {
-      this.setState({
-        showDialog: true,
-        Dialog: {
-          title: '确认支付',
-          trip: "即将使用余额支付，本次扣费" + amount + "元",
-          buttons: [
-            {
-              type: 'default',
-              label: '取消',
-              onClick: () => {this.setState({showDialog: false})}
-            },
-            {
-              type: 'primary',
-              label: '确认',
-              onClick: this.onPaymentService
-            }
-          ]
-        },
-      })
-    }
+    this.setState({
+      showDialog: true,
+      Dialog: {
+        title: '确认支付',
+        trip: "即将使用余额支付，本次扣费" + amount + "元",
+        buttons: [
+          {
+            type: 'default',
+            label: '取消',
+            onClick: () => {this.setState({showDialog: false})}
+          },
+          {
+            type: 'primary',
+            label: '确认',
+            onClick: this.onPaymentService
+          }
+        ]
+      },
+    })
   }
 
   paymentServiceSuccessCallback = (orderRecord) => {
+    Toast.success("订单支付成功")
     browserHistory.push('/result' + '/订单支付成功' + '/success')
   }
 
@@ -173,13 +149,17 @@ class OrderDetail extends Component {
         Toast.fail("余额不足")
         break
       default:
-        Toast.fail("内部错误" + error.code)
+        Toast.fail("订单支付失败" + error.code)
         break
     }
   }
 
   //支付服务订单
   onPaymentService = () => {
+    this.setState({showDialog: false})
+    Toast.loading("请稍后", 10, () => {
+      Toast.info("网络错误")
+    })
     this.props.paymentOrder({
       userId: this.props.currentUser.id,
       amount: this.getAmount(this.props.orderInfo),
@@ -333,7 +313,6 @@ const mapStateToProps = (state, ownProps) => {
     deviceInfo: deviceInfo,
     stationInfo: stationInfo,
     orderInfo: orderInfo,
-    walletInfo: selectWalletInfo(state)
   }
 };
 

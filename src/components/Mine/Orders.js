@@ -5,9 +5,8 @@ import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import {browserHistory} from 'react-router'
-import {fetchWalletInfo} from '../../actions/authActions'
 import {fetchOrders, paymentOrder, updateOrder} from '../../actions/orderActions'
-import {selectActiveUserInfo, selectWalletInfo} from '../../selector/authSelector'
+import {selectActiveUserInfo} from '../../selector/authSelector'
 import {selectMyOrders} from '../../selector/orderSelector'
 import * as appConfig from '../../constants/appConfig'
 import {formatTime} from '../../util'
@@ -19,9 +18,7 @@ import {socket} from '../../util/socket'
 import * as errno from '../../errno'
 import {Toast} from 'antd-mobile'
 
-const {Panel, Tab, TabBody, InfiniteLoader, Cells, Icon, Dialog, LoadMore, Msg} = WeUI
-
-const LoaderFinishIcon = (<LoadMore showLine>没有订单啦！</LoadMore>)
+const {Panel, Tab, TabBody, InfiniteLoader, Cells, Icon, Dialog, Msg} = WeUI
 
 class Orders extends Component {
   constructor(props) {
@@ -58,7 +55,6 @@ class Orders extends Component {
       limit: 10,
       isRefresh: true,
     })
-    this.props.fetchWalletInfo({})
   }
 
   getDuration(order) {
@@ -96,56 +92,32 @@ class Orders extends Component {
   //触发支付动作
   triggerPayment(order) {
     var amount = this.getAmount(order)
-    if(this.props.walletInfo.balance < amount) {  //余额不足
-      this.setState({
-        showDialog: true,
-        Dialog: {
-          title: '余额不足',
-          trip: '请充值后再试',
-          buttons: [
-            {
-              type: 'default',
-              label: '取消',
-              onClick: () => {this.setState({showDialog: false})}
-            },
-            {
-              type: 'primary',
-              label: '充值',
-              onClick: () => {
-                browserHistory.push('/mine/wallet/recharge')
-                this.setState({showDialog: false})
-              }
-            }
-          ]
-        },
-      })
-    } else {
-      this.setState({
-        showDialog: true,
-        payAmount: Number(amount),
-        payOrderId: order.id,
-        Dialog: {
-          title: '确认支付',
-          trip: "即将使用余额支付，本次扣费" + amount + "元",
-          buttons: [
-            {
-              type: 'default',
-              label: '取消',
-              onClick: () => {this.setState({showDialog: false})}
-            },
-            {
-              type: 'primary',
-              label: '确认',
-              onClick: this.onPaymentService
-            }
-          ]
-        },
-      })
-    }
+    this.setState({
+      showDialog: true,
+      payAmount: Number(amount),
+      payOrderId: order.id,
+      Dialog: {
+        title: '确认支付',
+        trip: "即将使用余额支付，本次扣费" + amount + "元",
+        buttons: [
+          {
+            type: 'default',
+            label: '取消',
+            onClick: () => {this.setState({showDialog: false})}
+          },
+          {
+            type: 'primary',
+            label: '确认',
+            onClick: this.onPaymentService
+          }
+        ]
+      },
+    })
   }
 
 
   paymentServiceSuccessCallback = (orderRecord) => {
+    Toast.success("订单支付成功")
     browserHistory.push('/result' + '/订单支付成功' + '/success')
   }
 
@@ -162,7 +134,7 @@ class Orders extends Component {
         Toast.fail("余额不足")
         break
       default:
-        Toast.fail("内部错误" + error.code)
+        Toast.fail("订单支付失败" + error.code)
         break
     }
   }
@@ -170,6 +142,9 @@ class Orders extends Component {
   //支付服务订单
   onPaymentService = () => {
     this.setState({showDialog: false})
+    Toast.loading("请稍后", 10, () => {
+      Toast.info("网络错误")
+    })
     this.props.paymentOrder({
       userId: this.props.currentUser.id,
       amount: this.state.payAmount,
@@ -206,7 +181,8 @@ class Orders extends Component {
   }
   //关机
   trunOffDevice(order) {
-    Toast.loading("处理中...", 15, () => {
+    this.setState({showDialog: false})
+    Toast.loading("请稍后", 15, () => {
       Toast.info("网络超时")
     })
     //发送关机请求
@@ -375,7 +351,6 @@ const mapStateToProps = (state, ownProps) => {
     currentUser: selectActiveUserInfo(state),
     orderList: orderList,
     lastTurnOnTime: lastTurnOnTime,
-    walletInfo: selectWalletInfo(state)
   }
 };
 
@@ -383,7 +358,6 @@ const mapDispatchToProps = (dispatch) => bindActionCreators({
   fetchOrders,
   paymentOrder,
   updateOrder,
-  fetchWalletInfo,
 }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(Orders)
