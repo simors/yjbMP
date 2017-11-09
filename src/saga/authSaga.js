@@ -13,7 +13,6 @@ import {
   verifyIdName,
   getJssdkConfig,
   loginAuthData,
-  updateUserRegionApi,
   createWithdrawApply,
   fetchLastRefund,
 } from  '../api/auth'
@@ -83,7 +82,6 @@ export function* autoLogin(action) {
     let mobilePhoneNumber = user.attributes.mobilePhoneNumber
     yield put(autoLoginSuccess({token: token, user: user, subscribe: subscribe}))
     console.log("自动登录成功：", user)
-    call(updateUserRegionApi, {})
     if (payload.success) {
       payload.success(mobilePhoneNumber)
     }
@@ -110,7 +108,6 @@ export function* wechatAuthDataLogin(action) {
     let token = result.token
     let mobilePhoneNumber = userInfo.attributes.mobilePhoneNumber
     yield put(loginSuccess({userInfo: userInfo, token: token}))
-    call(updateUserRegionApi, {})
     if (payload.success) {
       payload.success(mobilePhoneNumber)
     }

@@ -128,14 +128,6 @@ export function getJssdkConfig(payload) {
   })
 }
 
-export function updateUserRegionApi(payload) {
-  return AV.Cloud.run('authUpdateUserRegion', payload).then(() => {
-
-  }).catch((error) => {
-    throw error
-  })
-}
-
 export async function createWithdrawApply(payload) {
   let params = {
     amount: payload.amount,
