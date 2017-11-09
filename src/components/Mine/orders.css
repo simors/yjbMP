@@ -34,6 +34,11 @@
   justify-content: space-between;
 }
 
+.order-content-fee {
+  display: flex;
+  align-items: center;
+}
+
 .order-content-secondary {
   display: flex;
   align-items: center;
@@ -41,6 +46,7 @@
   font-size: 0.9rem;
   color: #888888;
 }
+
 
 .order-footer {
   display: flex;
@@ -54,6 +60,7 @@
   width: 6.4rem;
   height: 1.6rem;
   text-align: center;
+  line-height: 1.6rem;
   border-radius: 5px;
   border-style: solid;
   border-width: 1px;
@@ -66,6 +73,7 @@
   width: 6.4rem;
   height: 1.6rem;
   text-align: center;
+  line-height: 1.6rem;
   border-radius: 5px;
   border-style: solid;
   border-width: 1px;
@@ -80,12 +88,11 @@
   align-items: center;
   width: 3.2rem;
   height: 1.1rem;
-  border-radius: 8px;
+  border-radius: 4px;
   background-color: #1AAD19;
   font-size: 0.6rem;
-  text-align: center;
+  line-height: 0.8rem;
   color: #ffffff;
-  margin-right: 3.3rem;
 }
 
 .paid-success-trip {

@@ -246,9 +246,11 @@ class Orders extends Component {
         </div>
         <div className="order-content" onClick={() => {browserHistory.push('/mine/orders/' + item.id)}}>
           <div className="order-content-primary">
-            <text style={{fontSize: `1.1rem`, color: `#000000`}}>使用时长</text>
-            <text>{this.getDuration(item) + '分钟'}</text>
-            <div className="status">已烘干</div>
+            <div className="order-content-fee">
+              <text style={{fontSize: `1.1rem`, color: `#000000`}}>使用时长</text>
+              <text style={{marginRight: '0.5rem'}}>{this.getDuration(item) + '分钟'}</text>
+              <div className="status">已烘干</div>
+            </div>
             <text style={{fontSize: `1.5rem`}}>{this.getAmount(item) + '元'}</text>
           </div>
           <div className="order-content-secondary">
@@ -272,9 +274,11 @@ class Orders extends Component {
         </div>
         <div className="order-content" onClick={() => {browserHistory.push('/mine/orders/' + item.id)}}>
           <div className="order-content-primary">
-            <text style={{fontSize: `1.1rem`, color: `#000000`}}>使用时长</text>
-            <text>{this.getDuration(item) + '分钟'}</text>
-            <div className="status" style={{backgroundColor: `#FFA22A`}}>正在烘干</div>
+            <div className="order-content-fee">
+              <text style={{fontSize: `1.1rem`, color: `#000000`}}>使用时长</text>
+              <text style={{marginRight: '0.5rem'}}>{this.getDuration(item) + '分钟'}</text>
+              <div className="status" style={{backgroundColor: `#FFA22A`}}>正在烘干</div>
+            </div>
             <text style={{fontSize: `1.5rem`}}>{this.getAmount(item) + '元'}</text>
           </div>
           <div className="order-content-secondary">
@@ -298,9 +302,11 @@ class Orders extends Component {
         </div>
         <div className="order-content" onClick={() => {browserHistory.push('/mine/orders/' + item.id)}}>
           <div className="order-content-primary">
-            <text style={{fontSize: `1.1rem`, color: `#000000`}}>使用时长</text>
-            <text>{this.getDuration(item) + '分钟'}</text>
-            <div className="status">已完成</div>
+            <div className="order-content-fee">
+              <text style={{fontSize: `1.1rem`, color: `#000000`}}>使用时长</text>
+              <text style={{marginRight: '0.5rem'}}>{this.getDuration(item) + '分钟'}</text>
+              <div className="status">已完成</div>
+            </div>
             <text style={{fontSize: `1.5rem`}}>{this.getAmount(item) + '元'}</text>
           </div>
           <div className="order-content-secondary">
@@ -309,7 +315,7 @@ class Orders extends Component {
           </div>
         </div>
         <div className="order-footer">
-          <div className="paid-success-trip"><Icon value="success"/> 交易成功</div>
+          <div className="paid-success-trip"><Icon value="success"/>交易成功</div>
         </div>
       </Panel>
     )
