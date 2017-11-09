@@ -14,7 +14,6 @@ import {selectActiveUserInfo} from '../../selector/authSelector'
 import * as errno from '../../errno'
 
 const {
-  Page,
   Button,
   CellHeader,
   CellBody,
@@ -201,52 +200,53 @@ class Bind extends Component {
 
   render() {
     return (
-      <Page className="page" ptr={false} infiniteLoader={false}>
-        <div className="header">
-          <img className="avatar" src={this.props.currentUser? this.props.currentUser.avatar: '/defaultAvatar.svg'} alt=""/>
+      <div className="page">
+        <div>
+          <div className="header">
+            <img className="avatar" src={this.props.currentUser? this.props.currentUser.avatar: require('../../../public/defaultAvatar.svg')} alt=""/>
+          </div>
+          <div>
+            <Form className="form">
+              <FormCell select selectPos="before">
+                <CellHeader>
+                  <Select name="areaCode" defaultValue="1" onChange={this.handleInputChange}>
+                    <option value="+86">+86</option>
+                  </Select>
+                </CellHeader>
+                <CellBody>
+                  <Input name="phone" type="tel" placeholder="请输入手机号码" onChange={this.handleInputChange}/>
+                </CellBody>
+              </FormCell>
+              <FormCell vcode>
+                <CellHeader>
+                  <Label>验证码</Label>
+                </CellHeader>
+                <CellBody>
+                  <Input name="smsCode" type="number" placeholder="请输入验证码" onChange={this.handleInputChange}/>
+                </CellBody>
+                <CellFooter>
+                  <Button
+                    type="vcode"
+                    disabled={this.state.smsCodeDisable}
+                    onClick={this.getSmsCode}
+                    style={this.state.smsCodeDisable? {} : {color: `#00C203`}}>
+                    {this.state.smsCodeTrip}
+                  </Button>
+                </CellFooter>
+              </FormCell>
+            </Form>
+          </div>
+          <div className="button">
+            <Button onClick={this.submit}>绑定</Button>
+          </div>
         </div>
         <div>
-          <Form className="form">
-            <FormCell select selectPos="before">
-              <CellHeader>
-                <Select name="areaCode" defaultValue="1" onChange={this.handleInputChange}>
-                  <option value="+86">+86</option>
-                  <option value="+80">+80</option>
-                  <option value="+84">+84</option>
-                  <option value="+87">+87</option>
-                </Select>
-              </CellHeader>
-              <CellBody>
-                <Input name="phone" type="tel" placeholder="请输入手机号码" onChange={this.handleInputChange}/>
-              </CellBody>
-            </FormCell>
-            <FormCell vcode>
-              <CellHeader>
-                <Label>验证码</Label>
-              </CellHeader>
-              <CellBody>
-                <Input name="smsCode" type="number" placeholder="请输入验证码" onChange={this.handleInputChange}/>
-              </CellBody>
-              <CellFooter>
-                <Button
-                  type="vcode"
-                  disabled={this.state.smsCodeDisable}
-                  onClick={this.getSmsCode}
-                  style={this.state.smsCodeDisable? {} : {color: `#00C203`}}>
-                  {this.state.smsCodeTrip}
-                </Button>
-              </CellFooter>
-            </FormCell>
-          </Form>
+          <div className="bind-footer">
+            <img className="bind-logo" src={require('../../../public/logo_gray.png')} alt=""/>
+          </div>
+          <Toptips type="warn" show={this.state.showWarn}>{this.state.warnTips}</Toptips>
         </div>
-        <div className="button">
-          <Button onClick={this.submit}>绑定</Button>
-        </div>
-        <div className="bind-footer">
-          <img className="bind-logo" src="/logo_gray.png" alt=""/>
-        </div>
-        <Toptips type="warn" show={this.state.showWarn}>{this.state.warnTips}</Toptips>
-      </Page>
+      </div>
     )
   }
 }
