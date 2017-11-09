@@ -67,13 +67,13 @@ class OrderDetail extends Component {
         return order.amount
         break
       case appConfig.ORDER_STATUS_OCCUPIED:
-        return ((new Date(order.endTime) - new Date(order.createTime)) * 0.001 / 60).toFixed(0)
+        return Number((new Date(order.endTime) - new Date(order.createTime)) * 0.001 / 60).toFixed(0)
         break
       default:
         break
     }
     duration = duration < 1? 1: duration
-    return (duration * this.props.stationInfo.unitPrice).toFixed(2)
+    return Number(duration * this.props.stationInfo.unitPrice).toFixed(2)
   }
 
   getButtonTitle(order) {

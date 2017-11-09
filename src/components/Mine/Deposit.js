@@ -75,7 +75,7 @@ class Deposit extends Component {
           </div>
           <div>
             <div className="deposit-amount-trip">请支付押金</div>
-            <div className="deposit-amount">{currentStation.deposit + '元'}</div>
+            <div className="deposit-amount">{Number(currentStation.deposit).toFixed(2) + '元'}</div>
           </div>
           <div className="deposit-button-area" >
             <div className="deposit-button-trip">押金可在“个人中心－钱包”中申请退还</div>

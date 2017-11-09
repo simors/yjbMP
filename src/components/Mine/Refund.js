@@ -77,7 +77,7 @@ class Refund extends Component {
       return(
         <div style={{backgroundColor: `#EFEFF4`}}>
           <div className="primary-area">
-            <div>{'退款金额：' + walletInfo.deposit + '元'}</div>
+            <div>{'退款金额：' + Number(walletInfo.deposit).toFixed(2) + '元'}</div>
             <div>{'退款账户：' + currentUser.nickname + '的微信钱包账户'}</div>
           </div>
           <div className="refund-trip">退款将在7个工作日内到账，请您注意微信支付的通知并查看微信钱包余额变动。</div>

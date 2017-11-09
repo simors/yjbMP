@@ -65,10 +65,10 @@ class Orders extends Component {
     switch (order.status) {
       case appConfig.ORDER_STATUS_PAID:
       case appConfig.ORDER_STATUS_UNPAID:
-        return ((new Date(order.endTime) - new Date(order.createTime)) * 0.001 / 60).toFixed(0)
+        return Number((new Date(order.endTime) - new Date(order.createTime)) * 0.001 / 60).toFixed(0)
         break
       case appConfig.ORDER_STATUS_OCCUPIED:
-        return ((Date.now() - new Date(order.createTime)) * 0.001 / 60).toFixed(0)
+        return Number((Date.now() - new Date(order.createTime)) * 0.001 / 60).toFixed(0)
         break
       default:
         return 0
@@ -84,13 +84,13 @@ class Orders extends Component {
         return order.amount
         break
       case appConfig.ORDER_STATUS_OCCUPIED:
-        duration = ((Date.now() - new Date(order.createTime)) * 0.001 / 60).toFixed(0)
+        duration = Number((Date.now() - new Date(order.createTime)) * 0.001 / 60).toFixed(0)
         break
       default:
         break
     }
     duration = duration < 1? 1: duration
-    return (duration * order.unitPrice).toFixed(2)
+    return Number(duration * order.unitPrice).toFixed(2)
   }
 
   //触发支付动作

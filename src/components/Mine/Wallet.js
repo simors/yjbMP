@@ -77,7 +77,7 @@ class Wallet extends Component {
     if(walletInfo.deposit > 0) {
       return(
         <div className="deposit">
-          <text className="depositTrip">{'押金：' + (walletInfo.deposit || 0) + '元'}</text>
+          <text className="depositTrip">{'押金：' + (Number(walletInfo.deposit).toFixed(2) || 0) + '元'}</text>
           <div className="depositButton-area">
             <Button type='primary' plain className="depositButton" onClick={this.onPress}>
               {isRequestRefund ? '押金退款处理中' : '退押金'}
@@ -102,7 +102,7 @@ class Wallet extends Component {
     return(
       <div className="walletpage">
         <div className="walletcontainer">
-          <text className="amount">{(walletInfo.balance || 0) + '元'}</text>
+          <text className="amount">{(Number(walletInfo.balance).toFixed(2) || 0) + '元'}</text>
           <text className="amountTrip">当前余额</text>
 
           <div className="buttons-area">
