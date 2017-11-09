@@ -15,11 +15,9 @@ import 'weui'
 import 'react-weui/build/dist/react-weui.css'
 import {formatTime} from '../../util'
 import * as appConfig from '../../constants/appConfig'
-import io from 'socket.io-client'
+import {socket} from '../../util/socket'
 import * as errno from '../../errno'
 import {Toast, Card, WhiteSpace, Flex} from 'antd-mobile'
-
-const socket = io(appConfig.LC_SERVER_DOMAIN)
 
 const {
   Button,

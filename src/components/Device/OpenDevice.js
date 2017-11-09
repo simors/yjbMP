@@ -16,14 +16,12 @@ import wx from 'tencent-wx-jssdk'
 import 'weui'
 import 'react-weui/build/dist/react-weui.css'
 import './device.css'
-import io from 'socket.io-client'
+import {socket} from '../../util/socket'
 import * as errno from '../../errno'
 import RedEnvelope from '../Promotion/RedEnvelope'
 import {ActivityIndicator} from 'antd-mobile'
 import {getMobileOperatingSystem} from '../../util'
 import {selectInitUrl} from '../../selector/configSelector'
-
-const socket = io(appConfig.LC_SERVER_DOMAIN)
 
 const {
   Button,
