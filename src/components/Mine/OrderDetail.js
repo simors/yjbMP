@@ -194,7 +194,8 @@ class OrderDetail extends Component {
 
   //关机
   trunOffDevice(order) {
-    Toast.loading("处理中...", 15, () => {
+    this.setState({showDialog: false})
+    Toast.loading("请稍后", 10, () => {
       Toast.info("网络超时")
     })
     //发送关机请求
