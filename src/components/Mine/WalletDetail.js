@@ -128,7 +128,7 @@ class WalletDetail extends Component {
 
   render(){
     return (
-    <InfiniteLoader onLoadMore={this.onLoadMoreRecord}>
+    <InfiniteLoader onLoadMore={this.onLoadMoreRecord} loaderDefaultIcon={null}>
       <Page ptr={false}>
         <Cells>
           {
