@@ -147,6 +147,7 @@ class OrderDetail extends Component {
         break
       case errno.ERROR_NO_ENOUGH_BALANCE:
         Toast.fail("余额不足")
+        browserHistory.push('/mine/wallet/recharge')
         break
       default:
         Toast.fail("订单支付失败" + error.code)
