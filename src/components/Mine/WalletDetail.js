@@ -142,7 +142,7 @@ class WalletDetail extends Component {
                         <text className="content-trip">{formatTime((new Date(item.dealTime)).getTime(),'YYYY-MM-DD HH:mm')}</text>
                       </div>
                       <div className="record-content">
-                        <text className="content-primary">{item.cost + '元'}</text>
+                        <text className="content-primary">{item.amount + '元'}</text>
                         <text className="content-trip">{this.getDealType(item)}</text>
                       </div>
                     </div>
