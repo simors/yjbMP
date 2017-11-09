@@ -1,6 +1,6 @@
 .banner {
   height: 8.1rem;
-  background: url("/banner_recharge.png");
+  background: url("../../../public/banner_recharge.png");
   background-size: 100% 100%;
 }
 

@@ -4,7 +4,7 @@
   justify-content: center;
   align-items: center;
   height: 11.7rem;
-  background: url("/bg_score.png");
+  background: url("../../../public/bg_score.png");
   background-size:100% 100%;
 }
 

@@ -335,7 +335,7 @@ class Orders extends Component {
         <Msg
           type="info"
           title="没有订单记录！"
-          footer={() =>(<img style={{width: '6.3rem', marginBottom: '3rem'}}  src="/logo_gray.png" alt=""/>)}
+          footer={() =>(<img style={{width: '6.3rem', marginBottom: '3rem'}}  src={require('../../../public/logo_gray.png')} alt=""/>)}
         />
       )
     }

@@ -71,7 +71,7 @@ class Deposit extends Component {
       return(
         <div>
           <div className="deposit-banner">
-            <img src="/logo.png" alt="" style={{display: `block`, width: `7.5rem`, height: `6.75rem`}}/>
+            <img src={require('../../../public/logo.png')} alt="" style={{display: `block`, width: `7.5rem`, height: `6.75rem`}}/>
           </div>
           <div>
             <div className="deposit-amount-trip">请支付押金</div>
