@@ -17,13 +17,13 @@ import * as errno from '../../errno'
 
 
 const {
-  Page,
   InfiniteLoader,
   Cells,
   Cell,
   CellBody,
   Icon,
   LoadMore,
+  Msg,
 } = WeUI
 
 class WalletDetail extends Component {
@@ -129,6 +129,16 @@ class WalletDetail extends Component {
   }
 
   render(){
+    const {dealRecords} = this.props
+    if(dealRecords.length === 0) {
+      return(
+        <Msg
+          type="info"
+          title="没有消费记录！"
+          footer={() =>(<img style={{width: '6.3rem', marginBottom: '3rem'}}  src={require('../../../public/logo_gray.png')} alt=""/>)}
+        />
+      )
+    }
     return (
     <InfiniteLoader onLoadMore={this.onLoadMoreRecord} loaderDefaultIcon={null}>
       <Cells>
