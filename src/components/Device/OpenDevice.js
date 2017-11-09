@@ -88,7 +88,7 @@ class OpenDevice extends Component {
     const {deviceInfo, stationInfo} = this.props
     const {status} = deviceInfo
 
-    if(status === appConfig.DEVICE_STATUS_IDLE) {
+    if(status === appConfig.DEVICE_STATUS_IDLE && stationInfo) {
       return(
         <PanelBody style={{borderBottomWidth: `0`}}>
           <MediaBox type="text">
@@ -211,8 +211,8 @@ class OpenDevice extends Component {
   }
 
   render() {
-    const {params, currentUserId, deviceInfo, stationInfo} = this.props
-    if(!currentUserId || !deviceInfo || !stationInfo) {
+    const {params, currentUserId, deviceInfo} = this.props
+    if(!currentUserId || !deviceInfo) {
       return(<ActivityIndicator toast text="正在加载" />)
     }
     return(
