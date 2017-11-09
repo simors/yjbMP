@@ -83,7 +83,7 @@ export function* autoLogin(action) {
     let mobilePhoneNumber = user.attributes.mobilePhoneNumber
     yield put(autoLoginSuccess({token: token, user: user, subscribe: subscribe}))
     console.log("自动登录成功：", user)
-    yield call(updateUserRegionApi, {})
+    call(updateUserRegionApi, {})
     if (payload.success) {
       payload.success(mobilePhoneNumber)
     }
@@ -110,7 +110,7 @@ export function* wechatAuthDataLogin(action) {
     let token = result.token
     let mobilePhoneNumber = userInfo.attributes.mobilePhoneNumber
     yield put(loginSuccess({userInfo: userInfo, token: token}))
-    yield call(updateUserRegionApi, {})
+    call(updateUserRegionApi, {})
     if (payload.success) {
       payload.success(mobilePhoneNumber)
     }
