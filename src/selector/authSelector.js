@@ -20,14 +20,25 @@ export function selectToken(state) {
   return AUTH.token
 }
 
-export function selectDealRecord(state) {
-  let AUTH = state.AUTH
-  let dealRecordsMap = AUTH.dealRecords
-  let dealRecordList = []
-  dealRecordsMap.toArray().forEach((dealRecord) => {
-    dealRecordList.push(dealRecord.toJS())
+export function selectDealRecord(state, dealId) {
+  if(!dealId) {
+    return undefined
+  }
+  let dealRecord = state.AUTH.getIn(['dealRecords', dealId])
+  return dealRecord? dealRecord.toJS() : undefined
+}
+
+export function selectDealList(state) {
+  let dealList = state.AUTH.get('dealList')
+
+  let dealInfoList = []
+  dealList.toArray().forEach((dealId) => {
+    let dealRecord = selectDealRecord(state, dealId)
+    if(dealRecord) {
+      dealInfoList.push(dealRecord)
+    }
   })
-  return dealRecordList
+  return dealInfoList
 }
 
 export function selectWalletInfo(state) {

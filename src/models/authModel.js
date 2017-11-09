@@ -83,26 +83,23 @@ export class UserInfo extends UserInfoRecord {
   }
 }
 
-export const DealInfoRecord = Record({
-  orderNo: undefined,
-  from: undefined,
-  to: undefined,
-  cost: undefined,
-  dealTime: undefined,
-  dealType: undefined,
-}, 'DealInfoRecord')
+const DealRecord = Record({
+  id: undefined,                  //交易记录id
+  orderNo: undefined,             //交易单号
+  amount: undefined,              //交易金额
+  dealTime: undefined,            //交易时间
+  dealType: undefined,            //交易类型
+}, 'DealRecord')
 
-export class DealInfo extends DealInfoRecord {
-  static fromLeancloudApi(DealInfo) {
-    let info = new DealInfoRecord()
-
-    return info.withMutations((record) => {
-      record.set('orderNo', DealInfo.order_no)
-      record.set('from', DealInfo.from)
-      record.set('to', DealInfo.to)
-      record.set('cost', DealInfo.cost)
-      record.set('dealTime', DealInfo.dealTime)
-      record.set('dealType', DealInfo.dealType)
+export class Deal extends DealRecord {
+  static fromJSON(obj) {
+    let recharge = new DealRecord()
+    return recharge.withMutations((record) => {
+      record.set('id', obj.id)
+      record.set('orderNo', obj.order_no)
+      record.set('amount', obj.cost)
+      record.set('dealTime', obj.dealTime)
+      record.set('dealType', obj.dealType)
     })
   }
 }
@@ -117,12 +114,12 @@ export const WalletInfoRecord = Record({
   process: undefined,                 //状态
 }, 'WalletInfoRecord')
 
-
 export const AuthState = Record({
   activeUser: undefined,              //当前用户id
   token: undefined,                   //自动登录token
   profiles: Map(),                    //用户信息: 键为userId, 值为UserInfoRecord
   dealRecords: Map(),                 //交易记录：键为order_no,值为DealInfoRecord
+  dealList: List(),                   //用户钱包记录id列表
   wallet: undefined,                  //钱包信息
-  isRequestRefund: undefined,         // 是否有提交押金返还申请
+  isRequestRefund: undefined,         //是否有提交押金返还申请
 }, "AuthState")

@@ -190,15 +190,20 @@ export function* fetchWalletInfo(action) {
 export function* fetchDealRecords(action) {
   let payload = action.payload
   let dealPayload = {
-    userId: payload.userId
+    userId: payload.userId,
+    isRefresh: payload.isRefresh,
+    limit: payload.limit,
+    lastDealTime: payload.lastDealTime || undefined,
   }
   try {
-    let dealRecordList = yield call(getDealRecords, dealPayload)
-    if(dealRecordList.length > 0) {
-      yield put(fetchDealRecordsSuccess({dealRecordList}))
-    }
+    let result = yield call(getDealRecords, dealPayload)
+    let deals = result.dealList
+    let total = result.total
+    yield put(fetchDealRecordsSuccess({
+      isRefresh: dealPayload.isRefresh,
+      deals: deals}))
     if(payload.success) {
-      payload.success(dealRecordList)
+      payload.success(total)
     }
   } catch(error) {
     if(payload.error) {

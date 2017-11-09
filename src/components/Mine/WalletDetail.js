@@ -6,12 +6,15 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import WeUI from 'react-weui'
 import {fetchDealRecords} from '../../actions/authActions'
-import {selectActiveUserInfo, selectDealRecord} from '../../selector/authSelector'
+import {selectActiveUserInfo, selectDealList} from '../../selector/authSelector'
 import * as appConfig from '../../constants/appConfig'
 import {formatTime} from  '../../util'
 import 'weui'
 import 'react-weui/build/dist/react-weui.css'
 import './wallet-detail.css'
+import {Toast} from 'antd-mobile'
+import * as errno from '../../errno'
+
 
 const {
   Page,
@@ -24,12 +27,33 @@ const {
 class WalletDetail extends Component {
   constructor(props) {
     super(props)
+    this.state = {
+      total: undefined,
+    }
   }
 
   componentWillMount() {
     this.props.fetchDealRecords({
-      userId: this.props.currentUser.id
+      userId: this.props.currentUser.id,
+      isRefresh: true,
+      limit: 10,
+      success: (total) => {this.setState({total})},
+      error: this.onFetchDealRecordsError,
     })
+  }
+
+  onFetchDealRecordsError = (error) => {
+    switch (error.code) {
+      case errno.EPERM:
+        Toast.fail("用户未登录")
+        break
+      case errno.ERROR_NO_USER:
+        Toast.fail("用户不存在")
+        break
+      default:
+        Toast.fail("查询用户消费记录错误：" + error.code)
+        break
+    }
   }
 
   componentDidMount() {
@@ -37,10 +61,23 @@ class WalletDetail extends Component {
   }
 
   onLoadMoreRecord = (resolve, finish) => {
-    console.log("获取更多消费记录！")
-    setTimeout(function () {
-      resolve()
-    }, 1000)
+    const {total} = this.state
+    const {dealRecords, currentUser, fetchDealRecords} = this.props
+    const lastDealTime = dealRecords.length > 0? dealRecords[dealRecords.length - 1].dealTime : undefined
+    fetchDealRecords({
+      userId: currentUser.id,
+      isRefresh: false,
+      lastDealTime: lastDealTime,
+      limit: 10,
+      success: () => {
+        if(total === dealRecords.length) {
+          finish()
+        } else {
+          resolve()
+        }
+      },
+      error: this.onFetchDealRecordsError,
+    })
   }
 
   showRecordDetail(record) {
@@ -91,7 +128,7 @@ class WalletDetail extends Component {
 
   render(){
     return (
-    <InfiniteLoader onLoadMore={this.onLoadMoreRecord}>
+    <InfiniteLoader onLoadMore={this.onLoadMoreRecord} loaderDefaultIcon={null}>
       <Page ptr={false}>
         <Cells>
           {
@@ -105,7 +142,7 @@ class WalletDetail extends Component {
                         <text className="content-trip">{formatTime((new Date(item.dealTime)).getTime(),'YYYY-MM-DD HH:mm')}</text>
                       </div>
                       <div className="record-content">
-                        <text className="content-primary">{item.cost + '元'}</text>
+                        <text className="content-primary">{item.amount + '元'}</text>
                         <text className="content-trip">{this.getDealType(item)}</text>
                       </div>
                     </div>
@@ -125,7 +162,7 @@ class WalletDetail extends Component {
 const mapStateToProps = (state, ownProps) => {
   return {
     currentUser: selectActiveUserInfo(state),
-    dealRecords: selectDealRecord(state)
+    dealRecords: selectDealList(state)
   }
 };
 

@@ -12,20 +12,11 @@ import 'react-weui/build/dist/react-weui.css'
 import './score.css'
 
 const {
-  Button,
-  Panel,
   Page,
-  PanelHeader,
-  PanelBody,
-  MediaBox,
-  MediaBoxTitle,
-  MediaBoxDescription,
   InfiniteLoader,
   Cells,
   Cell,
   CellBody,
-  CellFooter,
-  CellsTitle,
 } = WeUI
 
 class Score extends Component {

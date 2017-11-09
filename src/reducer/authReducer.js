@@ -3,7 +3,7 @@
  */
 import {Map, List, Record} from 'immutable'
 import {REHYDRATE} from 'redux-persist/constants'
-import {AuthState, UserInfoRecord, UserInfo, WalletInfoRecord} from '../models/authModel'
+import {AuthState, UserInfoRecord, UserInfo, WalletInfoRecord, Deal} from '../models/authModel'
 import * as authActionTypes from '../constants/authActionTypes'
 
 const initialState = AuthState()
@@ -114,11 +114,18 @@ function handleLoginOut(state, action) {
 }
 
 function handleFetchDealRecords(state, action) {
-  let payload = action.payload
-  let dealRecordList = payload.dealRecordList
-  dealRecordList.forEach((dealRecord) => {
-    state = state.setIn(['dealRecords', dealRecord.orderNo], dealRecord)
+  let deals = action.payload.deals
+  let isRefresh = action.payload.isRefresh
+  let dealList = List()
+  if(!isRefresh) {
+    dealList = state.get("dealList")
+  }
+  deals.forEach((deal) => {
+    let dealRecord = Deal.fromJSON(deal)
+    state = state.setIn(['dealRecords', deal.id], dealRecord)
+    dealList = dealList.push(deal.id)
   })
+  state = state.set('dealList', dealList)
   return state
 }
 
