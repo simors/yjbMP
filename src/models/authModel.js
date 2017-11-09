@@ -48,6 +48,8 @@ export class UserInfo extends UserInfoRecord {
       record.set('province', attrs['province'])
       record.set('city', attrs['city'])
       record.set('authData', attrs['authData'])
+      record.set('score', attrs['score'])
+      record.set('subscribe', attrs['subscribe'])
       if(attrs.idName)
         record.set('idName', attrs['idName'])
       if(attrs.idNumber)
