@@ -1,5 +1,6 @@
-.record {
+.wallet_detail_record {
   display: flex;
+  justify-content: space-between;
 }
 
 .record-header {
@@ -10,15 +11,14 @@
 
 .record-content {
   display: flex;
-  flex: 1;
   flex-direction: column;
   justify-content: space-between;
-  align-items: flex-end;
 }
 
 .content-primary {
   font-size: 1.1rem;
   color: #000000;
+  margin-bottom: 1rem;
 }
 
 .content-trip {

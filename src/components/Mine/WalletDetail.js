@@ -14,20 +14,11 @@ import 'react-weui/build/dist/react-weui.css'
 import './wallet-detail.css'
 
 const {
-  Button,
-  Panel,
   Page,
-  PanelHeader,
-  PanelBody,
-  MediaBox,
-  MediaBoxTitle,
-  MediaBoxDescription,
   InfiniteLoader,
   Cells,
   Cell,
   CellBody,
-  CellFooter,
-  CellsTitle,
 } = WeUI
 
 class WalletDetail extends Component {
@@ -108,7 +99,7 @@ class WalletDetail extends Component {
               return (
                 <Cell key={i} access onClick={() => {this.showRecordDetail(item)}}>
                   <CellBody>
-                    <div className="record">
+                    <div className="wallet_detail_record">
                       <div className="record-header">
                         <text className="content-primary">{this.getDealTitle(item)}</text>
                         <text className="content-trip">{formatTime((new Date(item.dealTime)).getTime(),'YYYY-MM-DD HH:mm')}</text>
