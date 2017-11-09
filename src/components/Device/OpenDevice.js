@@ -126,19 +126,19 @@ class OpenDevice extends Component {
             <PanelBody style={{borderBottomWidth: `0`}}>
               <MediaBox type="text">
                 <MediaBoxTitle>{deviceInfo.deviceAddr}</MediaBoxTitle>
-                <MediaBoxDescription>
+                <MediaBoxDescription style={{marginBottom: 0}}>
                   请将衣物平整放入干衣柜，注意保持间隙。放置后请关门。
                 </MediaBoxDescription>
               </MediaBox>
               <MediaBox type="text">
                 <MediaBoxTitle>{stationInfo.unitPrice + '元／分钟'}</MediaBoxTitle>
-                <MediaBoxDescription>
+                <MediaBoxDescription style={{marginBottom: 0}}>
                   计费标准
                 </MediaBoxDescription>
               </MediaBox>
               <MediaBox type="text">
-                <MediaBoxTitle>请您将衣物预先脱水甩干后再放入干衣柜</MediaBoxTitle>
-                <MediaBoxDescription>
+                <MediaBoxTitle style={{whiteSpace: 'normal'}}>请您将衣物预先脱水甩干后再放入干衣柜</MediaBoxTitle>
+                <MediaBoxDescription style={{marginBottom: 0}}>
                   衣柜中有湿度探测器，在您的衣物烘干后会通过微信提醒您，届时请您及时收取衣物。
                 </MediaBoxDescription>
               </MediaBox>
