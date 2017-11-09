@@ -100,7 +100,7 @@ class Wallet extends Component {
       return(<ActivityIndicator toast text="正在加载" />)
     }
     return(
-      <div>
+      <div className="walletpage">
         <div className="walletcontainer">
           <text className="amount">{(walletInfo.balance || 0) + '元'}</text>
           <text className="amountTrip">当前余额</text>
