@@ -7,7 +7,7 @@ import { bindActionCreators } from 'redux'
 import {browserHistory} from 'react-router'
 import {requestDeviceInfo} from '../../actions/deviceActions'
 import {selectDeviceByDeviceNo} from '../../selector/deviceSelector'
-import {fetchWechatJssdkConfig, fetchWalletInfo} from '../../actions/authActions'
+import {fetchWechatJssdkConfig} from '../../actions/authActions'
 import {selectWalletInfo, selectActiveUserId} from '../../selector/authSelector'
 import {selectStationById} from '../../selector/stationSelector'
 import * as appConfig from '../../constants/appConfig'
@@ -19,7 +19,7 @@ import './device.css'
 import {socket} from '../../util/socket'
 import * as errno from '../../errno'
 import RedEnvelope from '../Promotion/RedEnvelope'
-import {ActivityIndicator} from 'antd-mobile'
+import {ActivityIndicator, Toast} from 'antd-mobile'
 import {getMobileOperatingSystem} from '../../util'
 import {selectInitUrl} from '../../selector/configSelector'
 
@@ -32,38 +32,24 @@ const {
   MediaBoxTitle,
   MediaBoxDescription,
   Msg,
-  Toast,
-  Toptips,
 } = WeUI
 
 class OpenDevice extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      deviceLoading: true,
-      walletLoading: true,
-      showLoading: false,
-      showWarn: false,
-      warnTips: "",
+      msgTitle: undefined,
     }
   }
 
   componentWillMount() {
-    const {params, requestDeviceInfo, fetchWalletInfo, fetchWechatJssdkConfig, currentUserId, initUrl} = this.props
+    const {params, requestDeviceInfo, fetchWechatJssdkConfig, initUrl} = this.props
     const OS = getMobileOperatingSystem()
     let jssdkURL = window.location.href
     let deviceNo = params.deviceNo
     if(deviceNo) {
       requestDeviceInfo({
         deviceNo: deviceNo,
-        success: () => {this.setState({deviceLoading: false})},
-        error: (error) => {this.setState({deviceLoading: false})}
-      })
-    }
-    if(currentUserId) {
-      fetchWalletInfo({
-        success: () => {this.setState({walletLoading: false})},
-        error: (error) => {this.setState({walletLoading: false})}
       })
     }
     if(OS === 'iOS') {
@@ -81,120 +67,60 @@ class OpenDevice extends Component {
     })
   }
 
-  componentWillReceiveProps(newProps) {
-    const {currentUserId, fetchWalletInfo} = newProps
-    if(currentUserId && this.props.currentUserId != currentUserId) {
-      fetchWalletInfo({
-        success: () => {this.setState({walletLoading: false})},
-        error: (error) => {this.setState({walletLoading: false})}
-      })
+  getWarnMsgTitle(status) {
+    switch (status) {
+      case appConfig.DEVICE_STATUS_OCCUPIED:
+        return "该柜正在被使用，无法为您提供服务"
+      case appConfig.DEVICE_STATUS_OFFLINE:
+        return "设备下线"
+      case appConfig.DEVICE_STATUS_FAULT:
+        return "设备故障"
+      case appConfig.DEVICE_STATUS_MAINTAIN:
+        return "设备正在维修保养"
+      case appConfig.DEVICE_STATUS_UNREGISTER:
+        return "设备未注册"
+      default:
+        return "设备异常"
     }
   }
 
   renderDeviceStatus() {
-    const {deviceInfo, walletInfo, stationInfo} = this.props
-    let status = deviceInfo? deviceInfo.status : undefined
-    if(!deviceInfo || !walletInfo || !stationInfo) {
-      return null
-    }
-    if(walletInfo.deposit === 0 || walletInfo.process === appConfig.WALLET_PROCESS_TYPE_REFUND) {  //未交押金
+    const {deviceInfo, stationInfo} = this.props
+    const {status} = deviceInfo
+
+    if(status === appConfig.DEVICE_STATUS_IDLE && stationInfo) {
       return(
         <PanelBody style={{borderBottomWidth: `0`}}>
-          <Msg
-            type="warn"
-            title="您尚未支付押金"
-            description="请点击下方按钮支付押金。支付成功后请再次扫码开柜。"
-          />
-        </PanelBody>
-      )
-    } else if(walletInfo.debt > 0) { //欠费
-      return(
-        <PanelBody style={{borderBottomWidth: `0`}}>
-          <Msg
-            type="warn"
-            title="您尚有未支付的订单"
-            description="请点击下方按钮查看历史订单，并对欠费订单进行支付。支付成功后请再次扫码开柜。"
-          />
+          <MediaBox type="text">
+            <MediaBoxTitle>{deviceInfo.deviceAddr}</MediaBoxTitle>
+            <MediaBoxDescription style={{marginBottom: 0}}>
+              请将衣物平整放入干衣柜，注意保持间隙。放置后请关门。
+            </MediaBoxDescription>
+          </MediaBox>
+          <MediaBox type="text">
+            <MediaBoxTitle>{stationInfo.unitPrice + '元／分钟'}</MediaBoxTitle>
+            <MediaBoxDescription style={{marginBottom: 0}}>
+              计费标准
+            </MediaBoxDescription>
+          </MediaBox>
+          <MediaBox type="text">
+            <MediaBoxTitle style={{whiteSpace: 'normal'}}>请您将衣物预先脱水甩干后再放入干衣柜</MediaBoxTitle>
+            <MediaBoxDescription style={{marginBottom: 0}}>
+              衣柜中有湿度探测器，在您的衣物烘干后会通过微信提醒您，届时请您及时收取衣物。
+            </MediaBoxDescription>
+          </MediaBox>
         </PanelBody>
       )
     } else {
-      switch (status) {
-        case appConfig.DEVICE_STATUS_IDLE:
-          return(
-            <PanelBody style={{borderBottomWidth: `0`}}>
-              <MediaBox type="text">
-                <MediaBoxTitle>{deviceInfo.deviceAddr}</MediaBoxTitle>
-                <MediaBoxDescription style={{marginBottom: 0}}>
-                  请将衣物平整放入干衣柜，注意保持间隙。放置后请关门。
-                </MediaBoxDescription>
-              </MediaBox>
-              <MediaBox type="text">
-                <MediaBoxTitle>{stationInfo.unitPrice + '元／分钟'}</MediaBoxTitle>
-                <MediaBoxDescription style={{marginBottom: 0}}>
-                  计费标准
-                </MediaBoxDescription>
-              </MediaBox>
-              <MediaBox type="text">
-                <MediaBoxTitle style={{whiteSpace: 'normal'}}>请您将衣物预先脱水甩干后再放入干衣柜</MediaBoxTitle>
-                <MediaBoxDescription style={{marginBottom: 0}}>
-                  衣柜中有湿度探测器，在您的衣物烘干后会通过微信提醒您，届时请您及时收取衣物。
-                </MediaBoxDescription>
-              </MediaBox>
-            </PanelBody>
-          )
-        case appConfig.DEVICE_STATUS_OCCUPIED:
-          return(
-            <PanelBody style={{borderBottomWidth: `0`}}>
-              <Msg
-                type="warn"
-                title="该柜正在被使用，无法为您提供服务"
-                description="请尝试扫码其他柜门"
-              />
-            </PanelBody>
-          )
-        case appConfig.DEVICE_STATUS_OFFLINE:
-          return(
-            <PanelBody style={{borderBottomWidth: `0`}}>
-              <Msg
-                type="info"
-                title="设备下线"
-                description="请尝试扫码其他柜门"
-              />
-            </PanelBody>
-          )
-        case appConfig.DEVICE_STATUS_FAULT:
-          return(
-            <PanelBody style={{borderBottomWidth: `0`}}>
-              <Msg
-                type="info"
-                title="设备故障"
-                description="请尝试扫码其他柜门"
-              />
-            </PanelBody>
-          )
-        case appConfig.DEVICE_STATUS_MAINTAIN:
-          return(
-            <PanelBody style={{borderBottomWidth: `0`}}>
-              <Msg
-                type="info"
-                title="设备维修保养"
-                description="请尝试扫码其他柜门"
-              />
-            </PanelBody>
-          )
-        case appConfig.DEVICE_STATUS_UNREGISTER:
-          return(
-            <PanelBody style={{borderBottomWidth: `0`}}>
-              <Msg
-                type="info"
-                title="设备未注册"
-                description="请尝试扫码其他柜门"
-              />
-            </PanelBody>
-          )
-        default:
-          return null
-      }
+      return(
+        <PanelBody style={{borderBottomWidth: `0`}}>
+          <Msg
+            type="warn"
+            title={this.getWarnMsgTitle(status)}
+            description="请尝试扫码其他柜门"
+          />
+        </PanelBody>
+      )
     }
   }
 
@@ -202,11 +128,9 @@ class OpenDevice extends Component {
 
   turnOnDevice() {
     const {deviceInfo, currentUserId, location} = this.props
-    var that = this
-    that.setState({
-      showLoading: true
+    Toast.loading("请稍后", 10, () => {
+      Toast.info("网络错误")
     })
-    //发送开机请求
     socket.emit(appConfig.TURN_ON_DEVICE, {
       deviceNo: deviceInfo.deviceNo,
       userId: currentUserId,
@@ -216,53 +140,47 @@ class OpenDevice extends Component {
       if(errorCode === 0) {
         return
       }
-      that.setState({ showLoading: false })
       switch (errorCode) {
         case errno.EINVAL:
-          that.setState({showWarn: true, warnTips: "参数错误"})
+          Toast.fail("参数错误")
           break
         case errno.ERROR_INVALID_STATUS:
-          that.setState({showWarn: true, warnTips: "无效的设备状态"})
+          Toast.fail("无效的设备状态")
           break
         case errno.ERROR_NO_WALLET:
-          that.setState({showWarn: true, warnTips: "用户钱包信息有误"})
+          Toast.fail("用户钱包信息有误")
           break
         case errno.ERROR_NO_DEPOSIT:
-          that.setState({showWarn: true, warnTips: "用户未交押金"})
+          Toast.fail("用户未交押金")
           jumpPath = '/mine/deposit'
           break
         case errno.ERROR_UNPAID_ORDER:
-          that.setState({showWarn: true, warnTips: "有未支付订单"})
+          Toast.fail("有未支付订单")
           jumpPath = '/mine/orders'
           break
         case errno.ERROR_OCCUPIED_ORDER:
-          that.setState({showWarn: true, warnTips: "有正在使用的订单"})
+          Toast.fail("有正在使用的订单")
           jumpPath = '/mine/orders'
           break
         case errno.ERROR_TURNON_FAILED:
-          that.setState({showWarn: true, warnTips: "设备开机失败"})
+          Toast.fail("设备开机失败")
           break
         default:
-          that.setState({showWarn: true, warnTips: "内部错误：" + errorCode})
+          Toast.fail("设备开机失败, 错误: " + errorCode)
           break
       }
-      setTimeout(function () {
-        that.setState({showWarn: false, warnTips: ""})
-        browserHistory.push(jumpPath, {from: location.pathname})
-      }, 3000)
+      browserHistory.push(jumpPath, {from: location.pathname})
     })
 
     //监听开机成功消息
     socket.on(appConfig.TURN_ON_DEVICE_SUCCESS, function (data) {
-      that.setState({showLoading: false})
+      Toast.success("开机成功")
       browserHistory.replace('/result' + '/开机成功' + '/success')
     })
 
     //监听开机失败消息
     socket.on(appConfig.TURN_ON_DEVICE_FAILED, function (data) {
-      console.log("收到开机失败消息", data)
-      that.setState({showLoading: false})
-
+      Toast.fail("开机失败")
     })
   }
 
@@ -275,15 +193,8 @@ class OpenDevice extends Component {
   }
 
   getButtonTitle() {
-    const {walletInfo, deviceInfo} = this.props
-    if(!walletInfo || !deviceInfo) {
-      return "扫一扫"
-    }
-    if(walletInfo.debt > 0) {               //欠费
-      return "去支付"
-    } else if(walletInfo.deposit === 0 || walletInfo.process === appConfig.WALLET_PROCESS_TYPE_REFUND) {   //押金
-      return "交押金"
-    } else if(deviceInfo.status === 0) {    //正常使用
+    const {deviceInfo} = this.props
+    if(deviceInfo.status === 0) {    //正常使用
       return "已放好衣物，开始使用"
     }  else {
       return "扫一扫"
@@ -291,12 +202,8 @@ class OpenDevice extends Component {
   }
 
   onPress = () => {
-    const {walletInfo, deviceInfo, location} = this.props
-    if(walletInfo.deposit === 0 || walletInfo.process === appConfig.WALLET_PROCESS_TYPE_REFUND) {
-      browserHistory.push('/mine/deposit')
-    } else if(walletInfo.debt > 0) { //欠费
-      browserHistory.push('/mine/orders', {from: location.pathname})
-    } else if(deviceInfo.status === 0) { //空闲
+    const {deviceInfo} = this.props
+    if(deviceInfo.status === 0) {
       this.turnOnDevice()
     } else{
       this.onScanQRCode()
@@ -304,9 +211,8 @@ class OpenDevice extends Component {
   }
 
   render() {
-    const {params, currentUserId} = this.props
-    const {deviceLoading, walletLoading, showLoading} = this.state
-    if(!currentUserId) {
+    const {params, currentUserId, deviceInfo} = this.props
+    if(!currentUserId || !deviceInfo) {
       return(<ActivityIndicator toast text="正在加载" />)
     }
     return(
@@ -325,8 +231,6 @@ class OpenDevice extends Component {
         <div className="device-button">
           <Button onClick={this.onPress}>{this.getButtonTitle()}</Button>
         </div>
-        <Toast icon="loading" show={deviceLoading || walletLoading || showLoading}>加载...</Toast>
-        <Toptips type="warn" show={this.state.showWarn}>{this.state.warnTips}</Toptips>
         <RedEnvelope />
       </div>
     )
@@ -352,7 +256,6 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => bindActionCreators({
   requestDeviceInfo,
   fetchWechatJssdkConfig,
-  fetchWalletInfo,
 }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(OpenDevice)
