@@ -4,20 +4,10 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import WeUI from 'react-weui'
 import {selectActiveUserInfo} from '../../selector/authSelector'
-
-import 'weui'
-import 'react-weui/build/dist/react-weui.css'
 import './score.css'
+import {WhiteSpace, Card, Flex} from 'antd-mobile'
 
-const {
-  Page,
-  InfiniteLoader,
-  Cells,
-  Cell,
-  CellBody,
-} = WeUI
 
 class Score extends Component {
   constructor(props) {
@@ -28,45 +18,47 @@ class Score extends Component {
     document.title = " 积分"
   }
 
-  onLoadMoreRecord = (resolve, finish) => {
-    console.log("获取更多积分记录！")
-    setTimeout(function () {
-      resolve()
-    }, 1000)
-  }
-
   render() {
+    const {currentUser} = this.props
     return(
-    <InfiniteLoader onLoadMore={this.onLoadMoreRecord}>
-      <Page ptr={false}>
+      <div>
         <div className="background">
-          <text className="score">3934</text>
+          <text className="score">{currentUser.score}</text>
           <text className="scoreTrip">当前积分</text>
         </div>
-        <Cells>
-          {
-            this.props.scoreRecords.map((item, i) => {
-              return(
-                <Cell key={i} access onClick={() => {}}>
-                  <CellBody>
-                    <div className="record">
-                      <div className="record-header">
-                        <text className="content-primary">{item.title}</text>
-                        <text className="content-trip">{item.time}</text>
-                      </div>
-                      <div className="record-content">
-                        <text className="content-primary">{item.score}</text>
-                        <text className="content-trip">{item.trip}</text>
-                      </div>
-                    </div>
-                  </CellBody>
-                </Cell>
-              )
-            })
-          }
-        </Cells>
-      </Page>
-    </InfiniteLoader>
+        <div>
+          <WhiteSpace size="lg" />
+          <Card>
+            <Card.Header title="积分规则" />
+            <Card.Body>
+              <Flex justify="between">
+                <div>关注微信公众号</div>
+                <div>20积分</div>
+              </Flex>
+              <Flex justify="between">
+                <div>交押金</div>
+                <div>20积分</div>
+              </Flex>
+              <Flex justify="between">
+                <div>每充值1元</div>
+                <div>1积分</div>
+              </Flex>
+              <Flex justify="between">
+                <div>使用干衣柜</div>
+                <div>1积分</div>
+              </Flex>
+              <Flex justify="between">
+                <div>绑定手机号码</div>
+                <div>10积分</div>
+              </Flex>
+              <Flex justify="between">
+                <div>实名认证</div>
+                <div>20积分</div>
+              </Flex>
+            </Card.Body>
+          </Card>
+        </div>
+      </div>
     )
   }
 
@@ -77,7 +69,6 @@ class Score extends Component {
 const mapStateToProps = (state, ownProps) => {
   return {
     currentUser: selectActiveUserInfo(state),
-    scoreRecords: [{title: '付款成功－干衣', time: '2017-03-30', trip: '消费5.00元', score: 50}],
   }
 };
 
