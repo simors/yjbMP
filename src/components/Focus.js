@@ -11,7 +11,7 @@ export default class Focus extends React.PureComponent {
   render() {
     return (
       <div>
-        <img src="/mp_focus.png" style={{width: '100vw', height: '100vh'}} alt=""/>
+        <img src={require('../../public/mp_focus.png')} style={{width: '100vw', height: '100vh'}} alt=""/>
       </div>
     )
   }
