@@ -8,7 +8,8 @@ import {browserHistory} from 'react-router'
 import WeUI from 'react-weui'
 import 'weui'
 import 'react-weui/build/dist/react-weui.css'
-import {selectActiveUserInfo} from '../selector/authSelector'
+import {selectActiveUserInfo, selectToken} from '../selector/authSelector'
+import {autoLogin} from '../actions/authActions'
 
 const {Msg} = WeUI
 
@@ -16,6 +17,14 @@ class Result extends PureComponent {
   constructor(props) {
     super(props)
   }
+
+  componentWillMount() {
+    const {autoLogin, token} = this.props
+    if(token) {
+      autoLogin({token: token})
+    }
+  }
+
   componentDidMount() {
     const {title} = this.props.params
     document.title = title || "衣家宝"
@@ -28,12 +37,11 @@ class Result extends PureComponent {
       return
     }
     switch (title) {
-      case '开机成功':
-        browserHistory.replace('/mine')
-        break
       case '订单支付成功':
         browserHistory.goBack()
         break
+      case '手机绑定成功':
+      case '开机成功':
       default:
         browserHistory.replace('/mine')
     }
@@ -62,11 +70,13 @@ const mapStateToProps = (state, ownProps) => {
   const currentUserInfo = selectActiveUserInfo(state)
   const subscribe = currentUserInfo? currentUserInfo.subscribe: undefined
   return {
+    token: selectToken(state),
     subscribe: subscribe,
   }
 }
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
+  autoLogin
 }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(Result)

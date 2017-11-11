@@ -191,7 +191,7 @@ class Bind extends Component {
         if(deviceNo) {
           browserHistory.replace('/openDevice/' + deviceNo)
         } else {
-          browserHistory.replace('/bind/success')
+          browserHistory.push('/result' + '/手机绑定成功' + '/success')
         }
       },
       error: this.onSubmitError

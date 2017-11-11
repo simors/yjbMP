@@ -8,7 +8,6 @@ import 'weui'
 import 'react-weui/build/dist/react-weui.css'
 import './bindsuccess.css'
 
-
 const {Page, Msg,} = WeUI
 
 export default class AuthSuccess extends PureComponent {

@@ -19,7 +19,6 @@ import {Toast, ActivityIndicator} from 'antd-mobile'
 
 const {
   Button,
-  Page,
 } = WeUI
 
 class Recharge extends Component {
@@ -94,7 +93,7 @@ class Recharge extends Component {
     if(promotion) {
       promotion.awards.rechargeList.forEach((value) => {
         if(value.recharge === this.state.selectAmount) {
-          tripText = "本次充值后，账户会增加" + (Number(value.recharge) + Number(value.award)) + "元，其中" + value.award + "元赠款不可退。"
+          tripText = "本次充值后，账户会增加" + (Number(value.recharge) + Number(value.award)) + "元。"
         }
       })
     } else {

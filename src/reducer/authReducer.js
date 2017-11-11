@@ -71,10 +71,8 @@ function handleAutoLogin(state, action) {
   let payload = action.payload
   let token = payload.token
   let user = payload.user
-  let subscribe = payload.subscribe
 
   let userRecord = UserInfo.fromLeancloudObject(user)
-  userRecord = userRecord.set('subscribe', subscribe)
   state = state.set('token', token)
   state = state.set('activeUser', user.id)
   state = state.setIn(['profiles', user.id], userRecord)

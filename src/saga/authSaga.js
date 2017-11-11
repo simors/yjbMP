@@ -78,9 +78,8 @@ export function* autoLogin(action) {
     let result = yield call(become, payload)
     let token = result.token
     let user = result.user
-    let subscribe = result.subscribe
     let mobilePhoneNumber = user.attributes.mobilePhoneNumber
-    yield put(autoLoginSuccess({token: token, user: user, subscribe: subscribe}))
+    yield put(autoLoginSuccess({token: token, user: user}))
     console.log("自动登录成功：", user)
     if (payload.success) {
       payload.success(mobilePhoneNumber)
