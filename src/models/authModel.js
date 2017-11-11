@@ -91,6 +91,7 @@ const DealRecord = Record({
   amount: undefined,              //交易金额
   dealTime: undefined,            //交易时间
   dealType: undefined,            //交易类型
+  promotionId: undefined,         //活动id
 }, 'DealRecord')
 
 export class Deal extends DealRecord {
@@ -102,6 +103,7 @@ export class Deal extends DealRecord {
       record.set('amount', obj.cost)
       record.set('dealTime', obj.dealTime)
       record.set('dealType', obj.dealType)
+      record.set('promotionId', obj.promotionId)
     })
   }
 }

@@ -16,15 +16,7 @@ import {Toast} from 'antd-mobile'
 import * as errno from '../../errno'
 
 
-const {
-  InfiniteLoader,
-  Cells,
-  Cell,
-  CellBody,
-  Icon,
-  LoadMore,
-  Msg,
-} = WeUI
+const {InfiniteLoader, Cells, Cell, CellBody, Msg} = WeUI
 
 class WalletDetail extends Component {
   constructor(props) {
@@ -99,7 +91,7 @@ class WalletDetail extends Component {
       case appConfig.WITHDRAW:
         return "提现成功-余额"
       case appConfig.SYS_PRESENT:
-        return "付款成功-充值"
+        return "活动"
       case appConfig.ORDER_PAY:
         return "付款成功-订单"
       default:
