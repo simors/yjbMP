@@ -65,7 +65,7 @@ class Bind extends Component {
         success: () => {
           this.setState({
             smsCodeDisable: true,
-            smsCodeTrip: this.wait + 's后重新发送'
+            smsCodeTrip: this.wait + 's'
           })
           this.wait--
           setTimeout(function () {
