@@ -67,13 +67,13 @@ class Mine extends Component {
   }
 
   render() {
-    const {currentUserId, activeOrderNum} = this.props
+    const {currentUserId} = this.props
     if(!currentUserId) {
       return(<ActivityIndicator toast text="正在加载" />)
     }
     return (
       <Page ptr={false} style={{backgroundColor: `#EFEFF4`}}>
-        <div className="container">
+        <div className="mineContainer">
           <img src={require('../../../public/logo.png')} alt="" style={{display: `block`, width: `7.5rem`, height: `6.75rem`}}/>
         </div>
 
