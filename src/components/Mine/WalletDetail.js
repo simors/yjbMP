@@ -128,6 +128,23 @@ class WalletDetail extends Component {
     }
   }
 
+  isExpendDealType(dealType) {
+    switch (dealType) {
+      case appConfig.REFUND:
+      case appConfig.SERVICE:
+      case appConfig.WITHDRAW:
+      case appConfig.ORDER_PAY:
+        return true
+      case appConfig.DEPOSIT:
+      case appConfig.RECHARGE:
+      case appConfig.SYS_PRESENT:
+        return false
+      default:
+        return false
+        break
+    }
+  }
+
   render(){
     const {dealRecords} = this.props
     if(dealRecords.length === 0) {
@@ -153,7 +170,9 @@ class WalletDetail extends Component {
                       <text className="content-trip">{formatTime((new Date(item.dealTime)).getTime(),'YYYY-MM-DD HH:mm')}</text>
                     </div>
                     <div className="record-content">
-                      <text className="content-primary">{Number(item.amount).toFixed(2) + '元'}</text>
+                      <text className="content-primary" style={{color: this.isExpendDealType(item.dealType)? 'black' : 'red'}}>
+                        {(this.isExpendDealType(item.dealType)? "-" : "+") + Number(item.amount).toFixed(2) + '元'}
+                      </text>
                       <text className="content-trip">{this.getDealType(item)}</text>
                     </div>
                   </div>
