@@ -11,13 +11,9 @@ export function become(payload) {
   return AV.User.become(payload.token).then((leanUser) => {
     user = leanUser
     token = leanUser.getSessionToken()
-    let openid = leanUser.attributes.authData.weixin.openid
-    return AV.Cloud.run('wechatIsSubscribe', {openid: openid})
-  }).then((subscribe) => {
     return {
       token: token,
       user: user,
-      subscribe: subscribe,
     }
   }).catch((error) => {
     throw error
