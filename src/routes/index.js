@@ -54,7 +54,7 @@ const rootRouter = (
     <Route path='about' component={About}/>
     <Route path='loading' component={LoadingPage} onEnter={setInitUrl}/>
     <Route path='focus' component={Focus} />
-    <Route path='authSuccess' component={AuthSuccess}/>
+    <Route path='authSuccess' component={AuthSuccess} onEnter={wechatOauth}/>
     <Route path='result/:title/:type' component={Result}/>
   </Router>
 )
