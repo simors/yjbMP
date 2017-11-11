@@ -35,13 +35,17 @@ class Recharge extends Component {
       selectAmount: this.defaultRechargeList[0].recharge,
       selectAward: this.defaultRechargeList[0].award,
       disableButton: false,
+      loading: true,
     }
   }
 
   componentWillMount() {
     const {fetchPromotionAction, currentUserId} = this.props
     if(currentUserId) {
-      fetchPromotionAction({})
+      fetchPromotionAction({
+        success: () => {this.setState({loading: false})},
+        error: (error) => {this.setState({loading: false})},
+      })
     }
   }
 
@@ -177,8 +181,9 @@ class Recharge extends Component {
   }
 
   render() {
+    const {loading} = this.state
     const {currentUserId} = this.props
-    if(!currentUserId) {
+    if(!currentUserId || loading) {
       return(<ActivityIndicator toast text="正在加载" />)
     }
     return(
