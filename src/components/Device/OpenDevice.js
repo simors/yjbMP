@@ -154,6 +154,10 @@ class OpenDevice extends Component {
           Toast.fail("用户未交押金")
           jumpPath = '/mine/deposit'
           break
+        case errno.ERROR_REFUNDING:
+          Toast.fail("用户押金退款处理中")
+          jumpPath = '/mine/wallet'
+          break
         case errno.ERROR_UNPAID_ORDER:
           Toast.fail("有未支付订单")
           jumpPath = '/mine/orders'
