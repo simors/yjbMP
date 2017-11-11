@@ -169,11 +169,20 @@ class OpenDevice extends Component {
         case errno.ERROR_TURNON_FAILED:
           Toast.fail("设备开机失败")
           break
+        case errno.ERROR_NO_USER:
+          Toast.fail("用户不存在")
+          break
+        case errno.EACCES:
+          Toast.fail("用户被禁用")
+          browserHistory.replace('/result' + '/用户登录失败' + '/warn')
+          break
         default:
           Toast.fail("设备开机失败, 错误: " + errorCode)
           break
       }
-      browserHistory.push(jumpPath, {from: location.pathname})
+      if(jumpPath) {
+        browserHistory.push(jumpPath, {from: location.pathname})
+      }
     })
 
     //监听开机成功消息

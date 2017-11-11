@@ -33,7 +33,7 @@ class Result extends PureComponent {
     document.title = title || "衣家宝"
     switch (title) {
       case '用户登录失败':
-        this.setState({description: '用户已被禁用！请在微信公众号内联系客户！'})
+        this.setState({description: '用户已被禁用！请在微信公众号内联系客服！'})
         break
       case '订单支付成功':
       case '手机绑定成功':
