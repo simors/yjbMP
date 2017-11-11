@@ -16,6 +16,7 @@ import 'weui'
 import 'react-weui/build/dist/react-weui.css'
 import './recharge.css'
 import {Toast, ActivityIndicator} from 'antd-mobile'
+import * as errno from '../../errno'
 
 const {
   Button,
@@ -123,7 +124,17 @@ class Recharge extends Component {
 
   createPaymentFailedCallback = (error) => {
     this.setState({disableButton: false})
-    Toast.fail("支付渠道错误")
+    switch (error.code) {
+      case errno.ERROR_PROM_INVALID:
+        Toast.fail("充值活动已经失效")
+        break
+      case errno.ERROR_CREATE_CHARGES:
+        Toast.fail("创建充值请求失败")
+        break
+      default:
+        Toast.fail("创建充值请求失败：" + error.code)
+        break
+    }
   }
 
   onRecharge = () => {
