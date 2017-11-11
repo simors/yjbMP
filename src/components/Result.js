@@ -37,12 +37,11 @@ class Result extends PureComponent {
       return
     }
     switch (title) {
-      case '开机成功':
-        browserHistory.replace('/mine')
-        break
       case '订单支付成功':
         browserHistory.goBack()
         break
+      case '手机绑定成功':
+      case '开机成功':
       default:
         browserHistory.replace('/mine')
     }

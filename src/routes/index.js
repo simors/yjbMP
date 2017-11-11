@@ -6,7 +6,6 @@ import { wechatOauth, setInitUrl} from  '../util'
 import AppIndex from '../components/AppIndex'
 import Home from '../components/Home'
 import About from '../components/About'
-import BindSuccess from '../components/Auth/BindSuccess'
 import Mine from '../components/Mine'
 import OpenDevice from '../components/Device/OpenDevice'
 import ModifyProfile from '../components/Mine/ModifyProfile'
@@ -37,7 +36,6 @@ const rootRouter = (
   <Router history={browserHistory}>
     {routes}
     <Route path='bind' component={Bind}/>
-    <Route path='bind/success' component={BindSuccess}/>
     <Route path='mine' component={Mine} onEnter={wechatOauth}/>
     <Route path='mine/wallet' component={Wallet} onEnter={wechatOauth}/>
     <Route path='mine/wallet/recharge' component={Recharge}/>
