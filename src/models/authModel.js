@@ -85,7 +85,7 @@ export class UserInfo extends UserInfoRecord {
   }
 }
 
-const DealRecord = Record({
+export const DealRecord = Record({
   id: undefined,                  //交易记录id
   orderNo: undefined,             //交易单号
   amount: undefined,              //交易金额
@@ -122,7 +122,7 @@ export const AuthState = Record({
   activeUser: undefined,              //当前用户id
   token: undefined,                   //自动登录token
   profiles: Map(),                    //用户信息: 键为userId, 值为UserInfoRecord
-  dealRecords: Map(),                 //交易记录：键为order_no,值为DealInfoRecord
+  dealRecords: Map(),                 //交易记录：键为id,值为DealRecord
   dealList: List(),                   //用户钱包记录id列表
   wallet: undefined,                  //钱包信息
   isRequestRefund: undefined,         //是否有提交押金返还申请
