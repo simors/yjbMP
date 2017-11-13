@@ -88,7 +88,7 @@ class Bind extends Component {
     } else {
       this.setState({
         smsCodeDisable: true,
-        smsCodeTrip: this.wait + 's后重新发送'
+        smsCodeTrip: this.wait + 's'
       })
       this.wait--
       setTimeout(function () {
@@ -199,11 +199,12 @@ class Bind extends Component {
   }
 
   render() {
+    const {currentUser} = this.props
     return (
       <div className="page">
         <div>
           <div className="header">
-            <img className="avatar" src={this.props.currentUser? this.props.currentUser.avatar: require('../../../public/defaultAvatar.svg')} alt=""/>
+            <img className="avatar" src={currentUser? currentUser.avatar: require('../../../public/defaultAvatar.svg')} alt=""/>
           </div>
           <div>
             <Form className="form">
