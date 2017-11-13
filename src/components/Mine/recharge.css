@@ -5,10 +5,23 @@
   flex-direction: column;
   justify-content: space-between;
 }
-.banner {
+.rechargeBanner {
   height: 8.1rem;
   background: url("../../../public/banner_recharge.png");
   background-size: 100% 100%;
+}
+
+.rechargeButtonArea {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  padding-right: 0.5rem;
+  padding-left: 0.5rem;
+}
+
+.buttonWarp {
+  flex: 50%;
+  padding: 0.5rem;
 }
 
 .amountButton {
@@ -16,14 +29,10 @@
   color: #737373;
   border-style: solid;
   border-width: 1px;
-  border-color: #737373;}
-
-.button-area {
-  padding-top: 2.0rem;
+  border-color: #737373;
 }
 
 .trip {
-  padding-top: 6.8rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -42,4 +51,5 @@
   margin-top: 1.3rem;
   padding-left: 1.3rem;
   padding-right: 1.3rem;
+  margin-bottom: 0.9rem;
 }

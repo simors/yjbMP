@@ -165,15 +165,17 @@ class Recharge extends Component {
     const {promotion} = this.props
     const rechargeList = promotion? promotion.awards.rechargeList : this.defaultRechargeList
     return (
-      <div>
+      <div className="rechargeButtonArea">
         {
           rechargeList.map((value, index) => (
-            <Button key={index} className='amountButton'
-                    plain={this.state.selectAmount != value.recharge}
-                    style={this.state.selectAmount == value.recharge? {color: `#fff`}: {}}
-                    onClick={() => this.changeAmount(value.recharge, value.award)} >
-              {'充' + value.recharge + '元' + (value.award? ('送' + value.award + '元') : '')}
-            </Button>
+            <div className="buttonWarp">
+              <Button key={index} className='amountButton'
+                      plain={this.state.selectAmount != value.recharge}
+                      style={this.state.selectAmount == value.recharge? {color: `#fff`}: {}}
+                      onClick={() => this.changeAmount(value.recharge, value.award)} >
+                {'充' + value.recharge + '元' + (value.award? ('送' + value.award + '元') : '')}
+              </Button>
+            </div>
           ))
         }
       </div>
@@ -187,20 +189,22 @@ class Recharge extends Component {
       return(<ActivityIndicator toast text="正在加载" />)
     }
     return(
-      <div>
-        <div className="banner">
-        </div>
-        <div className="button-area">
+      <div className="rechargePage">
+        <div>
+          <div className="rechargeBanner">
+          </div>
           {this.renderRechargeButton()}
         </div>
-        <div className="trip">
-          <text className="tripTitle">{this.getTripText()}</text>
-          <text className="tripDesc">{this.getTripDesc()}</text>
-        </div>
-        <div className="rechargeButton">
-          <Button disabled={this.state.disableButton} onClick={this.onRecharge}>
-            {"充值" + this.state.selectAmount + '元'}
-          </Button>
+        <div>
+          <div className="trip">
+            <text className="tripTitle">{this.getTripText()}</text>
+            <text className="tripDesc">{this.getTripDesc()}</text>
+          </div>
+          <div className="rechargeButton">
+            <Button disabled={this.state.disableButton} onClick={this.onRecharge}>
+              {"充值" + this.state.selectAmount + '元'}
+            </Button>
+          </div>
         </div>
       </div>
     )
