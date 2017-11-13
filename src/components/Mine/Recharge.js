@@ -168,7 +168,7 @@ class Recharge extends Component {
       <div className="rechargeButtonArea">
         {
           rechargeList.map((value, index) => (
-            <div className="buttonWarp">
+            <div key={index} className="buttonWarp">
               <Button key={index} className='amountButton'
                       plain={this.state.selectAmount != value.recharge}
                       style={this.state.selectAmount == value.recharge? {color: `#fff`}: {}}
