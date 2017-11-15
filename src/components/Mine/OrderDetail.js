@@ -15,7 +15,7 @@ import 'weui'
 import 'react-weui/build/dist/react-weui.css'
 import {formatTime} from '../../util'
 import * as appConfig from '../../constants/appConfig'
-import {socket} from '../../util/socket'
+import {createSocket} from '../../util/socket'
 import * as errno from '../../errno'
 import {Toast, Card, WhiteSpace, Flex} from 'antd-mobile'
 
@@ -23,6 +23,8 @@ const {
   Button,
   Dialog,
 } = WeUI
+
+const socket = createSocket()
 
 class OrderDetail extends Component {
   constructor(props) {

@@ -4,7 +4,6 @@ import {store} from './store/persistStore'
 import AV from 'leancloud-storage'
 import * as appConfig from './constants/appConfig'
 import './styles/main.scss'
-import {socket} from './util/socket'
 
 //leancloud init
 AV.init(appConfig.LC_APP_ID, appConfig.LC_APP_KEY)

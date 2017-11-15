@@ -7,7 +7,7 @@ import { bindActionCreators } from 'redux'
 import WeUI from 'react-weui'
 import 'weui'
 import 'react-weui/build/dist/react-weui.css'
-import {socket} from '../../util/socket'
+import {createSocket} from '../../util/socket'
 import * as appConfig from '../../constants/appConfig'
 import {selectActiveUserId} from '../../selector/authSelector'
 import {selectPromByCategoryType} from '../../selector/promotionSelector'
@@ -15,6 +15,8 @@ import {fetchPromotionAction, fetchPromCategoryAction} from '../../actions/promo
 import {Modal, Toast} from 'antd-mobile'
 import './redEnvelope.css'
 import * as errno from '../../errno'
+
+const socket = createSocket()
 
 class RedEnvelope extends React.PureComponent {
   constructor(props) {

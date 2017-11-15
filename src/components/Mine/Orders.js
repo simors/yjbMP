@@ -14,11 +14,13 @@ import WeUI from 'react-weui'
 import 'weui'
 import 'react-weui/build/dist/react-weui.css'
 import './orders.css'
-import {socket} from '../../util/socket'
+import {createSocket} from '../../util/socket'
 import * as errno from '../../errno'
 import {Toast} from 'antd-mobile'
 
 const {Panel, Tab, TabBody, InfiniteLoader, Cells, Icon, Dialog, Msg} = WeUI
+
+const socket = createSocket()
 
 class Orders extends Component {
   constructor(props) {

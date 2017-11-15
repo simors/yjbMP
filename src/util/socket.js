@@ -4,4 +4,11 @@
 import io from 'socket.io-client'
 import * as appConfig from '../constants/appConfig'
 
-export const socket = io(appConfig.LC_SERVER_DOMAIN, {forceNew: true})
+let socket = undefined
+
+export function createSocket() {
+  if (!socket) {
+    socket = io(appConfig.LC_SERVER_DOMAIN, {forceNew: true})
+  }
+  return socket
+}
