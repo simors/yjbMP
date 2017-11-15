@@ -3,7 +3,7 @@
  */
 import {Map, List, Record} from 'immutable'
 import {REHYDRATE} from 'redux-persist/constants'
-import {AuthState, UserInfoRecord, UserInfo, WalletInfoRecord, Deal} from '../models/authModel'
+import {AuthState, UserInfoRecord, UserInfo, WalletInfoRecord, Deal, DealRecord} from '../models/authModel'
 import * as authActionTypes from '../constants/authActionTypes'
 
 const initialState = AuthState()
@@ -161,6 +161,23 @@ function onRehydrate(state, action) {
   if(wallet) {
     var walletRecord = new WalletInfoRecord(wallet)
     state = state.set('wallet', walletRecord)
+  }
+
+  const dealList = incoming.dealList
+  if(dealList) {
+    state = state.set('dealList', List(dealList))
+  }
+
+  let dealRecordsMap = new Map(incoming.dealRecords)
+  try {
+    for (let [dealId, deal] of dealRecordsMap) {
+      if(dealId && deal) {
+        let dealRecord = new DealRecord({...deal})
+        state = state.setIn(['dealRecords', dealId], dealRecord)
+      }
+    }
+  } catch (error) {
+    dealRecordsMap.clear()
   }
 
   return state

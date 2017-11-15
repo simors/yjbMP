@@ -10,6 +10,7 @@ import * as appConfig from '../constants/appConfig'
 import {loginWithWechatAuthData} from '../actions/authActions'
 import {selectIsRehydrated} from '../selector/configSelector'
 import {updateInitUrl} from '../actions/configActions'
+import * as errno from '../errno'
 
 
 function getAuthorizeURL(redirect, state, scope) {
@@ -101,11 +102,17 @@ export function wechatOauth(nextState, replace) {
       }
     }
     if(authData) {
-      store.dispatch(loginWithWechatAuthData({...authData, success: (mobilePhoneNumber) => {
-        if(!mobilePhoneNumber) {
-          setTimeout(() => {browserHistory.replace('/bind')}, 2000)
+      store.dispatch(loginWithWechatAuthData({
+        ...authData,
+        success: (mobilePhoneNumber) => {
+          if(!mobilePhoneNumber) {
+            setTimeout(() => {browserHistory.replace('/bind')}, 2000)
+          }
+        },
+        error: (error) => {
+          browserHistory.replace('/result' + '/用户登录失败' + '/warn')
         }
-      }}))
+      }))
     } else {
       let wechatOauthUrl = appConfig.LC_SERVER_DOMAIN + '/wechatOauth'
       let nextPathname = nextState.location.pathname

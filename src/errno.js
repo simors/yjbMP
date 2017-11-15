@@ -180,13 +180,15 @@ export const ERROR_PROM_REGION  = (ERROR_BASE_PROMOTION - 5)       /* 活动范�
 export const ERROR_PROM_INVALID = (ERROR_BASE_PROMOTION - 6)       /* 活动已失效 */
 export const ERROR_PROM_LIMIT   = (ERROR_BASE_PROMOTION - 6)       /* 活动参与次数超限 */
 export const ERROR_PROM_NOSCORE = (ERROR_BASE_PROMOTION - 7)       /* 积分不足 */
-export const ERROT_PROM_LIMIT   = (ERROR_BASE_PROMOTION - 8)       /* 用户参数次数限制 */
+export const ERROR_INVALID_TYPE = (ERROR_BASE_PROMOTION - 8)       /* 无效的活动类型 */
+
 
 /* Deal */
 export const ERROR_UNSUPPORT_CHANNEL        = (ERROR_BASE_DEAL - 1)         /* 不支持的支付渠道 */
 export const ERROR_CREATE_TRANSFER          = (ERROR_BASE_DEAL - 2)         /* 创建交易请求失败 */
 export const ERROR_NOT_MATCH_DEPOSIT        = (ERROR_BASE_DEAL - 3)         /* 提取押金的金额不匹配 */
 export const ERROR_IN_REFUND_PROCESS        = (ERROR_BASE_DEAL - 4)         /* 已经处于提取押金的申请状态 */
+export const ERROR_CREATE_CHARGES           = (ERROR_BASE_DEAL - 5)         /* 创建支付请求失败 */
 
 /* Station */
 export const ERROR_STATION_NOMAN = (ERROR_BASE_STATION - 1)       /* 查无此人 */

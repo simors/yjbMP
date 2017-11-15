@@ -16,6 +16,9 @@ const {Msg} = WeUI
 class Result extends PureComponent {
   constructor(props) {
     super(props)
+    this.state = {
+      description: '',
+    }
   }
 
   componentWillMount() {
@@ -28,6 +31,16 @@ class Result extends PureComponent {
   componentDidMount() {
     const {title} = this.props.params
     document.title = title || "衣家宝"
+    switch (title) {
+      case '用户登录失败':
+        this.setState({description: '用户已被禁用！请在微信公众号内联系客服！'})
+        break
+      case '订单支付成功':
+      case '手机绑定成功':
+      case '开机成功':
+      default:
+        break
+    }
   }
 
   onPress = () => {
@@ -37,6 +50,8 @@ class Result extends PureComponent {
       return
     }
     switch (title) {
+      case '用户登录失败':
+        break
       case '订单支付成功':
         browserHistory.goBack()
         break
@@ -55,6 +70,7 @@ class Result extends PureComponent {
       <Msg
         type={type}
         title={title}
+        description={this.state.description}
         buttons={[{
           type: 'primary',
           label: subscribe? '确定': '关注衣家宝公众号',

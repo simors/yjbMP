@@ -16,6 +16,7 @@ import 'weui'
 import 'react-weui/build/dist/react-weui.css'
 import './recharge.css'
 import {Toast, ActivityIndicator} from 'antd-mobile'
+import * as errno from '../../errno'
 
 const {
   Button,
@@ -34,13 +35,17 @@ class Recharge extends Component {
       selectAmount: this.defaultRechargeList[0].recharge,
       selectAward: this.defaultRechargeList[0].award,
       disableButton: false,
+      loading: true,
     }
   }
 
   componentWillMount() {
     const {fetchPromotionAction, currentUserId} = this.props
     if(currentUserId) {
-      fetchPromotionAction({})
+      fetchPromotionAction({
+        success: () => {this.setState({loading: false})},
+        error: (error) => {this.setState({loading: false})},
+      })
     }
   }
 
@@ -123,7 +128,17 @@ class Recharge extends Component {
 
   createPaymentFailedCallback = (error) => {
     this.setState({disableButton: false})
-    Toast.fail("支付渠道错误")
+    switch (error.code) {
+      case errno.ERROR_PROM_INVALID:
+        Toast.fail("充值活动已经失效")
+        break
+      case errno.ERROR_CREATE_CHARGES:
+        Toast.fail("创建充值请求失败")
+        break
+      default:
+        Toast.fail("创建充值请求失败：" + error.code)
+        break
+    }
   }
 
   onRecharge = () => {
@@ -150,15 +165,17 @@ class Recharge extends Component {
     const {promotion} = this.props
     const rechargeList = promotion? promotion.awards.rechargeList : this.defaultRechargeList
     return (
-      <div>
+      <div className="rechargeButtonArea">
         {
           rechargeList.map((value, index) => (
-            <Button key={index} className='amountButton'
-                    plain={this.state.selectAmount != value.recharge}
-                    style={this.state.selectAmount == value.recharge? {color: `#fff`}: {}}
-                    onClick={() => this.changeAmount(value.recharge, value.award)} >
-              {'充' + value.recharge + '元' + (value.award? ('送' + value.award + '元') : '')}
-            </Button>
+            <div key={index} className="buttonWarp">
+              <Button key={index} className='amountButton'
+                      plain={this.state.selectAmount != value.recharge}
+                      style={this.state.selectAmount == value.recharge? {color: `#fff`}: {}}
+                      onClick={() => this.changeAmount(value.recharge, value.award)} >
+                {'充' + value.recharge + '元' + (value.award? ('送' + value.award + '元') : '')}
+              </Button>
+            </div>
           ))
         }
       </div>
@@ -166,25 +183,28 @@ class Recharge extends Component {
   }
 
   render() {
+    const {loading} = this.state
     const {currentUserId} = this.props
-    if(!currentUserId) {
+    if(!currentUserId || loading) {
       return(<ActivityIndicator toast text="正在加载" />)
     }
     return(
-      <div>
-        <div className="banner">
-        </div>
-        <div className="button-area">
+      <div className="rechargePage">
+        <div>
+          <div className="rechargeBanner">
+          </div>
           {this.renderRechargeButton()}
         </div>
-        <div className="trip">
-          <text className="tripTitle">{this.getTripText()}</text>
-          <text className="tripDesc">{this.getTripDesc()}</text>
-        </div>
-        <div className="rechargeButton">
-          <Button disabled={this.state.disableButton} onClick={this.onRecharge}>
-            {"充值" + this.state.selectAmount + '元'}
-          </Button>
+        <div>
+          <div className="trip">
+            <text className="tripTitle">{this.getTripText()}</text>
+            <text className="tripDesc">{this.getTripDesc()}</text>
+          </div>
+          <div className="rechargeButton">
+            <Button disabled={this.state.disableButton} onClick={this.onRecharge}>
+              {"充值" + this.state.selectAmount + '元'}
+            </Button>
+          </div>
         </div>
       </div>
     )

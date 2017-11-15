@@ -16,15 +16,7 @@ import {Toast} from 'antd-mobile'
 import * as errno from '../../errno'
 
 
-const {
-  InfiniteLoader,
-  Cells,
-  Cell,
-  CellBody,
-  Icon,
-  LoadMore,
-  Msg,
-} = WeUI
+const {InfiniteLoader, Cells, Cell, CellBody, Msg} = WeUI
 
 class WalletDetail extends Component {
   constructor(props) {
@@ -99,7 +91,7 @@ class WalletDetail extends Component {
       case appConfig.WITHDRAW:
         return "提现成功-余额"
       case appConfig.SYS_PRESENT:
-        return "付款成功-充值"
+        return "活动"
       case appConfig.ORDER_PAY:
         return "付款成功-订单"
       default:
@@ -124,6 +116,23 @@ class WalletDetail extends Component {
       case appConfig.ORDER_PAY:
         return "订单支付"
       default:
+        break
+    }
+  }
+
+  isExpendDealType(dealType) {
+    switch (dealType) {
+      case appConfig.REFUND:
+      case appConfig.SERVICE:
+      case appConfig.WITHDRAW:
+      case appConfig.ORDER_PAY:
+        return true
+      case appConfig.DEPOSIT:
+      case appConfig.RECHARGE:
+      case appConfig.SYS_PRESENT:
+        return false
+      default:
+        return false
         break
     }
   }
@@ -153,7 +162,9 @@ class WalletDetail extends Component {
                       <text className="content-trip">{formatTime((new Date(item.dealTime)).getTime(),'YYYY-MM-DD HH:mm')}</text>
                     </div>
                     <div className="record-content">
-                      <text className="content-primary">{Number(item.amount).toFixed(2) + '元'}</text>
+                      <text className="content-primary" style={{color: this.isExpendDealType(item.dealType)? 'black' : 'red'}}>
+                        {(this.isExpendDealType(item.dealType)? "-" : "+") + Number(item.amount).toFixed(2) + '元'}
+                      </text>
                       <text className="content-trip">{this.getDealType(item)}</text>
                     </div>
                   </div>

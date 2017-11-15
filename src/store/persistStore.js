@@ -8,6 +8,7 @@ import {selectToken} from '../selector/authSelector'
 import {autoLogin} from '../actions/authActions'
 import {updateRehydrate} from '../actions/configActions'
 import {browserHistory} from 'react-router'
+import * as errno from '../errno'
 
 const configFilter = createFilter('CONFIG', 'AUTH', [])
 
@@ -20,11 +21,17 @@ export default function persist(store) {
     let state = store.getState()
     let token = selectToken(state)
     if(token) {
-      store.dispatch(autoLogin({token: token, success: (mobilePhoneNumber) => {
-        if(!mobilePhoneNumber) {
-          browserHistory.replace('/bind')
+      store.dispatch(autoLogin({
+        token: token,
+        success: (mobilePhoneNumber) => {
+          if(!mobilePhoneNumber) {
+            browserHistory.replace('/bind')
+          }
+        },
+        error: (error) => {
+          browserHistory.replace('/result' + '/用户登录失败' + '/warn')
         }
-      }}))
+      }))
     }
     setTimeout(function () {
       store.dispatch(updateRehydrate({rehydrated: true}))

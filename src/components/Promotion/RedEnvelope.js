@@ -83,7 +83,7 @@ class RedEnvelope extends React.PureComponent {
           case errno.ERROR_PROM_INVALID:
             Toast.fail("活动已失效", 2)
             break
-          case errno.ERROT_PROM_LIMIT:
+          case errno.ERROR_PROM_LIMIT:
             Toast.fail("用户参数次数限制", 2)
             break
           default:

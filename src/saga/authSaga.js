@@ -87,6 +87,9 @@ export function* autoLogin(action) {
   } catch(error) {
     console.log("自动登录失败：", error)
     yield put(logout({}))
+    if(payload.error) {
+      payload.error(error)
+    }
   }
 
 }
@@ -113,6 +116,9 @@ export function* wechatAuthDataLogin(action) {
   } catch (error) {
     console.error("微信authData登录失败：", error)
     yield put(logout({}))
+    if(payload.error) {
+      payload.error(error)
+    }
   }
 }
 
