@@ -23,8 +23,6 @@ import {ActivityIndicator, Toast} from 'antd-mobile'
 import {getMobileOperatingSystem} from '../../util'
 import {selectInitUrl} from '../../selector/configSelector'
 
-const socket = createSocket()
-
 const {
   Button,
   Panel,
@@ -42,6 +40,7 @@ class OpenDevice extends Component {
     this.state = {
       msgTitle: undefined,
     }
+    this.socket = createSocket()
   }
 
   componentWillMount() {
@@ -133,7 +132,7 @@ class OpenDevice extends Component {
     Toast.loading("请稍后", 10, () => {
       Toast.info("网络错误")
     })
-    socket.emit(appConfig.TURN_ON_DEVICE, {
+    this.socket.emit(appConfig.TURN_ON_DEVICE, {
       deviceNo: deviceInfo.deviceNo,
       userId: currentUserId,
     }, function (data) {
@@ -188,13 +187,13 @@ class OpenDevice extends Component {
     })
 
     //监听开机成功消息
-    socket.on(appConfig.TURN_ON_DEVICE_SUCCESS, function (data) {
+    this.socket.on(appConfig.TURN_ON_DEVICE_SUCCESS, function (data) {
       Toast.success("开机成功")
       browserHistory.replace('/result' + '/开机成功' + '/success')
     })
 
     //监听开机失败消息
-    socket.on(appConfig.TURN_ON_DEVICE_FAILED, function (data) {
+    this.socket.on(appConfig.TURN_ON_DEVICE_FAILED, function (data) {
       Toast.fail("开机失败")
     })
   }

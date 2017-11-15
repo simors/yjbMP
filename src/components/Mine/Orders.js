@@ -20,8 +20,6 @@ import {Toast} from 'antd-mobile'
 
 const {Panel, Tab, TabBody, InfiniteLoader, Cells, Icon, Dialog, Msg} = WeUI
 
-const socket = createSocket()
-
 class Orders extends Component {
   constructor(props) {
     super(props)
@@ -46,6 +44,7 @@ class Orders extends Component {
         ]
       }
     }
+    this.socket = createSocket()
   }
 
   componentDidMount() {
@@ -189,7 +188,7 @@ class Orders extends Component {
       Toast.info("网络超时")
     })
     //发送关机请求
-    socket.emit(appConfig.TURN_OFF_DEVICE, {
+    this.socket.emit(appConfig.TURN_OFF_DEVICE, {
       userId: this.props.currentUser.id,
       deviceNo: order.deviceNo,
       orderId: order.id
@@ -206,12 +205,12 @@ class Orders extends Component {
       }
     })
 
-    socket.on(appConfig.TURN_OFF_DEVICE_SUCCESS, function (data) {
+    this.socket.on(appConfig.TURN_OFF_DEVICE_SUCCESS, function (data) {
       Toast.success("关机成功")
       browserHistory.push('/mine/orders/' + order.id)
     })
 
-    socket.on(appConfig.TURN_OFF_DEVICE_FAILED, function (data) {
+    this.socket.on(appConfig.TURN_OFF_DEVICE_FAILED, function (data) {
       Toast.fail("关机失败")
     })
   }

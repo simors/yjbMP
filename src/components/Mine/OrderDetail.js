@@ -24,8 +24,6 @@ const {
   Dialog,
 } = WeUI
 
-const socket = createSocket()
-
 class OrderDetail extends Component {
   constructor(props) {
     super(props)
@@ -48,6 +46,7 @@ class OrderDetail extends Component {
         ]
       }
     }
+    this.socket = createSocket()
   }
 
   componentWillMount() {
@@ -201,7 +200,7 @@ class OrderDetail extends Component {
       Toast.info("网络超时")
     })
     //发送关机请求
-    socket.emit(appConfig.TURN_OFF_DEVICE, {
+    this.socket.emit(appConfig.TURN_OFF_DEVICE, {
       userId: this.props.currentUser.id,
       deviceNo: order.deviceNo,
       orderId: order.id
@@ -218,12 +217,12 @@ class OrderDetail extends Component {
       }
     })
 
-    socket.on(appConfig.TURN_OFF_DEVICE_SUCCESS, function (data) {
+    this.socket.on(appConfig.TURN_OFF_DEVICE_SUCCESS, function (data) {
       Toast.success("关机成功")
       browserHistory.goBack()
     })
 
-    socket.on(appConfig.TURN_OFF_DEVICE_FAILED, function (data) {
+    this.socket.on(appConfig.TURN_OFF_DEVICE_FAILED, function (data) {
       Toast.fail("关机失败")
     })
   }

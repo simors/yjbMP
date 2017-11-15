@@ -16,8 +16,6 @@ import {Modal, Toast} from 'antd-mobile'
 import './redEnvelope.css'
 import * as errno from '../../errno'
 
-const socket = createSocket()
-
 class RedEnvelope extends React.PureComponent {
   constructor(props) {
     super(props)
@@ -25,6 +23,7 @@ class RedEnvelope extends React.PureComponent {
       visible: true,
       amount: undefined,
     }
+    this.socket = createSocket()
   }
 
   componentWillMount() {
@@ -51,13 +50,13 @@ class RedEnvelope extends React.PureComponent {
     Toast.loading("请稍后", 10, () => {
       Toast.info("网络超时")
     })
-    socket.emit(appConfig.PROMOTION_REQUEST, {
+    this.socket.emit(appConfig.PROMOTION_REQUEST, {
       promotionId: promotion.id,
       userId: currentUserId,
     })
 
     //监听红包响应
-    socket.on(appConfig.PROMOTION_RESPONSE, function (data) {
+    this.socket.on(appConfig.PROMOTION_RESPONSE, function (data) {
       let errorCode = data.errorCode
       let amount = data.amount
       if(errorCode === 0) {
