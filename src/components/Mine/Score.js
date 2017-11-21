@@ -7,6 +7,7 @@ import { bindActionCreators } from 'redux'
 import {selectActiveUserInfo} from '../../selector/authSelector'
 import './score.css'
 import {WhiteSpace, Card, Flex} from 'antd-mobile'
+import ScoreExchange from '../Promotion/ScoreExchange'
 
 
 class Score extends Component {
@@ -27,6 +28,7 @@ class Score extends Component {
           <text className="scoreTrip">当前积分</text>
         </div>
         <div>
+          <ScoreExchange />
           <WhiteSpace size="lg" />
           <Card>
             <Card.Header title="积分规则" />

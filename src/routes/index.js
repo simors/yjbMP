@@ -42,7 +42,7 @@ const rootRouter = (
     <Route path='mine/wallet/walletDetail' component={WalletDetail}/>
     <Route path='mine/orders' component={Orders} onEnter={wechatOauth}/>
     <Route path='mine/orders/:id' component={OrderDetail}/>
-    <Route path='mine/score' component={Score} />
+    <Route path='mine/score' component={Score} onEnter={wechatOauth}/>
     <Route path='mine/deposit' component={Deposit} />
     <Route path='mine/refund' component={Refund} />
     <Route path='openDevice/:deviceNo' component={OpenDevice} onEnter={wechatOauth}/>
